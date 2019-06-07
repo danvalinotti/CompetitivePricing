@@ -1,0 +1,36 @@
+.dashboardPrices{
+    width:80%;
+    /* margin-left:10%;
+    margin-right:10%; */
+
+}
+.dashboardRows{
+    border-top: 1px solid #B3B3B3;
+    border-bottom: 1px solid #B3B3B3;
+}
+.highlightedCell{
+    background-color:#EDF6FB;
+}
+.dashboardPrices{
+    font-size: 12px;
+    width: 100%;
+}
+table.dashboardPrices td {
+
+    padding:10px;
+}
+
+.nameColor{
+    color: black;
+}
+.programPrice{
+    font-weight: bold;
+    font-size: 12px;
+}
+.colorBlue{
+    color: rgb(46, 140, 248);
+}
+
+.colorGreen{
+    color: rgb(46, 140, 248);
+}

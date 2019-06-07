@@ -1,0 +1,377 @@
+
+table {
+    width: 100%;
+  }
+  .insideRx{
+    font-size: 35px;
+  }
+  .height100{
+    height:100%;
+  }
+  
+  .arrowGreen{
+    font-weight: bold;
+    color: green;
+  }
+  .arrowRed{
+    font-weight: bold;
+    color: red;
+  }
+  .nameColor{
+    color: black;
+  }
+
+  .percentageClass{
+    padding-left: 2px;
+    color: green;
+  }
+  .percentageClassRed{
+    padding-left: 2px;
+    color: red;
+  }
+  .arrowClassGreen{
+    padding-left: 2px;
+    color: green;
+  }
+  .arrowClassRed{
+    padding-left: 2px;
+    color: red;
+  }
+  .title {
+    letter-spacing: 2px;
+    font-size: 24px;
+    vertical-align: middle;
+    font-weight: bold;
+}
+.filter-select {
+  width: 25%;
+  list-style: none;
+  font-size: 1.1em;
+  position: absolute;
+  top: 60px;
+  left:62%;
+  z-index: 2;
+  color: rgb(105, 105, 105);
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  margin-top: 0px;
+  padding-left: 0px;
+}
+.filter-select-list {
+  cursor: pointer;
+  padding: 5px 10px;
+  z-index: 2;
+}
+.filter-select-list:hover {
+  background:  #C0C0C0;
+  color: #fff
+}
+.whole-page{
+  margin-left: 20%;
+}
+.header{
+  background-color: #ff9505;
+  color:white;
+  vertical-align: 50%;
+}
+.title{
+  margin-left: 20%;
+}
+.headerCol{
+  padding:10px;
+}
+.headerRow{
+  width: 100%;
+  padding-left:2%;
+}
+.searchButton{
+  margin-left:30%;
+  margin-right:30%;
+  width: 40%;
+  background: darkblue;
+  color:white;
+}
+.page{
+  margin-left:15%;
+  margin-right:15%;
+
+  width: 70%;
+}
+.priceTitle{
+
+  font-weight: bold;
+  font-size: x-small;
+  text-align: center;
+  color: #1E2022;	
+  font-family: "TradeGothic LT";	
+  font-size: 12px;
+  line-height: 26px;	
+  margin-bottom : 5%;
+}
+.overallPrice{
+  border-right: 1px solid #B3B3B3;
+  font-family: "TradeGothic LT";	
+  font-size: 48px;	
+  font-weight: bold;	
+  line-height: initial;	
+  text-align: center;
+}
+.last{
+  border-right: 0px solid #B3B3B3;
+}
+.competitors {
+  padding-top: 3%;
+  padding-bottom: 3%;
+
+}
+.competitorRow{
+  border-top : 1px solid #B3B3B3;
+}
+.diff{
+  
+  font-family: "TradeGothic LT";	
+  font-size: 14px;	
+  line-height: 26px;
+  text-align: center;
+  font-weight: normal;
+}
+.positive{
+  color: #08CA00;;
+}
+.negative{
+  color:red;
+} 
+.drugDescription{
+  color: #1E2022;	
+  font-family: "TradeGothic LT";	
+  font-size: 14px;	
+  line-height: 26px;
+}
+.formalName{
+  color: #1E2022;	
+  font-family: "TradeGothic LT";	
+  font-size: 18px;	
+  font-style: italic;	
+  line-height: 21px;
+}
+.drugName{
+  color: #1E2022;	
+  font-family: "TradeGothic LT";	
+  font-size: 36px;	
+  font-weight: bold;	
+  line-height: 43px;
+}
+.returnToDashboard{
+  color: #1B8DCA;	
+  font-family: "TradeGothic LT";	
+  font-size: 14px;	
+  font-weight: bold;	
+  line-height: 26px;
+}
+.competitorTitle{
+  color: #1E2022;	
+  font-family: "TradeGothic LT";	
+  font-size: 24px;	
+  font-weight: bold;	
+  line-height: 28px;
+  padding-top: 5%;
+}
+
+.addDrug{
+  box-sizing: border-box;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 64px;
+  line-height: 36px;
+  padding: 0 16px;
+  border-radius: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  overflow: visible;
+  transform: translate3d(0,0,0);
+  transition: background .4s cubic-bezier(.25,.8,.25,1),box-shadow 280ms cubic-bezier(.4,0,.2,1);
+  border: 1px solid #1B8DCA;
+  background-color: white;
+  color: #1B8DCA;
+  
+  
+}
+.pharmacy{
+  color: #1E2022;	
+  font-family: "TradeGothic LT";	
+  font-size: 14px;	
+  line-height: 16px;
+}
+.price{
+  font-family: "TradeGothic LT";	
+  font-size: 24px;	
+  font-weight: bold;	
+  line-height: 26px;	
+  text-align: right;
+}
+.price .diff{
+  font-family: "TradeGothic LT";	
+  font-size: 14px;	
+  line-height: 26px;	
+  text-align: right;
+}
+.search-bar-copy-4 {
+	height: 50px;
+	width: 100%;
+	border-radius: 8px;
+	box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.15);
+}
+.searchButton1{
+  
+  height: 100%;
+  border: 1px solid;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+.search-bar {
+  
+	height: 50px;
+	width: 100%;
+	border: 1px solid #B3B3B3;
+	border-radius: 8px;
+	background-color: #FFFFFF;
+	box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.15);
+}
+.textCenter{
+  text-align: center;
+}
+
+.search-bar-copy {
+	height: 50px;
+	width: 100%;
+	border: 1px solid #B3B3B3;
+	border-radius: 8px;
+	background-color: #FFFFFF;
+	box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.15);
+}
+.search-bar-copy-3 {
+	height: 50px;
+	width: 100%;
+	border: 1px solid #B3B3B3;
+	border-radius: 8px;
+	background-color: #FFFFFF;
+	box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.15);
+}
+.search-bar-copy-4 {
+	height: 50px;
+	
+	border-radius: 8px;
+	 background-color: #1B8DCA;
+	box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.15);
+}
+.searchHeader{
+  display:inline-flex;
+  padding:1%;
+  float: right;
+  width:100%;
+} 
+.dollar{
+  font-family:initial;
+  font-weight:normal;
+}
+.headerhelp{
+  display: inline-flex;
+}
+.errorZipCode{
+  border-color: red;
+}
+.compPrice{
+  display: inline-flex;
+}
+
+.headerZip{
+  padding:1%
+ 
+}
+.headerButton{
+  padding:1%
+}
+.subRow{
+  width:  100%;
+  margin:0px
+}
+.searchButton2{
+ width: 100%;
+  border: 1px solid;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px 5px 5px 5px;
+  cursor: pointer;
+  font-size: 20px;
+  display: inline-flex;
+  border-color:#F8F8F8;
+}
+.btnText{
+ 
+  text-align: center;
+  
+}
+.myStyle{
+  display: block;
+  text-align: center;
+  height: calc(2.25rem + 2px);
+  line-height: 1.5em;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+.alignFlex{
+  display: inline-flex;
+}
+.removeLine::before{
+  left: auto !important; 
+  right: auto !important;
+  bottom: auto !important;
+  position: initial !important;
+  border-bottom: 0px solid rgba(0, 0, 0, 0.42) !important; 
+}
+.removeLine::after{
+  left: auto !important; 
+  right: auto !important;
+  bottom: auto !important;
+  position: initial !important;
+}
+th{
+  padding:10px
+}
+.trackListing:hover{
+  color:#0457af;
+  border-color :#0457af;
+}
+
+
+
+@media (max-width: 576px) {
+
+  .competitors {
+    padding-top: 3%;
+    padding-bottom: 3%;
+    text-align: start;
+  }
+  
+}

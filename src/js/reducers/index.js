@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
-import loginReducer from "./loginReducer";
+import dashBoardReducer from "./dashBoardReducer";
+import {reducer as formReducer} from "redux-form"
 
-
-// Combine all reducers as root reducer
-export default combineReducers({loginReducer});
+export default combineReducers({dashBoardReducer,form: formReducer});
