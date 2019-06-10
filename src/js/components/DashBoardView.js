@@ -404,7 +404,7 @@ class DashBoardViewComponent extends Component {
                         </div>
                         <div className="col-sm-6 " style={{ paddingRight: '0px', }}>
                             <div className="float-sm-right">
-                                {/* <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.viewSummaries() }} className="btn btn-outline-primary">View Daily Summaries</button> */}
+                                <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.viewSummaries() }} className="btn btn-outline-primary">View Daily Summaries</button>
                                 <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.exportDrugs() }} className="btn btn-outline-primary">Export</button>
                                 <button type="button" onClick={() => { this.routeToSearch() }} className="btn btn-outline-primary">Search Drug</button>
                             </div>
