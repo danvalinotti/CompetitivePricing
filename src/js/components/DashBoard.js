@@ -13,12 +13,33 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import SockJS from "sockjs-client";
 
 class DashBoard extends React.Component {
+
     constructor(props) {
         super(props);
+        //SockJS
 
-        this.state = {
+        var sock = new SockJS('http://localhost:8980/gs-guide-websocket');
+
+
+        sock.onopen = function () {
+            console.log('open');
+
+        };
+
+        sock.onmessage = function (e) {
+            console.log('message', e.data);
+            // sock.close();
+        };
+
+        sock.onclose = function () {
+            console.log('close');
+        };
+
+        console.log("SOCK");
+        this.state = { 
             drugName: '',
             drugNDC: '',
             dosageStrength: '',
@@ -30,11 +51,24 @@ class DashBoard extends React.Component {
             drugStrengthArray: [],
             drugQuantityArray: [],
             selectedDrug: null,
-            showDialog: false
+            showDialog: false,
+            actions: sock,
+            messages: []
         };
-      
+
+
         this.handleSubmit = this.handleSubmit.bind(this);
         this.selectedDrug = this.selectedDrug.bind(this);
+
+
+    }
+   
+    onConnected() {
+        //  stompClient.subscribe('/topic/greetings', onMessageReceived);
+
+        // Tell your username to the server
+        stompClient.send("/app/greeting?name=hello");
+        console.log("sent");
     }
 
     changeStrengthList(strengthList) {
@@ -69,7 +103,7 @@ class DashBoard extends React.Component {
             .then(response => {
                 this.toggleDialog();
                 this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
-                
+
             })
     }
 
@@ -109,9 +143,12 @@ class DashBoard extends React.Component {
             quantity: quantity,
         })
     }
+
     goToDashboard() {
-       console.log("GO TO DASHBOARD");
-       this.props.history.push({ pathname: '/viewDashboard'});
+      //  this.state.actions.
+       //     this.state.actions.send("testing");
+     //   console.log("GO TO DASHBOARD");
+      this.props.history.push({ pathname: '/viewDashboard' });
 
     }
     toggleDialog() {
@@ -124,7 +161,7 @@ class DashBoard extends React.Component {
 
 
     render() {
-      
+
         const searchBarStyle = {
 
             height: '60px ',
@@ -249,9 +286,9 @@ class DashBoard extends React.Component {
                         <div className="row" style={{ padding: '2%' }}>
                             <div className='col-sm-4'>  </div>
                             <div className='col-sm-4'>
-                                <button  className="form-control" style={seePricesBtn}><span
+                                <button className="form-control" style={seePricesBtn}><span
                                     className="see-prices">SEE PRICES</span></button>
-                                     <button type="button" onClick={()=>{this.goToDashboard()}} className="form-control" style={seePricesBtn}><span
+                                <button type="button" onClick={() => { this.goToDashboard() }} className="form-control" style={seePricesBtn}><span
                                     className="see-prices" >SEE DASHBOARD</span></button>
                                 <br />
                             </div>

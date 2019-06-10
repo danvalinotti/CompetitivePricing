@@ -6,6 +6,11 @@ import { withRouter } from "react-router-dom";
 import Axios from "axios";
 import Icons from "./Icons"
 import { isNumber } from "util";
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 
 
 class DashBoardViewComponent extends Component {
@@ -22,6 +27,7 @@ class DashBoardViewComponent extends Component {
             pharmCardSort: "off",
             singleCareSort: "off",
             lowestPriceSort: "off",
+            showDialog:false,
 
         }
         this.props.actions.dashBoardDrugs();
@@ -29,6 +35,21 @@ class DashBoardViewComponent extends Component {
     }
     routeToSearch() {
         this.props.history.push({ pathname: '/search' });
+    }
+    handleClose(){
+        console.log("CLOSE");
+        this.setState({
+            showDialog: false
+        });
+    }
+    toggleDialog(){
+        this.setState({
+            showDialog: !this.state.showDialog,
+        });
+    }
+    viewSummaries(){
+        this.toggleDialog();
+        console.log("view");
     }
     exportDrugs() {
         var exportList = [["Drug Name", "Drug Type", "Dosage Strength",
@@ -323,6 +344,11 @@ class DashBoardViewComponent extends Component {
             filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 4, sort)
         });
     }
+    test(){
+    console.log("test");
+    var inner = "<div><br/><a>View Summary for 6/10/18</a><br/></div>"
+    document.getElementById("dailySummary").innerHTML = inner;
+    }
     sortByLowestPrice() {
         var sort = "off";
         switch (this.state.lowestPriceSort) {
@@ -367,7 +393,7 @@ class DashBoardViewComponent extends Component {
                 <HeaderComponent />
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <h4 className="row" style={{ paddingTop: '3%', marginRight: '0px', marginLeft: '0px' }}>
-                        <div className="col-sm-8" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>
+                        <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>
                             <div style={{ padding: '10px', paddingLeft: '0px' }}>Competitive Pricing </div>
                             <div className=" headerZip" style={{ padding: '0px' }}>
                                 <input className="form-control search-bar " onChange={() => { this.filterList(event) }} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
@@ -376,8 +402,9 @@ class DashBoardViewComponent extends Component {
                             <input className="form-control search-bar " onKeyPress={()=>{this.commandList(event)}} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
                         </div> */}
                         </div>
-                        <div className="col-sm-4 " style={{ paddingRight: '0px', }}>
+                        <div className="col-sm-6 " style={{ paddingRight: '0px', }}>
                             <div className="float-sm-right">
+                                {/* <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.viewSummaries() }} className="btn btn-outline-primary">View Daily Summaries</button> */}
                                 <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.exportDrugs() }} className="btn btn-outline-primary">Export</button>
                                 <button type="button" onClick={() => { this.routeToSearch() }} className="btn btn-outline-primary">Search Drug</button>
                             </div>
@@ -433,6 +460,17 @@ class DashBoardViewComponent extends Component {
                         </table>
                     </div>
                 </div>
+                <Dialog onClose={() => this.handleClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.showDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
+                        Daily Summaries
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                    <input className="form-control "type="text" placeholder="Date Of Report (mm/dd/yyyy)" />
+                    <button style={{marginTop:'10px'}} type="button" onClick={() => { this.test() }} className="btn btn-outline-primary">View Daily Summary</button>
+                    <div id="dailySummary"></div>
+                    </DialogContent>
+                </Dialog>
             </div>
         )
     }
