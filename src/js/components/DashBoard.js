@@ -13,7 +13,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import SockJS from "sockjs-client";
+//import SockJS from "sockjs-client";
 
 class DashBoard extends React.Component {
 
@@ -21,24 +21,24 @@ class DashBoard extends React.Component {
         super(props);
         //SockJS
 
-        var sock = new SockJS('http://localhost:8980/gs-guide-websocket');
+        // var sock = new SockJS('http://localhost:8980/gs-guide-websocket');
 
 
-        sock.onopen = function () {
-            console.log('open');
+        // sock.onopen = function () {
+        //     console.log('open');
 
-        };
+        // };
 
-        sock.onmessage = function (e) {
-            console.log('message', e.data);
-            // sock.close();
-        };
+        // sock.onmessage = function (e) {
+        //     console.log('message', e.data);
+        //     // sock.close();
+        // };
 
-        sock.onclose = function () {
-            console.log('close');
-        };
+        // sock.onclose = function () {
+        //     console.log('close');
+        // };
 
-        console.log("SOCK");
+        //console.log("SOCK");
         this.state = { 
             drugName: '',
             drugNDC: '',
@@ -52,8 +52,7 @@ class DashBoard extends React.Component {
             drugQuantityArray: [],
             selectedDrug: null,
             showDialog: false,
-            actions: sock,
-            messages: []
+          
         };
 
 
@@ -63,13 +62,13 @@ class DashBoard extends React.Component {
 
     }
    
-    onConnected() {
-        //  stompClient.subscribe('/topic/greetings', onMessageReceived);
+    // onConnected() {
+    //     //  stompClient.subscribe('/topic/greetings', onMessageReceived);
 
-        // Tell your username to the server
-        stompClient.send("/app/greeting?name=hello");
-        console.log("sent");
-    }
+    //     // Tell your username to the server
+    //     stompClient.send("/app/greeting?name=hello");
+    //     console.log("sent");
+    // }
 
     changeStrengthList(strengthList) {
         this.selectedDrug({
