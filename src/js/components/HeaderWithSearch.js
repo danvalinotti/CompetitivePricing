@@ -62,7 +62,7 @@ class HeaderWithSearch extends React.Component {
   };
 
   getProviderPrices(drugName) {
-    fetch('https://drug-pricing-app.cfapps.io/getDrugInfo/' + drugName)
+    fetch('http://localhost:8081/getDrugInfo/' + drugName)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -98,7 +98,7 @@ class HeaderWithSearch extends React.Component {
   };
   getDrugDetails(drugRequest) {
     this.props.toggleDialog();
-    axios.post('https://drug-pricing-app.cfapps.io/getPharmacyPrice', drugRequest)
+    axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
       .then(response => {
 
         this.setState({

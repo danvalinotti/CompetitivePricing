@@ -99,7 +99,7 @@ class DashBoard extends React.Component {
             "latitude": "latitude"
         };
 
-        axios.post('https://drug-pricing-app.cfapps.io/getPharmacyPrice', requestObject)
+        axios.post('http://localhost:8081/getPharmacyPrice', requestObject)
             .then(response => {
                 this.toggleDialog();
                 this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
