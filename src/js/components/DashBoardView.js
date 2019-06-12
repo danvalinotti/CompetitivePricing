@@ -10,6 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { runInThisContext } from "vm";
 
 
 
@@ -28,6 +29,7 @@ class DashBoardViewComponent extends Component {
             singleCareSort: "off",
             lowestPriceSort: "off",
             showDialog:false,
+            reports:<div></div>
 
         }
         this.props.actions.dashBoardDrugs();
@@ -344,10 +346,58 @@ class DashBoardViewComponent extends Component {
             filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 4, sort)
         });
     }
-    test(){
+    exportReport(data){
+        console.log(data);
+        var exportList = [["Drug Name", "Drug Type", "Dosage Strength",
+        "Quantity", "Zip Code", "Inside Rx Price", "U.S Pharmacy Card Price",
+        "Well Rx Price", "MedImpact Price", "Singlecare Price",
+        "Recommended Price", "Difference"]];
+    data.forEach((element, index) => {
+        var row = [element.name, element.drugType, element.dosageStrength + " " + element.dosageUOM,
+        element.quantity, '= "' + element.zipcode + '"', element.programs[0].price, element.programs[1].price,
+        element.programs[2].price, element.programs[3].price, element.programs[4].price,
+        element.recommendedPrice, element.recommendedDiff];
+
+        exportList.push(row);
+
+    });
+
+    console.log(exportList);
+    let csvContent = "data:text/csv;charset=utf-8,";
+
+    exportList.forEach(function (rowArray) {
+        let row = rowArray.join(",");
+        csvContent += row + "\r\n";
+    });
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "DashboardDrugs.csv");
+    document.body.appendChild(link); // Required for FF
+
+    link.click(); // This will download the data file named "my_data.csv".
+        console.log("REPORT");
+    }
+    getDailyReports(){
+
+
     console.log("test");
-    var inner = "<div><br/><a>View Summary for 6/10/18</a><br/></div>"
-    document.getElementById("dailySummary").innerHTML = inner;
+        var self = this;
+    var inputVal= document.getElementById("reportInput").value;
+    Axios.get('http://localhost:8081/masterList/getByDate/'+inputVal)
+    .then(response => {
+       
+        var inner=<div>
+        {response.data.map(item => (
+            <div onClick={()=>this.exportReport(item.drug)}>{item.batchDetails.batchStart}</div>
+        ))} </div>
+      
+
+        this.setState({
+            reports:inner
+        });
+    });
+
     }
     sortByLowestPrice() {
         var sort = "off";
@@ -466,9 +516,10 @@ class DashBoardViewComponent extends Component {
                         Daily Summaries
                     </DialogTitle>
                     <DialogContent className="textCenter">
-                    <input className="form-control "type="text" placeholder="Date Of Report (mm/dd/yyyy)" />
-                    <button style={{marginTop:'10px'}} type="button" onClick={() => { this.test() }} className="btn btn-outline-primary">View Daily Summary</button>
-                    <div id="dailySummary"></div>
+                    <input id="reportInput"className="form-control "type="text" placeholder="Date Of Report (mm-dd-yyyy)" />
+                    <button style={{marginTop:'10px'}} type="button" onClick={() => { this.getDailyReports() }} className="btn btn-outline-primary">View Daily Summary</button>
+                    {this.state.reports}
+                    
                     </DialogContent>
                 </Dialog>
             </div>
