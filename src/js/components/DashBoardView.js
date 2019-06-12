@@ -83,7 +83,7 @@ class DashBoardViewComponent extends Component {
     }
     deleteDrug(id) {
 
-        Axios.delete('https://drug-pricing-app.cfapps.io/removeDrug/' + id)
+        Axios.delete('https://drug-pricing-backend.cfapps.io/removeDrug/' + id)
             .then(response => {
                 this.props.actions.dashBoardDrugs();
                 this.setState({
@@ -96,7 +96,7 @@ class DashBoardViewComponent extends Component {
             })
     }
     getDashboardDrugs() {
-        fetch('https://drug-pricing-app.cfapps.io/getAllPharmacy')
+        fetch('https://drug-pricing-backend.cfapps.io/getAllPharmacy')
             .then(res => res.json())
             .then(json => {
                 this.setState({

@@ -55,7 +55,7 @@ const parseJSON = (response) => response.json();
 };
 
 function drugDetailService(drugName) {
-    const url = `https://drug-pricing-app.cfapps.io/getDrugInfo/${drugName}`;
+    const url = `https://drug-pricing-backend.cfapps.io/getDrugInfo/${drugName}`;
     // executeFetch(url,'GET')
     return fetch(
         url,
