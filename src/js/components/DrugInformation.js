@@ -72,7 +72,7 @@ class DrugInformation extends React.Component {
 
     getDrugDetails(drugRequest) {
 
-        axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
+        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
             .then(response => {
                 this.props.toggleDialog();
                 this.setState({
@@ -119,7 +119,7 @@ class DrugInformation extends React.Component {
     addDrug() {
 
         this.props.toggleDialog();
-        axios.post('http://localhost:8081/addDrugToDashBoard', this.props.drugRequest)
+        axios.post('https://drug-pricing-backend.cfapps.io/addDrugToDashBoard', this.props.drugRequest)
             .then(response => {
                 
                 this.props.toggleDialog();

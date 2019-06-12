@@ -50175,7 +50175,7 @@ var executeFetch = function executeFetch(url, urlMethod, requestObject, queryPar
     });
 };
 function drugSearchService(name) {
-    var url = 'http://localhost:8081/getDrugInfo/' + name;
+    var url = 'https://drug-pricing-backend.cfapps.io/getDrugInfo/' + name;
     // executeFetch(url,'GET')
     return (0, _fetchRetry2.default)(url, {
         method: 'GET',
@@ -51944,7 +51944,7 @@ var _fetchRetry2 = _interopRequireDefault(_fetchRetry);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function getDashBoardDrugsService() {
-    var url = 'http://localhost:8081/getAllPharmacy';
+    var url = 'https://drug-pricing-backend.cfapps.io/getAllPharmacy';
     // executeFetch(url,'GET')
     return (0, _fetchRetry2.default)(url, {
         method: 'GET',
@@ -51980,7 +51980,7 @@ function getDrugPriceService(drugNDC, data, drugName) {
     var parseJSON = function parseJSON(response) {
         return response.json();
     };
-    var url = "http://localhost:8081/getPharmacyPrice";
+    var url = "https://drug-pricing-backend.cfapps.io/getPharmacyPrice";
     var urlMethod = "POST";
     var requestObject = {
         "drugNDC": drugNDC,
@@ -52063,7 +52063,7 @@ var executeFetch = exports.executeFetch = function executeFetch(url, urlMethod, 
 };
 
 function drugDetailService(drugName) {
-    var url = 'http://localhost:8081/getDrugInfo/' + drugName;
+    var url = 'https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName;
     // executeFetch(url,'GET')
     return (0, _fetchRetry2.default)(url, {
         method: 'GET',
@@ -64501,7 +64501,7 @@ var DashBoard = function (_React$Component) {
                 "latitude": "latitude"
             };
 
-            _axios2.default.post('http://localhost:8081/getPharmacyPrice', requestObject).then(function (response) {
+            _axios2.default.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', requestObject).then(function (response) {
                 _this2.toggleDialog();
                 _this2.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: _this2.state.selectedDrug, response: response.data } });
             });
@@ -76226,7 +76226,7 @@ var AutoSuggestComponent = function (_React$Component) {
         value: function getProviderPrices(drugName) {
             var _this2 = this;
 
-            fetch('http://localhost:8081/getDrugInfo/' + drugName).then(function (res) {
+            fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName).then(function (res) {
                 return res.json();
             }).then(function (json) {
 
@@ -95633,7 +95633,7 @@ var DashBoardViewComponent = function (_Component) {
         value: function deleteDrug(id) {
             var _this2 = this;
 
-            _axios2.default.delete('http://localhost:8081/removeDrug/' + id).then(function (response) {
+            _axios2.default.delete('https://drug-pricing-backend.cfapps.io/removeDrug/' + id).then(function (response) {
                 _this2.props.actions.dashBoardDrugs();
                 _this2.setState({
                     dashBoardDrugsData: _this2.props.dashBoardDrugsData
@@ -95648,7 +95648,7 @@ var DashBoardViewComponent = function (_Component) {
         value: function getDashboardDrugs() {
             var _this3 = this;
 
-            fetch('http://localhost:8081/getAllPharmacy').then(function (res) {
+            fetch('https://drug-pricing-backend.cfapps.io/getAllPharmacy').then(function (res) {
                 return res.json();
             }).then(function (json) {
                 _this3.setState({
@@ -98206,7 +98206,7 @@ var HeaderWithSearch = function (_React$Component) {
     value: function getProviderPrices(drugName) {
       var _this2 = this;
 
-      fetch('http://localhost:8081/getDrugInfo/' + drugName).then(function (res) {
+      fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName).then(function (res) {
         return res.json();
       }).then(function (json) {
         _this2.setState({
@@ -98251,7 +98251,7 @@ var HeaderWithSearch = function (_React$Component) {
       var _this3 = this;
 
       this.props.toggleDialog();
-      _axios2.default.post('http://localhost:8081/getPharmacyPrice', drugRequest).then(function (response) {
+      _axios2.default.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest).then(function (response) {
 
         _this3.setState({
           drugDetails: response.data
@@ -98699,7 +98699,7 @@ var DrugInformation = function (_React$Component) {
         value: function getDrugDetails(drugRequest) {
             var _this3 = this;
 
-            _axios2.default.post('http://localhost:8081/getPharmacyPrice', drugRequest).then(function (response) {
+            _axios2.default.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest).then(function (response) {
                 _this3.props.toggleDialog();
                 _this3.setState({
                     drugDetails: response.data
@@ -98749,7 +98749,7 @@ var DrugInformation = function (_React$Component) {
             var _this4 = this;
 
             this.props.toggleDialog();
-            _axios2.default.post('http://localhost:8081/addDrugToDashBoard', this.props.drugRequest).then(function (response) {
+            _axios2.default.post('https://drug-pricing-backend.cfapps.io/addDrugToDashBoard', this.props.drugRequest).then(function (response) {
 
                 _this4.props.toggleDialog();
             });
