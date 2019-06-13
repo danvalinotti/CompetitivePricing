@@ -28,6 +28,9 @@ class Icons extends React.Component {
                   {(this.props.icon === "off") ?
                  <svg xmlns="http://www.w3.org/2000/svg"width={this.props.width} height={this.props.height}  visibility='hidden' ><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/><path d="M0 0h24v24H0z" fill="none"/></svg> 
                  :null}
+                  {(this.props.icon === "save") ?
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/><path fill="none" d="M0 0h24v24H0z"/></svg>
+                  :null}
             
            
 
