@@ -10,6 +10,7 @@ import { HashRouter, Route } from "react-router-dom";
 import DashBoardContainer from "./container/DashBoardContainer";
 import DashBoardViewContainer from "./container/DashBoardViewContainer";
 import ViewDrugDetailsContainer from "./container/ViewDrugDetailsContainer";
+import ReportsContainer from "./container/ReportsContainer";
 
 render(
     <Provider store={store}>
@@ -19,6 +20,7 @@ render(
                 <Route path="/search" component={DashBoardContainer} />
                 <Route path="/viewdrugs" component={ViewDrugDetailsContainer} />
                 <Route path="/viewDashBoard" component={DashBoardViewContainer} />
+                <Route path="/reports" component={ReportsContainer} />
             </div>
         </HashRouter>
     </Provider>,

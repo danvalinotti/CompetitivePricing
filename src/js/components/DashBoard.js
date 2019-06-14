@@ -59,6 +59,9 @@ class DashBoard extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.selectedDrug = this.selectedDrug.bind(this);
+        this.clickHome = this.clickHome.bind(this);
+        this.clickDashboard = this.clickDashboard.bind(this);
+        this.clickReports = this.clickReports.bind(this);
 
 
     }
@@ -158,6 +161,15 @@ class DashBoard extends React.Component {
             showDialog: !this.state.showDialog,
         })
     }
+    clickHome(){
+        this.props.history.push({ pathname: '/search' });
+    }
+    clickDashboard(){
+        this.props.history.push({ pathname: '/viewDashboard' });
+    }
+    clickReports(){
+        this.props.history.push({ pathname: '/reports' });
+    }
 
 
     render() {
@@ -203,15 +215,16 @@ class DashBoard extends React.Component {
             backgroundColor: '#1B8DCA ',
             boxShadow: '0 10px 20px -10px rgba(0, 0, 0, 0.26) !important'
         }
+        
 
 
         return (
             <div>
                 <form id='Simple' className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}
                 >
-                    <HeaderComponent />
+                    <HeaderComponent value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}/>
                     <div className="title ">
-                        <div style={{ float: 'right' }}>
+                        <div style={{ float: 'right', paddingTop:'10px'}}>
                             <img className="gxImage" src={gxImage} />
                         </div>
                         <h1 className="search-for-a-prescri" style={searchPrescri}>Search for a medication to compare
@@ -288,8 +301,7 @@ class DashBoard extends React.Component {
                             <div className='col-sm-4'>
                                 <button className="form-control" style={seePricesBtn}><span
                                     className="see-prices">SEE PRICES</span></button>
-                                <button type="button" onClick={() => { this.goToDashboard() }} className="form-control" style={seePricesBtn}><span
-                                    className="see-prices" >SEE DASHBOARD</span></button>
+                                
                                 <br />
                             </div>
                             <div className='col-sm-4'>  </div>

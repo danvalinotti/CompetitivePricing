@@ -7,6 +7,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import '../../assests/sass/ViewDrugDetailsCSS.css'
 import axios from 'axios';
 import image from "../../assests/images/InsideLogo_1.svg";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;
@@ -28,8 +36,11 @@ function renderInput(inputProps) {
 
 class HeaderWithSearch extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    console.log("PROPS");
+    console.log(this.props);
+    console.log(props);
     this.state = {
       inputValue: '',
       selectedItem: [],
@@ -46,12 +57,19 @@ class HeaderWithSearch extends React.Component {
       toDashboard: true,
       open: false,
       averagePriceColor: null,
+      value: 0 ,
     };
   }
   onChangeZipCode(event) {
     this.setState({
       zipCode: event.target.value,
     });
+  }
+   handleChange(event, newValue) {
+    this.setState({
+      value: newValue
+    }
+    );
   }
   handleInputChange(event) {
     this.setState({
@@ -159,21 +177,50 @@ class HeaderWithSearch extends React.Component {
     const { classes } = this.props;
     return (
 
-      <div className="header" >
-        <div className="searchArea">
+      // <div className="header" >
+      //   <div className="searchArea">
 
-          <div className="headerRow row" style={{padding:'.5%'}}>
-            <div className="headerCol col-sm-4" style ={{padding:'0px'}} >
-              <div className="headerHelp" style ={{paddingTop: '2%' , paddingLeft: '4%'}}>
-                <div ><svg style={{width: '35px', height:'35px'}}
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
+      //     <div className="headerRow row" style={{padding:'.5%'}}>
+      //       <div className="headerCol col-sm-4" style ={{padding:'0px'}} >
+      //         <div className="headerHelp" style ={{paddingTop: '2%' , paddingLeft: '4%'}}>
+      //           <div ><svg style={{width: '35px', height:'35px'}}
+      //             xmlns="http://www.w3.org/2000/svg">
+      //             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
 
-                <div><img src={image} style={{ float: 'right', width: '130px', height: '30px' }} /> </div></div>
-            </div>
-            <div className="headerCol col-sm-8 searchHeader " style ={{padding:'0px'}}>
-              <div className="row subRow">
-                <div className="col-sm-7 headerButton" style={{padding:'0px'}}>
+      //           <div><img src={image} style={{ float: 'right', width: '130px', height: '30px' }} /> </div></div>
+      //       </div>
+      //       <div className="headerCol col-sm-8 searchHeader " style ={{padding:'0px'}}>
+              
+      //       </div>
+      //     </div>
+
+      //   </div>
+
+      // </div>
+      <AppBar position="static" style={{ background: "orange" }}>
+      <Toolbar>
+     
+       <div className="col-sm-7"> 
+        <div className= "row">
+        <span onClick={()=>this.props.clickHome()} className="headerHelp" style={{marginTop:'1.5%'}}>
+          <span ><svg style={{ marginLeft: '30%', width: '70px', paddingTop: '5px' ,height:'25px' }}
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></span>
+          <span><img src={image} style={{paddingRight:'20px' , float: 'right', width: '130px', height: '30px' }} /> </span></span>
+        <Tabs
+          value={this.state.value}
+
+          onChange={(event, value) => this.handleChange(event, value)}
+        >
+          <Tab onClick={() => this.props.clickHome()} label="Search" />
+          <Tab onClick={() => this.props.clickDashboard()} label="Dashboard" />
+          <Tab onClick={() => this.props.clickReports()} label="Reports" />
+        </Tabs>
+        </div> 
+       </div>
+        <div className="col-sm-5">
+        <div className="row">
+                <div className="col-sm-6 headerButton" style={{padding:'0px'}}>
                   <Downshift onSelect={(drug) => this.onClickDrug(drug)} itemToString={i => { return i ? i.name : '' }} id="downshift-simple" >
                     {({
                       theme = { theme },
@@ -226,20 +273,17 @@ class HeaderWithSearch extends React.Component {
                   </Downshift>
                 </div>
                 <div className="col-sm-3 headerZip" style={{padding:'0px', paddingRight:'5px'}}>
-                  <input className="form-control search-bar " onChange={this.onChangeZipCode.bind(this)} type="text" id="myZipCode" placeholder="Enter Zip Code" />
+                  <input className="form-control search-bar " onChange={this.onChangeZipCode.bind(this)} type="text" id="myZipCode" placeholder="Zip Code" />
                 </div>
-                <div className="col-sm-2 headerButton" style={{padding:'0px',paddingRight:'5px'}}>
+                <div className="col-sm-3 headerButton" style={{padding:'0px',paddingRight:'5px'}}>
                   <button className="searchButton1 search-bar-copy-4" onClick={this.onClickSearch.bind(this)}>
                     Search
                   </button>
                 </div>
+                </div>
               </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
+      </Toolbar>
+    </AppBar>
 
     );
   };
@@ -247,7 +291,6 @@ class HeaderWithSearch extends React.Component {
 const styles = theme => ({
   root: {
     flexGrow: 1,
- 
   },
   container: {
     flexGrow: 1,

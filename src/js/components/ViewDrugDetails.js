@@ -47,8 +47,11 @@ class ViewDrugDetails extends React.Component {
         toDashboard: true,
         toggleDialog: false,
       };
+     
     }
-
+    this.clickHome = this.clickHome.bind(this);
+    this.clickDashboard = this.clickDashboard.bind(this);
+    this.clickReports = this.clickReports.bind(this);
 
   }
   getIndexByLabel(label, list){
@@ -108,6 +111,15 @@ class ViewDrugDetails extends React.Component {
     }
 
   }
+  clickHome(){
+    this.props.history.push({ pathname: '/search' });
+}
+clickDashboard(){
+    this.props.history.push({ pathname: '/viewDashboard' });
+}
+clickReports(){
+    this.props.history.push({ pathname: '/reports' });
+}
   toggleDialog() {
     this.setState({
       toggleDialog: !this.state.toggleDialog
@@ -156,10 +168,12 @@ class ViewDrugDetails extends React.Component {
       }
       return (
 
-        <div className={classes.root}>
+        <div>
           <HeaderWithSearch
             updateProperties={this.updateProperties.bind(this)}
             toggleDialog={this.toggleDialog.bind(this)}
+            value={0}
+            clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}
           ></HeaderWithSearch>
           <DrugInformation
             drugRequest={this.state.drugRequest}

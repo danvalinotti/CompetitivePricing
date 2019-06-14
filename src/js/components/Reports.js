@@ -15,9 +15,10 @@ import { runInThisContext } from "vm";
 import DatePicker from './DatePicker'
 
 
-class DashBoardViewComponent extends Component {
+class Reports extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             dashBoardDrugsData: this.props.dashBoardDrugsData,
             filteredList: [],
@@ -29,27 +30,53 @@ class DashBoardViewComponent extends Component {
             pharmCardSort: "off",
             singleCareSort: "off",
             lowestPriceSort: "off",
-            showDialog: false,
-            reports: <div></div>
+            reportsDialog: false,
+            reportsByDate: <div></div>,
+            reports: [],
+            loadingDialog:false,
 
         }
-        this.props.actions.dashBoardDrugs();
+        Axios.get('http://localhost:8081/masterList/getAll')
+            .then(response => {
+                this.setState({
+                    reports: response.data
+                });
+            });
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
+
     }
     routeToSearch() {
         this.props.history.push({ pathname: '/search' });
     }
+    manualReport() {
+        this.setState({
+            loadingDialog:true
+        });
+
+        Axios.get('http://localhost:8081/masterList/addToMasterList')
+            .then(response => {
+                this.exportReport(response.data.drug);
+                this.handleCloseLoading();
+            });
+
+    }
     handleClose() {
         console.log("CLOSE");
         this.setState({
-            showDialog: false
+            reportsDialog: false
+        });
+    }
+    handleCloseLoading(){
+        console.log("closing loading");
+        this.setState({
+            loadingDialog: false
         });
     }
     toggleDialog() {
         this.setState({
-            showDialog: !this.state.showDialog,
+            reportsDialog: !this.state.reportsDialog,
         });
     }
     viewSummaries() {
@@ -395,8 +422,8 @@ class DashBoardViewComponent extends Component {
                 var inner = <div><br />
                     {response.data.map(item => (
                         <div>
-                            <Button style={{marginBottom:'10px'}} variant="outlined" color="default" onClick={() => this.exportReport(item.drug)}>
-                                Batch for {this.getDate(item.batchDetails.batchStart)}
+                            <Button style={{ marginBottom: '10px' }} variant="outlined" color="default" onClick={() => this.exportReport(item.drug)}>
+                                Report for {this.getDate(item.batchDetails.batchStart)}
                                 <Icons icon="save" height="24" width="24" />
                             </Button>
                             <br />
@@ -404,24 +431,24 @@ class DashBoardViewComponent extends Component {
 
                     ))} </div>
 
-                if(response.data.length === 0 ){
-                    inner = <div> <br/> No Results Found</div>
+                if (response.data.length === 0) {
+                    inner = <div> <br /> No Results Found</div>
                 }
 
 
                 this.setState({
-                    reports: inner
+                    reportsByDate: inner
                 });
             });
 
     }
-    clickHome(){
+    clickHome() {
         this.props.history.push({ pathname: '/search' });
     }
-    clickDashboard(){
+    clickDashboard() {
         this.props.history.push({ pathname: '/viewDashboard' });
     }
-    clickReports(){
+    clickReports() {
         this.props.history.push({ pathname: '/reports' });
     }
     getDate(batchStart) {
@@ -470,13 +497,13 @@ class DashBoardViewComponent extends Component {
         }
         return (
             <div>
-                <HeaderComponent value={1} clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}/>
+                <HeaderComponent value={2} clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports} />
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <h4 className="row" style={{ paddingTop: '3%', marginRight: '0px', marginLeft: '0px' }}>
                         <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>
-                            <div style={{ padding: '10px', paddingLeft: '0px' }}>Competitive Pricing </div>
+                            <div style={{ padding: '10px', paddingLeft: '0px' }}>Reports </div>
                             <div className=" headerZip" style={{ padding: '0px' }}>
-                                <input className="form-control search-bar " onChange={() => { this.filterList(event) }} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
+                                {/* <input className="form-control search-bar " onChange={() => { this.filterList(event) }} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" /> */}
                             </div>
                             {/* <div className="col-sm-3 headerZip" style={{ padding: '0px' }}>
                             <input className="form-control search-bar " onKeyPress={()=>{this.commandList(event)}} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
@@ -484,8 +511,8 @@ class DashBoardViewComponent extends Component {
                         </div>
                         <div className="col-sm-6 " style={{ paddingRight: '0px', }}>
                             <div className="float-sm-right">
-                                <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.exportDrugs() }} className="btn btn-outline-primary">Export</button>
-                                {/* <button type="button" onClick={() => { this.routeToSearch() }} className="btn btn-outline-primary">Search Drug</button> */}
+                                <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.viewSummaries() }} className="btn btn-outline-primary">View Daily Summaries</button>
+                                <button type="button" onClick={() => { this.manualReport() }} className="btn btn-outline-primary">Manual Report</button>
                             </div>
                         </div>
                     </h4>
@@ -493,67 +520,65 @@ class DashBoardViewComponent extends Component {
                         <table className="dashboardPrices">
                             <thead className="dashboardRows">
                                 <tr>
-                                    <th className="highlightedCell"></th>
-                                    <th className="highlightedCell" onClick={() => { this.sortByName() }}><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Drug</label><div style={{ float: 'left' }}> <Icons icon={this.state.drugSort} height="24" width="24" /></div></div></th>
-                                    <th className="highlightedCell" onClick={() => { this.sortByInsideRx() }}><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Current Price</label><div style={{ float: 'left' }}> <Icons icon={this.state.insideRxSort} height="24" width="24" /></div></div></th>
-                                    <th onClick={() => { this.sortByPharmCard() }}><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>US Pharmacy Card Price</label><div style={{ float: 'left' }}> <Icons icon={this.state.pharmCardSort} height="24" width="24" /></div></div></th>
-                                    <th onClick={() => { this.sortByWellRx() }}><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Well Rx Price</label><div style={{ float: 'left' }}> <Icons icon={this.state.wellRxSort} height="24" width="24" /></div></div></th>
-                                    <th onClick={() => { this.sortByMedImpact() }}><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>MedImpact Price</label><div style={{ float: 'left' }}> <Icons icon={this.state.medImpactSort} height="24" width="24" /></div></div></th>
-                                    <th onClick={() => { this.sortBySingleCare() }}><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>SingleCare Price</label><div style={{ float: 'left' }}> <Icons icon={this.state.singleCareSort} height="24" width="24" /></div></div></th>
-                                    <th onClick={() => { this.sortByLowestPrice() }} className="highlightedCell"><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Lowest Market Price</label><div style={{ float: 'left' }}> <Icons icon={this.state.lowestPriceSort} height="24" width="24" /></div></div></th>
+                                    {/* <th className="highlightedCell"></th> */}
+                                    <th className="highlightedCell" ><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Report Number</label><div style={{ float: 'left' }}> <Icons icon={this.state.drugSort} height="24" width="24" /></div></div></th>
+                                    <th className=""  ><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Date of Report</label><div style={{ float: 'left' }}> <Icons icon={this.state.insideRxSort} height="24" width="24" /></div></div></th>
+                                    <th className="highlightedCell"  ><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Number of Drugs in Report</label><div style={{ float: 'left' }}> <Icons icon={this.state.pharmCardSort} height="24" width="24" /></div></div></th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                {this.state.filteredList.map((drug, index) => {
+                                {this.state.reports.map((report, index) => {
                                     return (
                                         <tr className="dashboardRows" key={index}>
-                                            <td className="highlightedCell"> <div style={{ color: "red" }} onClick={() => this.deleteDrug(drug.id)}><div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" /><path d="M0 0h24v24H0z" fill="none" /></svg></div></div></td>
-                                            <td className="highlightedCell">
-                                                <span className="nameColor"><strong>{drug.name}</strong><br />
-                                                    Type: {drug.drugType}<br />
-                                                    Dosage: {drug.dosageStrength} {drug.dosageUOM} <br />
-                                                    Quantity: {drug.quantity}<br />
-                                                    Zip Code: {drug.zipcode}<br />
-                                                </span></td>
-                                            <td className="highlightedCell"><span className="programPrice colorBlue">
-                                                {this.getDiv(drug.programs[0])} </span><br /></td>
-                                            <td className="programPrice"><span className="programPrice colorBlue">
-                                                {this.getDiv(drug.programs[1])} </span><br /></td>
-                                            <td className="programPrice"><span className="programPrice colorBlue">
-                                                {this.getDiv(drug.programs[2])}
-                                            </span><br /></td>
-                                            <td className="programPrice"><span className="programPrice colorBlue">
-                                                {this.getDiv(drug.programs[3])}
-                                            </span><br /></td>
-                                            <td className="programPrice"><span className="programPrice colorBlue">
-                                                {this.getDiv(drug.programs[4])}
-                                            </span><br /></td>
+                                            {/* <td className="highlightedCell"> <div style={{ color: "red" }} onClick={() => this.deleteDrug(drug.id)}><div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" /><path d="M0 0h24v24H0z" fill="none" /></svg></div></div></td> */}
 
-                                            <td className="highlightedCell"><span className="programPrice colorBlue">
-                                                {this.getDiv2(drug.recommendedPrice, drug.recommendedDiff)}
-                                            </span><br /></td>
+                                            <td className=" highlightedCell"><span className=" programPrice colorBlue">
+                                                {index + 1} </span><br /></td>
+                                            <td className=" programPrice"><span className="programPrice colorBlue">
+                                                {new Date(report.batchDetails.batchStart).toLocaleString()} </span><br /></td>
+                                            <td className="highlightedCell programPrice"><span className="programPrice colorBlue">
+                                                {report.drug.length} </span><br /></td>
                                         </tr>);
                                 })}
                             </tbody>
-                        </table>
+                        </table><br /> <br />
                     </div>
                 </div>
                 <Dialog onClose={() => this.handleClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.showDialog}>
+                    aria-labelledby="customized-dialog-title" open={this.state.reportsDialog}>
                     <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
                         Daily Summaries
                     </DialogTitle>
                     <DialogContent className="textCenter">
                         <DatePicker></DatePicker><br />
                         <button style={{ marginTop: '10px' }} type="button" onClick={() => { this.getDailyReports() }} className="btn btn-outline-primary">View Daily Summary</button>
-                        {this.state.reports}
+                        {this.state.reportsByDate}
 
                     </DialogContent>
+                </Dialog>
+                <Dialog
+                    onClose={() => this.handleCloseLoading()}
+                    aria-labelledby="customized-dialog-title"
+                    open={this.state.loadingDialog}
+                >
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLoading.bind(this)}>
+                        Manual Report
+          </DialogTitle>
+                    <DialogContent className="textCenter">
+                        Your manual report is being created, this may take a few minutes.
+                        You may close this dialog box and continue using the competitive pricing website.
+                        If you leave the website, you will not recieve a download of your report. However,
+                        the report will still be created and you may download it by clicking "View Daily Summaries".<br/>
+                        <button style={{ marginTop: '10px' }} type="button" onClick={() => { this.handleCloseLoading() }} className="btn btn-outline-primary">Okay</button>
+<br/>
+                        <CircularProgress />
+                    </DialogContent>
+
                 </Dialog>
             </div>
         )
     }
 }
 
-export default withRouter(DashBoardViewComponent);
+export default withRouter(Reports);

@@ -9,6 +9,7 @@ import '../../assests/sass/ViewDrugDetailsCSS.css'
 class ViewDrugDetailsContainer extends Component {
     constructor(props) {
         super(props);
+        
     }
     render() {
         return (
@@ -18,6 +19,7 @@ class ViewDrugDetailsContainer extends Component {
                         actions={this.props.actions}
                         drugStrengthArray={this.props.drugStrengthArray}
                         state= {this.props}
+                        
                     />
             </div>
         );
