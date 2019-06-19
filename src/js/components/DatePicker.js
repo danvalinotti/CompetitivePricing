@@ -9,39 +9,52 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-const useStyles = makeStyles({
-  grid: {
-    width: '60%',
-  },
-});
 
-export default function MaterialUIPickers() {
+class DatePicker extends React.Component {
   // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  constructor(props){
+    super(props);
+    this.state={
+      selectedDate : new Date(),
+    }
+    this.setSelectedDate.bind(this);
+  }
+  
+  setSelectedDate(date){
+    console.log(date);
 
-  const classes = useStyles();
-
-  function handleDateChange(date) {
-    setSelectedDate(date);
+    this.setState({
+      selectedDate :date,
+    })
   }
 
-  return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-     
-        <KeyboardDatePicker
-          margin="normal"
-          id="mui-pickers-date"
-          format = "MM-dd-yyyy"
-          label="Date picker"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-       
-      
-    </MuiPickersUtilsProvider>
 
-  );
+ handleDateChange(date) {
+   console.log("Handle");
+    this.setSelectedDate(date);
+  }
+  render(){
+
+    return (
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+       
+          <KeyboardDatePicker
+            margin="normal"
+            id={this.props.id ?this.props.id  : "mui-pickers-date"}
+            format = "MM-dd-yyyy"
+            label="Date picker"
+            value={this.state.selectedDate}
+            onChange={this.handleDateChange.bind(this)}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+         
+        
+      </MuiPickersUtilsProvider>
+  
+    );
+  }
+  
 }
+export default DatePicker;

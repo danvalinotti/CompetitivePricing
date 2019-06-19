@@ -12,7 +12,26 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { runInThisContext } from "vm";
-import DatePicker from './DatePicker'
+import DatePicker from './DatePicker';
+import Checkbox from '@material-ui/core/Checkbox';
+import Container from '@material-ui/core/Container';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableHead from '@material-ui/core/TableHead';
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
+import SplitButton from './SplitButton';
+import Grid from '@material-ui/core/Grid';
+import FilterDialogs from './FilterDialogs'
+import ManualReportDialog from './ManualReportDialog'
 
 
 class Reports extends Component {
@@ -33,29 +52,49 @@ class Reports extends Component {
             reportsDialog: false,
             reportsByDate: <div></div>,
             reports: [],
-            loadingDialog:false,
-
+            loadingDialog: false,
+            page: 0,
+            rowsPerPage: 10,
+            openFilter: "off",
+            filterFunc: null,
+            selectedReports: [],
+            openManualReport:false,
         }
-        Axios.get('http://localhost:8081/masterList/getAll')
-            .then(response => {
-                this.setState({
-                    reports: response.data
-                });
-            });
+        this.getAllReports();
+        
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
+            console.log("hello");
+            
 
+    }
+    getAllReports(){
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getAll')
+            .then(response => {
+               
+                this.setState({
+                    reports: response.data,
+                    selectedReports: new Array(response.data.length).fill(false),
+
+                });
+            });
     }
     routeToSearch() {
         this.props.history.push({ pathname: '/search' });
     }
+    resetSelected(){
+        var arr = new Array(this.state.count).fill(false);
+        this.setState({
+            selectedReports:arr
+        });
+    }
     manualReport() {
         this.setState({
-            loadingDialog:true
+            loadingDialog: true
         });
 
-        Axios.get('http://localhost:8081/masterList/addToMasterList')
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/addToMasterList')
             .then(response => {
                 this.exportReport(response.data.drug);
                 this.handleCloseLoading();
@@ -68,7 +107,7 @@ class Reports extends Component {
             reportsDialog: false
         });
     }
-    handleCloseLoading(){
+    handleCloseLoading() {
         console.log("closing loading");
         this.setState({
             loadingDialog: false
@@ -115,7 +154,7 @@ class Reports extends Component {
     }
     deleteDrug(id) {
 
-        Axios.delete('http://localhost:8081/removeDrug/' + id)
+        Axios.delete('https://drug-pricing-backend.cfapps.io/removeDrug/' + id)
             .then(response => {
                 this.props.actions.dashBoardDrugs();
                 this.setState({
@@ -128,7 +167,7 @@ class Reports extends Component {
             })
     }
     getDashboardDrugs() {
-        fetch('http://localhost:8081/getAllPharmacy')
+        fetch('https://drug-pricing-backend.cfapps.io/getAllPharmacy')
             .then(res => res.json())
             .then(json => {
                 this.setState({
@@ -409,14 +448,12 @@ class Reports extends Component {
         console.log("REPORT");
     }
     getDailyReports() {
-
-
         console.log("test");
         var self = this;
         var inputVal = document.getElementById("mui-pickers-date").value;
         console.log("INPUTVAL");
         console.log(inputVal);
-        Axios.get('http://localhost:8081/masterList/getByDate/' + inputVal)
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
             .then(response => {
 
                 var inner = <div><br />
@@ -481,10 +518,161 @@ class Reports extends Component {
             filteredList: Sorting.sortByLowestPrice(this.state.filteredList, sort)
         });
     }
+    handleChangePage(event, newPage) {
+        console.log("handleChangePAge");
+        console.log(this.state.selectedReports);
+        this.setState({
+            page: newPage, 
+
+        });
+    }
+    handleChangeRowsPerPage(event) {
+        var rows = parseInt(event.target.value);
+        this.setState({
+            rowsPerPage: rows
+        });
+    }
+    handleChange(event, index) {
+        console.log(this.state.selectedReports);
+        console.log(index);
+    
+        if (event.target.checked) {
+            this.state.selectedReports[index]= true;
+            this.setState({
+                selectedReports:this.state.selectedReports,
+            })
+            
+        } else {
+            this.state.selectedReports[index]= false;
+            this.setState({
+                selectedReports:this.state.selectedReports,
+            })
+        }
+       
+    }
+    downloadSelected() {
+        this.state.selectedReports.forEach((report, index) => {
+            if(report==true){
+                this.exportReport(this.state.reports[index].drug);
+            }
+            
+        })
+    }
+    sortBy(event, compare) {
+
+        console.log("sort ing");
+        var list = this.state.reports;
+        console.log(list);
+        list.sort(compare.func);
+        console.log(list);
+        this.setState({
+            selectedReports: [],
+            reports: list
+        });
+    }
+    filterBy(event, option) {
+
+        this.setState({
+            selectedReports: [],
+            filterFunc: option.func,
+            openFilter: option.dialog
+        });
 
 
 
+    }
+    filterByHelper(option) {
+        var list = this.state.reports;
+        console.log("filterhelper");
+        option.func()
+        // this.setState({
+        //     reports:list
+        // });
+    }
+    compareNewestToOldest(a, b) {
 
+        var dateA = new Date(a.batchDetails.batchStart);
+        var dateB = new Date(b.batchDetails.batchStart);
+
+        if (dateA < dateB) return 1;
+        if (dateB < dateA) return -1;
+
+        return 0;
+    }
+    compareOldestToNewest(a, b) {
+
+        var dateA = new Date(a.batchDetails.batchStart);
+        var dateB = new Date(b.batchDetails.batchStart);
+
+        if (dateA > dateB) return 1;
+        if (dateB > dateA) return -1;
+
+        return 0;
+    }
+    compareNumberOfDrugs(a, b) {
+        if (a.drug.length < b.drug.length) return 1;
+        if (b.drug.length < a.drug.length) return -1;
+
+        return 0;
+    }
+    updateDialog(value) {
+        this.setState({
+            openFilter: value,
+        });
+    }
+    getBetweenDates(start, end) {
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getBetweenTime/' + start + '/' + end)
+            .then(response => {
+                this.setState({
+                    reports: response.data
+                });
+            });
+    }
+    getBetweenDrugs(start, end) {
+        //Not Yet
+    }
+    equalDate(date) {
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + date)
+            .then(response => {
+                this.setState({
+                    reports: response.data
+                });
+            });
+    }
+    getWithDrugCount(drugCount) {
+
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getNumberOfDrugs/' + drugCount)
+            .then(response => {
+                this.setState({
+                    reports: response.data
+                });
+            });
+    }
+    createManualReport(){
+        this.setState({
+            openManualReport:true,
+        })
+    }
+    reportIncludes(selectedReports, givenReport) {
+        console.log("REPORT")
+        var found = false;
+        var batchStart = givenReport.batchDetails.batchStart;
+        for (var i = 0; i < selectedReports.length; i++) {
+            console.log(selectedReports[i].batchDetails.batchStart == batchStart);
+            if (selectedReports[i].batchDetails.batchStart == batchStart) {
+                found = true;
+                break;
+            }
+        }
+        console.log(found);
+        return found
+    }
+    handleManualReportClose() {
+
+        this.setState({
+            openManualReport: false,
+        });
+    }
 
     render() {
         if (this.props.dashBoardDrugsData != this.state.dashBoardDrugsData) {
@@ -511,38 +699,89 @@ class Reports extends Component {
                         </div>
                         <div className="col-sm-6 " style={{ paddingRight: '0px', }}>
                             <div className="float-sm-right">
-                                <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.viewSummaries() }} className="btn btn-outline-primary">View Daily Summaries</button>
-                                <button type="button" onClick={() => { this.manualReport() }} className="btn btn-outline-primary">Manual Report</button>
+                                {/* <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.viewSummaries() }} className="btn btn-outline-primary">View Daily Summaries</button>
+                                <button type="button" onClick={() => { this.manualReport() }} className="btn btn-outline-primary">Manual Report</button> */}
                             </div>
                         </div>
                     </h4>
                     <div style={{ paddingTop: '30px' }}>
-                        <table className="dashboardPrices">
-                            <thead className="dashboardRows">
-                                <tr>
-                                    {/* <th className="highlightedCell"></th> */}
-                                    <th className="highlightedCell" ><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Report Number</label><div style={{ float: 'left' }}> <Icons icon={this.state.drugSort} height="24" width="24" /></div></div></th>
-                                    <th className=""  ><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Date of Report</label><div style={{ float: 'left' }}> <Icons icon={this.state.insideRxSort} height="24" width="24" /></div></div></th>
-                                    <th className="highlightedCell"  ><div style={{ display: 'inline-flex' }}><label style={{ float: 'left' }}>Number of Drugs in Report</label><div style={{ float: 'left' }}> <Icons icon={this.state.pharmCardSort} height="24" width="24" /></div></div></th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <Container >
+                            <Grid container spacing={1}>
 
-                                {this.state.reports.map((report, index) => {
-                                    return (
-                                        <tr className="dashboardRows" key={index}>
-                                            {/* <td className="highlightedCell"> <div style={{ color: "red" }} onClick={() => this.deleteDrug(drug.id)}><div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" /><path d="M0 0h24v24H0z" fill="none" /></svg></div></div></td> */}
+                                <Grid item xs={2}>
+                                    <SplitButton reset={this.getAllReports.bind(this)} masterFunction={this.sortBy.bind(this)} selections={[{ key: 0, text: "Newest to Oldest", func: this.compareNewestToOldest.bind(this) }, { key: 1, text: "Oldest to Newest", func: this.compareOldestToNewest.bind(this) }, { key: 2, text: "Number of Drugs", func: this.compareNumberOfDrugs.bind(this) }]} dropDownName="Sort" ></SplitButton>
 
-                                            <td className=" highlightedCell"><span className=" programPrice colorBlue">
-                                                {index + 1} </span><br /></td>
-                                            <td className=" programPrice"><span className="programPrice colorBlue">
-                                                {new Date(report.batchDetails.batchStart).toLocaleString()} </span><br /></td>
-                                            <td className="highlightedCell programPrice"><span className="programPrice colorBlue">
-                                                {report.drug.length} </span><br /></td>
-                                        </tr>);
-                                })}
-                            </tbody>
-                        </table><br /> <br />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <SplitButton reset={this.getAllReports.bind(this)} masterFunction={this.filterBy.bind(this)} selections={[{ key: 0, text: "Specific Date", func: this.equalDate.bind(this), dialog: 'specificDate' }, { key: 1, text: "Date Range", func: this.getBetweenDates.bind(this), dialog: 'betweenDates' }, { key: 2, text: "Number Of Drugs", func: this.getWithDrugCount.bind(this), dialog: 'drugCount' }]} dropDownName="Filter" ></SplitButton>
+
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <SplitButton masterFunction={this.downloadSelected.bind(this)} selections={[{ key: 0, text: "Download Selected", func: this.equalDate.bind(this) }]} dropDownName="Actions"></SplitButton>
+
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Button style={{ float: 'right' ,fontSize: '13px' ,height: '32px' }} onClick={() => { this.createManualReport() }} variant="contained" color="primary">Create Manual Report</Button>
+
+                                </Grid>
+                            </Grid>
+                            <Table >
+                                <TableHead >
+                                    <TableRow>
+                                        <TableCell padding="checkbox"></TableCell>
+                                        <TableCell >Date of Report</TableCell>
+                                        <TableCell size="small" >Drug Count</TableCell>
+                                        <TableCell padding="checkbox">Download</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {this.state.reports.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((report, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    id={report.id}
+                                                    onChange={() => this.handleChange(event,  this.state.page * this.state.rowsPerPage +index)}
+                                                    value= {this.state.selectedReports[this.state.page * this.state.rowsPerPage +index]}
+                                                    checked={this.state.selectedReports[ this.state.page * this.state.rowsPerPage +index]}
+                                                    style={{ zIndex: 0 }}
+                                                    color="primary"
+
+                                                    inputProps={{
+                                                        'aria-label': 'secondary checkbox',
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell>{new Date(report.batchDetails.batchStart).toLocaleString()} </TableCell>
+                                            <TableCell size="small"> {report.drug.length}</TableCell>
+                                            <TableCell padding="checkbox" onClick={() => this.exportReport(this.state.reports[index].drug)}> <Icons icon="save" height="24" width="24" /></TableCell>
+                                        </TableRow>
+                                    ))}
+
+
+                                </TableBody>
+                                <TableFooter>
+                                    <TableRow>
+
+                                        <TablePagination
+                                            rowsPerPageOptions={[5, 10, 25, 50]}
+                                            colSpan={4}
+                                            count={this.state.reports.length}
+                                            rowsPerPage={this.state.rowsPerPage}
+                                            page={this.state.page}
+                                            SelectProps={{
+                                                inputProps: { 'aria-label': 'Rows per page' },
+                                                native: true,
+                                            }}
+
+                                            onChangePage={this.handleChangePage.bind(this)}
+                                            onChangeRowsPerPage={this.handleChangeRowsPerPage.bind(this)}
+
+                                        />
+                                    </TableRow>
+                                </TableFooter>
+                            </Table>
+
+                        </Container><br /> <br />
                     </div>
                 </div>
                 <Dialog onClose={() => this.handleClose()}
@@ -569,13 +808,15 @@ class Reports extends Component {
                         Your manual report is being created, this may take a few minutes.
                         You may close this dialog box and continue using the competitive pricing website.
                         If you leave the website, you will not recieve a download of your report. However,
-                        the report will still be created and you may download it by clicking "View Daily Summaries".<br/>
+                        the report will still be created and you may download it by clicking "View Daily Summaries".<br />
                         <button style={{ marginTop: '10px' }} type="button" onClick={() => { this.handleCloseLoading() }} className="btn btn-outline-primary">Okay</button>
-<br/>
+                        <br />
                         <CircularProgress />
                     </DialogContent>
 
                 </Dialog>
+                <FilterDialogs updateDialog={this.updateDialog.bind(this)} dialog={this.state.openFilter} filterFunc={this.state.filterFunc}></FilterDialogs>
+                <ManualReportDialog dialog={this.state.openManualReport} onCloseFunc={this.handleManualReportClose.bind(this)}></ManualReportDialog>
             </div>
         )
     }

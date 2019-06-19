@@ -80,11 +80,9 @@ class AutoSuggestComponent extends React.Component {
         this.getProviderPrices(event.target.value);
     };
     getProviderPrices(drugName) {
-        fetch('http://localhost:8081/getDrugInfo/' + drugName)
+        fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName)
             .then(res => res.json())
             .then(json => {
-
-
                 this.setState({
                     providerPrices: json
                 });

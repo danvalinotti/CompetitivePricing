@@ -363,7 +363,16 @@ th{
   color:#0457af;
   border-color :#0457af;
 }
-
+.column1Width{
+  width:50px
+}
+.reportCell{
+  text-align: center;
+  font-size: 12px;
+}
+.reportDate{
+  padding:20px;
+}
 
 
 @media (max-width: 576px) {
