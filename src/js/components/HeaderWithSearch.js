@@ -160,6 +160,24 @@ class HeaderWithSearch extends React.Component {
     );
   }
   onClickSearch() {
+    console.log("PRovider Price");
+    console.log(this.state.providerPrices[0]);
+    this.state.providerPrices[0];
+    if(this.state.selectedDrug  == null){
+      this.state.selectedDrug = this.state.providerPrices[0];
+      var drug = this.state.selectedDrug;
+      this.dosageList = drug.dose;
+    this.setState({
+      inputValue: drug.name,
+      selectedDrug: drug,
+      strengthList: drug.dose,
+      drugStrength: drug.dose[0],
+      quantityList: drug.dose[0].quantity,
+      drugQuantity: drug.dose[0].quantity[0],
+    });
+    }
+
+
     const zipCode = this.state.zipCode;
     const drugNDC = this.state.selectedDrug.defaultDose;
     const drugType = "BRAND_WITH_GENERIC";
@@ -167,6 +185,7 @@ class HeaderWithSearch extends React.Component {
     const quantity = this.state.selectedDrug.dose[0].defaultQuantity;
     const drugName = this.state.selectedDrug.name;
     const drugRequest = { "drugNDC": drugNDC, "drugName": drugName, "drugType": drugType, "dosageStrength": drugStrength, "quantity": quantity, "zipcode": zipCode, "longitude": "longitude", "latitude": "latitude" }
+    
     this.setState({
       drugRequest: drugRequest,
     });
