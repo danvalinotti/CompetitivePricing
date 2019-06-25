@@ -70,7 +70,7 @@ class Reports extends Component {
 
     }
     getAllReports(){
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getAll')
+        Axios.get('http://localhost:8081/masterList/getAll')
             .then(response => {
                
                 this.setState({
@@ -94,7 +94,7 @@ class Reports extends Component {
             loadingDialog: true
         });
 
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/addToMasterList')
+        Axios.get('http://localhost:8081/masterList/addToMasterList')
             .then(response => {
                 this.exportReport(response.data.drug);
                 this.handleCloseLoading();
@@ -154,7 +154,7 @@ class Reports extends Component {
     }
     deleteDrug(id) {
 
-        Axios.delete('https://drug-pricing-backend.cfapps.io/removeDrug/' + id)
+        Axios.delete('http://localhost:8081/removeDrug/' + id)
             .then(response => {
                 this.props.actions.dashBoardDrugs();
                 this.setState({
@@ -167,7 +167,7 @@ class Reports extends Component {
             })
     }
     getDashboardDrugs() {
-        fetch('https://drug-pricing-backend.cfapps.io/getAllPharmacy')
+        fetch('http://localhost:8081/getAllPharmacy')
             .then(res => res.json())
             .then(json => {
                 this.setState({
@@ -453,7 +453,7 @@ class Reports extends Component {
         var inputVal = document.getElementById("mui-pickers-date").value;
         console.log("INPUTVAL");
         console.log(inputVal);
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
+        Axios.get('http://localhost:8081/masterList/getByDate/' + inputVal)
             .then(response => {
 
                 var inner = <div><br />
@@ -523,7 +523,6 @@ class Reports extends Component {
         console.log(this.state.selectedReports);
         this.setState({
             page: newPage, 
-
         });
     }
     handleChangeRowsPerPage(event) {
@@ -621,7 +620,7 @@ class Reports extends Component {
         });
     }
     getBetweenDates(start, end) {
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getBetweenTime/' + start + '/' + end)
+        Axios.get('http://localhost:8081/masterList/getBetweenTime/' + start + '/' + end)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -632,7 +631,7 @@ class Reports extends Component {
         //Not Yet
     }
     equalDate(date) {
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + date)
+        Axios.get('http://localhost:8081/masterList/getByDate/' + date)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -641,7 +640,7 @@ class Reports extends Component {
     }
     getWithDrugCount(drugCount) {
 
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getNumberOfDrugs/' + drugCount)
+        Axios.get('http://localhost:8081/masterList/getNumberOfDrugs/' + drugCount)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -753,7 +752,7 @@ class Reports extends Component {
                                             </TableCell>
                                             <TableCell>{new Date(report.batchDetails.batchStart).toLocaleString()} </TableCell>
                                             <TableCell size="small"> {report.drug.length}</TableCell>
-                                            <TableCell padding="checkbox" onClick={() => this.exportReport(this.state.reports[index].drug)}> <Icons icon="save" height="24" width="24" /></TableCell>
+                                            <TableCell padding="checkbox" onClick={() => this.exportReport(this.state.reports[this.state.page * this.state.rowsPerPage +index].drug)}> <Icons icon="save" height="24" width="24" /></TableCell>
                                         </TableRow>
                                     ))}
 

@@ -30,6 +30,7 @@ function renderInput(inputProps) {
                 ...InputProps,
             }}
             {...other}
+            
         />
     );
 }
@@ -80,14 +81,18 @@ class AutoSuggestComponent extends React.Component {
         this.getProviderPrices(event.target.value);
     };
     getProviderPrices(drugName) {
-        fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName)
+        fetch('http://localhost:8081/getDrugInfo/' + drugName)
             .then(res => res.json())
             .then(json => {
+                console.log("json");
+                console.log(json);
+                this.props.setFirstChoice(json[0]);
                 this.setState({
                     providerPrices: json
                 });
                 return json;
             });
+
     };
     renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
         const isHighlighted = highlightedIndex === index;

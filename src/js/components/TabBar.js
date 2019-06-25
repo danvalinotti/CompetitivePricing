@@ -34,7 +34,7 @@ class TabBar extends React.Component {
         <AppBar position="static" style={{ background: "orange" }}>
           <Toolbar>
            
-            <span onClick={()=>this.props.clickHome()} className="headerHelp">
+            <span onClick={()=>this.props.clickHome()} className="headerHelp pointer">
               <span ><svg style={{ marginLeft: '30%', width: '70px', paddingTop: '5px' ,height:'25px' }}
                 xmlns="http://www.w3.org/2000/svg">
                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></span>

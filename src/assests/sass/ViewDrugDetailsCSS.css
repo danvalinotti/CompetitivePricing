@@ -373,7 +373,16 @@ th{
 .reportDate{
   padding:20px;
 }
-
+.pointer{
+  cursor: pointer;
+}
+.css-1hwfws3{
+  max-height: 100px ;
+  overflow-y: auto !important;
+}
+.MuiDialog-paperWidthSm{
+  overflow-y: inherit !important;
+}
 
 @media (max-width: 576px) {
 

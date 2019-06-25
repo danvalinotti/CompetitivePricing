@@ -70,7 +70,7 @@ class SplitButton extends Component {
   }
   getButtonGroup(){
      
-    return(<ButtonGroup fullWidth="true" variant="contained" color="primary" aria-label="Split button">
+    return(<ButtonGroup fullWidth={true} variant="contained" color="primary" aria-label="Split button">
             <Button
               color="primary"
               variant="contained"

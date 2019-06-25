@@ -88,7 +88,7 @@ class DashBoardViewComponent extends Component {
     }
     deleteDrug(id) {
 
-        Axios.delete('https://drug-pricing-backend.cfapps.io/removeDrug/' + id)
+        Axios.delete('http://localhost:8081/removeDrug/' + id)
             .then(response => {
                 this.props.actions.dashBoardDrugs();
                 this.setState({
@@ -101,7 +101,7 @@ class DashBoardViewComponent extends Component {
             })
     }
     getDashboardDrugs() {
-        fetch('https://drug-pricing-backend.cfapps.io/getAllPharmacy')
+        fetch('http://localhost:8081/getAllPharmacy')
             .then(res => res.json())
             .then(json => {
                 this.setState({
@@ -389,7 +389,7 @@ class DashBoardViewComponent extends Component {
         var inputVal = document.getElementById("mui-pickers-date").value;
         console.log("INPUTVAL");
         console.log(inputVal);
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
+        Axios.get('http://localhost:8081/masterList/getByDate/' + inputVal)
             .then(response => {
 
                 var inner = <div><br />

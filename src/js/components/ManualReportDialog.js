@@ -15,11 +15,13 @@ import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import Input from "@material-ui/core/Input";
 
+import Select2 from 'react-select';
 
 class ManualReportDialog extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             isOpen: true,
             drugList: [],
@@ -30,8 +32,16 @@ class ManualReportDialog extends React.Component {
             selectedProviders:[],
             buttonText:"Create Manual Report",
             buttonDisabled:false,
+             options : [
+                { value: 'chocolate', label: 'Chocolate' },
+                { value: 'strawberry', label: 'Strawberry' },
+                { value: 'vanilla', label: 'Vanilla' },
+              ],
+              selectedOption: null,
+              
         }
         this.getLatestReport();
+        
     }
    
     handleChange(event) {
@@ -44,7 +54,12 @@ class ManualReportDialog extends React.Component {
         this.state.selectedDrugs.indexOf(event.target.value);
       }
     handleSubmit() {
-        var reportRequest = {'drugs':this.state.selectedDrugs, 'drugDetails':this.state.selectedDrugDetails,
+       var  selectedDrugs = [];
+        this.state.selectedOption.map((option)=>{
+            selectedDrugs.push(option.value);
+        })
+
+        var reportRequest = {'drugs':selectedDrugs, 'drugDetails':this.state.selectedDrugDetails,
         'providers': this.state.selectedProviders}
       //  console.log(this.state.selectedDrugs);
       this.setState({
@@ -53,7 +68,7 @@ class ManualReportDialog extends React.Component {
 
       });
       
-        Axios.post('https://drug-pricing-backend.cfapps.io/masterList/manualReport', reportRequest)
+        Axios.post('http://localhost:8081/masterList/manualReport', reportRequest)
             .then(response => {
                 console.log(response.data);
                 this.exportReport(response.data);
@@ -66,13 +81,25 @@ class ManualReportDialog extends React.Component {
         
     }
     getLatestReport() {
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getLast')
+        Axios.get('http://localhost:8081/masterList/getLast')
             .then(response => {
 
                 this.setState({
                     drugList: response.data.drug,
                 });
+                this.mapOptions(response.data.drug);
             });
+    }
+    mapOptions(drugList){
+        var newOptions = [];
+        console.log(drugList);
+        drugList.map((drug)=>{
+            newOptions.push({value:drug, label: drug.name +" "+ drug.dosageStrength+ drug.dosageUOM +" "+"("+drug.quantity+")"})
+        })
+        this.setState({
+            options:newOptions
+        })
+        console.log(newOptions);
     }
     renderValue(selected){
       
@@ -134,28 +161,34 @@ class ManualReportDialog extends React.Component {
         });
 
     }
+    handleDrugChange (selectedOption) {
+
+        this.setState({ selectedOption });
+        console.log(`Option selected:`, selectedOption);
+      };
 
 
     render() {
         return (
 
-            <Dialog
+            <Dialog 
                 onClose={() => this.props.onCloseFunc()}
                 aria-labelledby="customized-dialog-title"
                 open={this.props.dialog}
+                style={{overflowY:'inherit'}}
             >
                 <DialogTitle id="customized-dialog-title" onClose={() => this.props.onCloseFunc()}>
                    Create Manual Report
                     </DialogTitle>
-                <DialogContent className="textCenter">
-                    <Container>
+                <DialogContent className="textCenter" style={{maxHeight:'600px', overflowY:'initial'}}>
+                    <Container style={{overflowY:'inherit'}}>
                         <Grid container spacing={1}>
                             <Grid container item xs={12} spacing={3}>
                                 <Grid item xs={6}>
                                     Select Drug(s):
                             </Grid>
                                 <Grid item xs={6}>
-                                    <Select
+                                    {/* <Select
                                         multiple
                                         value={this.state.selectedDrugs}
                                         onChange={this.handleChange.bind(this)}
@@ -170,7 +203,16 @@ class ManualReportDialog extends React.Component {
                                                 <ListItemText primary={drug.name + ", "+drug.dosageStrength+drug.dosageUOM+"("+drug.quantity+")"} />
                                             </MenuItem>
                                         ))}
-                                    </Select>
+                                    </Select> */}
+                                   <Select2
+                                   closeMenuOnSelect= {false}
+                                   cropWithEllipsis= {true}
+                                   styles={{maxHeight:'200px'}}
+                                   isMulti={true}
+                                   isSearchable={true}
+                                    value={this.state.selectedOption}
+                                    onChange={this.handleDrugChange.bind(this)}
+                                    options={this.state.options} />
                                 </Grid>
                             </Grid>
                             <Grid container item xs={12} spacing={3}>
@@ -178,14 +220,12 @@ class ManualReportDialog extends React.Component {
                                     Select Drug Details:
                             </Grid>
                                 <Grid item xs={6}>
-                                <Select
+                                 <Select
                                         multiple
                                         value={this.state.selectedDrugDetails}
                                         onChange={this.handleDrugDetailsChange.bind(this)}
                                         style={{width:'200px'}}
-                                        renderValue={selected => (selected+"").substring(0,20)}
-                                      
-                                    >
+                                        renderValue={selected => (selected+"").substring(0,20)}>
                                         {this.state.drugDetails.map(drug => (
                                             <MenuItem key={drug} value={drug} >
                                                 <Checkbox
@@ -193,7 +233,10 @@ class ManualReportDialog extends React.Component {
                                                 <ListItemText primary={drug} />
                                             </MenuItem>
                                         ))}
-                                    </Select>
+                                    </Select> 
+                                   
+                                   
+                                    
                                 </Grid>
                             </Grid>
                             <Grid container item xs={12} spacing={3}>

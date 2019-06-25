@@ -72,7 +72,7 @@ class DrugInformation extends React.Component {
 
     getDrugDetails(drugRequest) {
 
-        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
+        axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
             .then(response => {
                 this.props.toggleDialog();
                 this.setState({
@@ -119,7 +119,7 @@ class DrugInformation extends React.Component {
     addDrug() {
 
         this.props.toggleDialog();
-        axios.post('https://drug-pricing-backend.cfapps.io/addDrugToDashBoard', this.props.drugRequest)
+        axios.post('http://localhost:8081/addDrugToDashBoard', this.props.drugRequest)
             .then(response => {
                 
                 this.props.toggleDialog();
@@ -202,7 +202,7 @@ class DrugInformation extends React.Component {
                     {this.props && this.props.drugRequest ? this.props.drugRequest.drugName : "Drug Name"}
                 </div>
                 <div className="col-sm-6 ">
-                    <button type="button" style={{backgroundColor:'white'}} onClick={() => { this.addDrug() }} className="btn btn-outline-primary float-sm-right trackListing">Track Pricing</button>
+                    <button type="button" style={{backgroundColor:'white'}} onClick={() => { this.addDrug() }} className="btn btn-outline-primary float-sm-right trackListing pointer">Track Pricing</button>
                 </div>
             </h2>
             <h3 className="formalName">

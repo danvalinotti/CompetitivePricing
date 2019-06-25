@@ -52,6 +52,7 @@ class DashBoard extends React.Component {
             drugQuantityArray: [],
             selectedDrug: null,
             showDialog: false,
+            firstChoice:null,
            // actions: sock,
             messages: []
         };
@@ -84,30 +85,54 @@ class DashBoard extends React.Component {
             drugQuantityArray: quantityList
         })
     }
+    setFirstChoice(drug){
+        this.setState({
+            firstChoice:drug,
+        });
+    }
     handleSubmit(data) {
+        console.log("this.state.firstChoice");
+        console.log(this.state.firstChoice);
+        var drugName = this.state.drugName;
+        var dosageStrength = this.state.dosageStrength;
+        var quantity = this.state.quantity;
+        if(this.state.drugName === ""){
+            console.log("HEELLLLLLLLLLLOOOOOOOOOO");
+            console.log(this.state.firstChoice.name);
+            
+                drugName = this.state.firstChoice.name;
+                dosageStrength =this.state.firstChoice.dose[0];
+                quantity = this.state.firstChoice.dose[0].quantity[0].value;
+                this.state.selectedDrug = this.state.firstChoice;
+
+        }
         this.setState({
             zipcode: data.myZipCode,
             drugType: data.drugType,
         });
         this.toggleDialog();
-
+        
         const requestObject = {
-            "drugNDC": this.state.dosageStrength.value,
-            "drugName": this.state.drugName,
-            "dosageStrength": this.state.dosageStrength.label,
+            "drugNDC": dosageStrength.value,
+            "drugName": drugName,
+            "dosageStrength": dosageStrength.label,
             "drugType": this.state.drugType,
-            "quantity": this.state.quantity,
+            "quantity": quantity,
             "zipcode": data.myZipCode,
             "longitude": "longitude",
             "latitude": "latitude"
         };
 
-        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', requestObject)
+        axios.post('http://localhost:8081/getPharmacyPrice', requestObject)
             .then(response => {
                 this.toggleDialog();
                 this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
 
-            })
+            }).catch(error => {
+                // handle error
+                this.toggleDialog();
+                console.log(error);
+              })
     }
 
 
@@ -236,9 +261,10 @@ class DashBoard extends React.Component {
 
                     }}>
                         <div className='row'>
-                            <Field component={AutoSuggestComponent} name="autoSuggestValue"
+                            <Field  component={AutoSuggestComponent} name="autoSuggestValue"
                                 AutoSuggestComponent={this.props.drugStrengthArray}
                                 selectedDrug={this.selectedDrug}
+                                setFirstChoice= {this.setFirstChoice.bind(this)}
                                 drugSearchResult={this.props.drugSearchResult}
                                 actions={this.props.actions}
                                 drugStrengthArray={this.props.drugStrengthArray}
@@ -249,7 +275,7 @@ class DashBoard extends React.Component {
 
 
                             <div className="col-sm-3">
-                                <Field component='input' className="form-control search-bar-copy" style={searchBarCopy}
+                                <Field required component='input' className="form-control search-bar-copy" style={searchBarCopy}
                                     name="myZipCode" id="myZipCode" placeholder="Enter Zip Code" />
                             </div>
                         </div>
@@ -299,8 +325,8 @@ class DashBoard extends React.Component {
                         <div className="row" style={{ padding: '2%' }}>
                             <div className='col-sm-4'>  </div>
                             <div className='col-sm-4'>
-                                <button className="form-control" style={seePricesBtn}><span
-                                    className="see-prices">SEE PRICES</span></button>
+                                <button className="form-control pointer" style={seePricesBtn}><span
+                                    className="see-prices ">SEE PRICES</span></button>
                                 
                                 <br />
                             </div>

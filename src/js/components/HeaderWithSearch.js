@@ -80,7 +80,7 @@ class HeaderWithSearch extends React.Component {
   };
 
   getProviderPrices(drugName) {
-    fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName)
+    fetch('http://localhost:8081/getDrugInfo/' + drugName)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -116,7 +116,7 @@ class HeaderWithSearch extends React.Component {
   };
   getDrugDetails(drugRequest) {
     this.props.toggleDialog();
-    axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
+    axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
       .then(response => {
 
         this.setState({
@@ -202,7 +202,7 @@ class HeaderWithSearch extends React.Component {
      
        <div className="col-sm-7"> 
         <div className= "row">
-        <span onClick={()=>this.props.clickHome()} className="headerHelp" style={{marginTop:'1.5%'}}>
+        <span onClick={()=>this.props.clickHome()} className="headerHelp pointer" style={{marginTop:'1.5%'}}>
           <span ><svg style={{ marginLeft: '30%', width: '70px', paddingTop: '5px' ,height:'25px' }}
             xmlns="http://www.w3.org/2000/svg">
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></span>
@@ -244,6 +244,7 @@ class HeaderWithSearch extends React.Component {
                               className: 'removeLine ',
                               onChange: this.handleInputChange.bind(this),
                               value: this.state.inputValue,
+                              style:{flexWrap:'inherit'}
                             }),
 
                           })}
