@@ -2,7 +2,7 @@ import {executeFetch} from "./drugdeatilsservice";
 
 function getDrugPriceService(drugNDC,data,drugName) {
     const parseJSON = (response) => response.json();
-    const url ="http://localhost:8081/getPharmacyPrice";
+    const url ="https://drug-pricing-backend.cfapps.io/getPharmacyPrice";
     const urlMethod = "POST";
     let  requestObject = {
         "drugNDC": drugNDC,

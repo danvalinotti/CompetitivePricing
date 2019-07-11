@@ -11,6 +11,8 @@ import DashBoardContainer from "./container/DashBoardContainer";
 import DashBoardViewContainer from "./container/DashBoardViewContainer";
 import ViewDrugDetailsContainer from "./container/ViewDrugDetailsContainer";
 import ReportsContainer from "./container/ReportsContainer";
+import SignInContainer from "./container/SignInContainer";
+import SignUpContainer from "./container/SignUpContainer";
 
 render(
     <Provider store={store}>
@@ -21,6 +23,8 @@ render(
                 <Route path="/viewdrugs" component={ViewDrugDetailsContainer} />
                 <Route path="/viewDashBoard" component={DashBoardViewContainer} />
                 <Route path="/reports" component={ReportsContainer} />
+                <Route path="/signin" component={SignInContainer} />
+                <Route path="/signup" component={SignUpContainer} />
             </div>
         </HashRouter>
     </Provider>,

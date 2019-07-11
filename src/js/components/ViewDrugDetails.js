@@ -26,6 +26,8 @@ class ViewDrugDetails extends React.Component {
     } else {
       var response = this.props.state.location.state.response;
     var request = this.props.state.location.state.request;
+    request.token = window.sessionStorage.getItem("token");
+
     var info = this.props.state.location.state.info;
       this.props.state.location.state.info.dose.map((dose) => {
         if (dose.label === this.props.state.location.state.request.dosageStrength) {
@@ -178,9 +180,11 @@ clickReports(){
           <HeaderWithSearch
             updateProperties={this.updateProperties.bind(this)}
             toggleDialog={this.toggleDialog.bind(this)}
+            history={this.props.history}
             value={0}
             clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}
           ></HeaderWithSearch>
+      
           <DrugInformation
             drugRequest={this.state.drugRequest}
             selectedDrug={this.state.selectedDrug}

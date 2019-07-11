@@ -13,13 +13,13 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { runInThisContext } from "vm";
 import DatePicker from './DatePicker'
-
+import KJUR from 'jsrsasign'
 
 class DashBoardViewComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dashBoardDrugsData: this.props.dashBoardDrugsData,
+            dashBoardDrugsData: [],
             filteredList: [],
             drugSort: "off",
             insideRxSort: "off",
@@ -33,7 +33,7 @@ class DashBoardViewComponent extends Component {
             reports: <div></div>
 
         }
-        this.props.actions.dashBoardDrugs();
+        this.getDashboardDrugs();
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
@@ -86,26 +86,32 @@ class DashBoardViewComponent extends Component {
 
         link.click(); // This will download the data file named "my_data.csv".
     }
-    deleteDrug(id) {
-
-        Axios.delete('http://localhost:8081/removeDrug/' + id)
+    deleteDrug(drug, index) {
+            console.log("delete");
+            console.log(drug);
+            console.log(index);
+            
+        Axios.post('https://drug-pricing-backend.cfapps.io/dashboard/drug/delete' , drug)
             .then(response => {
-                this.props.actions.dashBoardDrugs();
-                this.setState({
-                    dashBoardDrugsData: this.props.dashBoardDrugsData,
-
-                })
-                var element = document.getElementById("myZipCode").value;
-                this.filterList({ target: { value: element } });
-
-            })
+                  this.setState({
+                    dashBoardDrugsData:   this.state.dashBoardDrugsData.splice(index,1),
+                  })
+             })
     }
     getDashboardDrugs() {
-        fetch('http://localhost:8081/getAllPharmacy')
-            .then(res => res.json())
-            .then(json => {
+        var strtoken = window.sessionStorage.getItem("token");
+        console.log("strtoken");
+        console.log(strtoken);
+        var token = {};
+        token.value = strtoken;
+        token.key = strtoken;
+        console.log(token);
+        Axios.post('https://drug-pricing-backend.cfapps.io/dashboard/get', token)
+        .then(response => {
+            console.log(response);
                 this.setState({
-                    dashBoardDrugsData: json
+                    dashBoardDrugsData: response.data,
+                    filteredList: response.data
                 })
             });
     }
@@ -157,16 +163,22 @@ class DashBoardViewComponent extends Component {
         }
 
     }
+    // setFilterList(){
+    //     this.setState({
+    //         filteredList:this.state.dashBoardDrugsData
+    //     })
+    // }
     filterList(event) {
         var str = event.target.value.toLowerCase();
         var filteredList = [];
-        this.props.dashBoardDrugsData.map(val => {
+        this.state.dashBoardDrugsData.map(val => {
             var drugName = val.name.toLowerCase();
             if (drugName.includes(str)) {
                 filteredList.push(val);
             }
 
         })
+        console.log("filteredList"); 
         console.log(filteredList);
         this.setState({
             filteredList: filteredList
@@ -389,7 +401,7 @@ class DashBoardViewComponent extends Component {
         var inputVal = document.getElementById("mui-pickers-date").value;
         console.log("INPUTVAL");
         console.log(inputVal);
-        Axios.get('http://localhost:8081/masterList/getByDate/' + inputVal)
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
             .then(response => {
 
                 var inner = <div><br />
@@ -455,27 +467,31 @@ class DashBoardViewComponent extends Component {
             filteredList: Sorting.sortByLowestPrice(this.state.filteredList, sort)
         });
     }
+    
 
 
 
 
 
     render() {
-        if (this.props.dashBoardDrugsData != this.state.dashBoardDrugsData) {
-            this.setState({
-                dashBoardDrugsData: this.props.dashBoardDrugsData,
+        // if (this.props.dashBoardDrugsData != this.state.dashBoardDrugsData) {
+        //     this.setState({
+        //         dashBoardDrugsData: this.props.dashBoardDrugsData,
 
-            });
-            var element = document.getElementById("myZipCode").value;
-            this.filterList({ target: { value: element } });
-        }
+        //     });
+        //     var element = document.getElementById("myZipCode").value;
+        //     this.filterList({ target: { value: element } });
+        // }
         return (
             <div>
-                <HeaderComponent value={1} clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}/>
+                <HeaderComponent value={1} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <h4 className="row" style={{ paddingTop: '3%', marginRight: '0px', marginLeft: '0px' }}>
                         <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>
-                            <div style={{ padding: '10px', paddingLeft: '0px' }}>Competitive Pricing </div>
+                            <div style={{ padding: '10px', paddingLeft: '0px' }}>
+                            Competitive Pricing
+                         
+                             </div>
                             <div className=" headerZip" style={{ padding: '0px' }}>
                                 <input className="form-control search-bar " onChange={() => { this.filterList(event) }} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
                             </div>
@@ -509,7 +525,7 @@ class DashBoardViewComponent extends Component {
                                 {this.state.filteredList.map((drug, index) => {
                                     return (
                                         <tr className="dashboardRows" key={index}>
-                                            <td className="highlightedCell"> <div style={{ color: "red" }} onClick={() => this.deleteDrug(drug.id)}><div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" /><path d="M0 0h24v24H0z" fill="none" /></svg></div></div></td>
+                                            <td className="highlightedCell"> <div style={{ color: "red" }} onClick={() => this.deleteDrug(drug,index)}><div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" /><path d="M0 0h24v24H0z" fill="none" /></svg></div></div></td>
                                             <td className="highlightedCell">
                                                 <span className="nameColor"><strong>{drug.name}</strong><br />
                                                     Type: {drug.drugType}<br />

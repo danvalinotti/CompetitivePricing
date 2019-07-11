@@ -14,6 +14,11 @@ import Typography from "@material-ui/core/Typography";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup'; 
+import Menu from '@material-ui/core/Menu';
 
 
 function renderInput(inputProps) {
@@ -38,9 +43,15 @@ class HeaderWithSearch extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log("PROPS");
-    console.log(this.props);
-    console.log(props);
+ 
+    var loggedIn = window.sessionStorage.getItem("loggedIn");
+    
+    if(!(loggedIn == "true")){
+      loggedIn = false;
+    }else{
+      loggedIn = true;
+    }
+
     this.state = {
       inputValue: '',
       selectedItem: [],
@@ -58,6 +69,11 @@ class HeaderWithSearch extends React.Component {
       open: false,
       averagePriceColor: null,
       value: 0 ,
+      anchorEl:null,
+      profileMenuOpen: false,
+      loggedIn:loggedIn,
+      openSignIn:false,
+      openSignUp:false
     };
   }
   onChangeZipCode(event) {
@@ -80,7 +96,7 @@ class HeaderWithSearch extends React.Component {
   };
 
   getProviderPrices(drugName) {
-    fetch('http://localhost:8081/getDrugInfo/' + drugName)
+    fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -116,7 +132,7 @@ class HeaderWithSearch extends React.Component {
   };
   getDrugDetails(drugRequest) {
     this.props.toggleDialog();
-    axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
+    axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
       .then(response => {
 
         this.setState({
@@ -192,6 +208,62 @@ class HeaderWithSearch extends React.Component {
     this.getDrugDetails(drugRequest);
 
   }
+  navigateProfile(){
+    
+  }
+  openProfileMenu(event){
+    console.log("hellothere");
+    console.log(event);
+    this.setState({
+      profileMenuOpen: !this.state.openProfileMenu,
+      anchorEl: event.target
+    })
+  }
+  closeProfileMenu(event){
+    console.log("hellothere");
+    console.log(event);
+    this.setState({
+      profileMenuOpen:false,
+      anchorEl: event.target
+    })
+  }
+  loadMenuItems(){
+    
+    if(this.state.loggedIn == true){
+      return(<div>
+      <MenuItem >My Account</MenuItem>
+      <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
+    }else{
+      return(<div>
+        <MenuItem onClick={this.signIn.bind(this)} >Sign In</MenuItem>
+        <MenuItem onClick={this.signUp.bind(this)} >Sign Up</MenuItem></div>);
+    }
+  }
+  logout(){
+    this.setState({
+      loggedIn: false,
+    });
+    window.sessionStorage.setItem("loggedIn",false);
+    window.sessionStorage.setItem("token","");
+
+    this.props.history.push({ pathname: '/signin' });
+  }
+  signIn(){
+    this.setState({
+      // loggedIn: true,
+      openSignIn:true
+    });
+    // window.sessionStorage.setItem("loggedIn",true);
+  }
+  signUp(){
+    console.log("signup");
+    this.setState({
+      // loggedIn: true,
+      openSignUp:true
+    });
+    // window.sessionStorage.setItem("loggedIn",true);
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -219,7 +291,7 @@ class HeaderWithSearch extends React.Component {
       <AppBar position="static" style={{ background: "orange" }}>
       <Toolbar>
      
-       <div className="col-sm-7"> 
+       {/* <div className="col-sm-7">  */}
         <div className= "row">
         <span onClick={()=>this.props.clickHome()} className="headerHelp pointer" style={{marginTop:'1.5%'}}>
           <span ><svg style={{ marginLeft: '30%', width: '70px', paddingTop: '5px' ,height:'25px' }}
@@ -236,8 +308,8 @@ class HeaderWithSearch extends React.Component {
           <Tab onClick={() => this.props.clickReports()} label="Reports" />
         </Tabs>
         </div> 
-       </div>
-        <div className="col-sm-5">
+       {/* </div> */}
+        {/* <div className="col-sm-5"> */}
         <div className="row">
                 <div className="col-sm-6 headerButton" style={{padding:'0px'}}>
                   <Downshift onSelect={(drug) => this.onClickDrug(drug)} itemToString={i => { return i ? i.name : '' }} id="downshift-simple" >
@@ -301,7 +373,38 @@ class HeaderWithSearch extends React.Component {
                   </button>
                 </div>
                 </div>
-              </div>
+              {/* </div> */}
+              <div style={{ marginLeft: "auto", marginRight: -12}}>
+              <IconButton
+                aria-label="Account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={this.openProfileMenu.bind(this)}
+                color="white"
+              >
+                <AccountCircle style={{color:'white'}} />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                open={this.state.profileMenuOpen}
+               onChange= {()=>{this.navigateProfile}}
+               onBlur={this.closeProfileMenu.bind(this)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                getContentAnchorEl={null}
+                anchorEl={this.state.anchorEl}
+                
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+               
+              >{this.loadMenuItems()}
+              </Menu>
+            </div>
       </Toolbar>
     </AppBar>
 

@@ -19,6 +19,7 @@ class DashBoard extends React.Component {
 
     constructor(props) {
         super(props);
+        this.authenticateUser();
         //SockJS
 
         // var sock = new SockJS('http://localhost:8980/gs-guide-websocket');
@@ -57,7 +58,7 @@ class DashBoard extends React.Component {
             messages: []
         };
 
-
+        this.authenticateUser.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.selectedDrug = this.selectedDrug.bind(this);
         this.clickHome = this.clickHome.bind(this);
@@ -65,6 +66,31 @@ class DashBoard extends React.Component {
         this.clickReports = this.clickReports.bind(this);
 
 
+    }
+    authenticateUser(){
+        console.log("dashboardContainer")
+        var userToken = {};
+        userToken.name = window.sessionStorage.getItem("token");
+
+        axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
+        .then(r => {
+            console.log(r.data)
+            if(r.data.password != "false"){
+              this.setState({
+                openSignIn : false,
+                loggedIn : true,
+                
+              });
+              console.log("LOGGED IN");
+             
+              window.sessionStorage.setItem("token",r.data.password);
+              window.sessionStorage.setItem("loggedIn","true");
+            //   this.props.history.push({ pathname: '/search' });
+            }else{
+               console.log("incorrect");
+               this.props.history.push({ pathname: '/signIn' });
+            }
+        })
     }
    
     onConnected() {
@@ -123,7 +149,7 @@ class DashBoard extends React.Component {
             "latitude": "latitude"
         };
 
-        axios.post('http://localhost:8081/getPharmacyPrice', requestObject)
+        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', requestObject)
             .then(response => {
                 this.toggleDialog();
                 this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
@@ -247,7 +273,7 @@ class DashBoard extends React.Component {
             <div>
                 <form id='Simple' className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}
                 >
-                    <HeaderComponent value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}/>
+                    <HeaderComponent value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
                     <div className="title ">
                         <div style={{ float: 'right', paddingTop:'10px'}}>
                             <img className="gxImage" src={gxImage} />

@@ -14,8 +14,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import Input from "@material-ui/core/Input";
-
+import IntegrationReactSelect from './SelectDrugDropdown'
 import Select2 from 'react-select';
+import fileDownload from 'js-file-download';
 
 class ManualReportDialog extends React.Component {
 
@@ -25,95 +26,164 @@ class ManualReportDialog extends React.Component {
         this.state = {
             isOpen: true,
             drugList: [],
-            selectedDrugs:[],
-            drugDetails:["Brand Type", "Dosage Strength","Quantity","Zip Code","Recommended Price", "Difference"],
-            selectedDrugDetails:[],
-            providers:["InsideRx", "WellRx","SingleCare","MedImpact","U.S Pharmacy Card"],
-            selectedProviders:[],
-            buttonText:"Create Manual Report",
-            buttonDisabled:false,
-             options : [
+            selectedDrugs: [],
+            drugDetails: ["Brand Type", "Dosage Strength", "Quantity", "Zip Code", "Recommended Price", "Difference"],
+            selectedDrugDetails: [],
+            providers: ["InsideRx", "WellRx", "SingleCare", "MedImpact", "U.S Pharmacy Card"],
+            selectedProviders: [],
+            buttonText: "Create Manual Report",
+            previousReports: [],
+            buttonDisabled: false,
+            isSaved: false,
+            selectedPrevious: null,
+            reportName: "",
+            options: [
                 { value: 'chocolate', label: 'Chocolate' },
                 { value: 'strawberry', label: 'Strawberry' },
                 { value: 'vanilla', label: 'Vanilla' },
-              ],
-              selectedOption: null,
-              
+            ],
+            selectedOption: null,
+
+
         }
         this.getLatestReport();
-        
+        this.loadPreviousReports();
+
     }
-   
+    loadPreviousReports() {
+        var sender = {};
+        sender.value = window.sessionStorage.getItem("token");
+        sender.key = window.sessionStorage.getItem("token");
+        Axios.post('https://drug-pricing-backend.cfapps.io/reports/saved/get', sender)
+            .then(response => {
+
+                console.log("response.data"); console.log(response.data);
+                // this.setState({
+                //     selectedProviders:response.data.providers,
+                //     selectedDrugDetails: response.data.drug_fields,
+                //     selectedDrugs: response.data.drug_ids,
+
+                // })
+                this.setState({
+                    previousReports: response.data
+                })
+            });
+    }
+    handlePrevious(event) {
+        if (event.target.value == "none") {
+            this.setState({
+                selectedPrevious: 'None',
+                selectedProviders: [],
+                selectedDrugDetails: [],
+                selectedOption: [],
+            })
+        } else {
+            console.log(event.target.value.drug_ids);
+            var arr = [];
+            event.target.value.drug_ids.map((drug, index) => {
+                console.log(drug);
+                arr.push({ 'label': drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")", 'value': drug })
+            })
+            this.setState({
+                selectedPrevious: event.target.value.name,
+                selectedProviders: event.target.value.providers,
+                selectedDrugDetails: event.target.value.drug_fields,
+                selectedOption: arr,
+            })
+            console.log(arr);
+        }
+
+    }
+    handleInputChange(event) {
+        this.setState({
+            reportName: event.target.value
+        })
+    }
     handleChange(event) {
-       
-        
+
+
         this.setState({
             selectedDrugs: event.target.value,
         });
 
         this.state.selectedDrugs.indexOf(event.target.value);
-      }
+    }
     handleSubmit() {
-       var  selectedDrugs = [];
-        this.state.selectedOption.map((option)=>{
+        var selectedDrugs = [];
+        this.state.selectedOption.map((option) => {
             selectedDrugs.push(option.value);
         })
+        console.log("this.state.isSaved");
+        console.log(this.state.isSaved);
+        var reportRequest = {
+            'drugs': selectedDrugs, 'drugDetails': this.state.selectedDrugDetails,
+            'providers': this.state.selectedProviders, 'isSaved': this.state.isSaved, 'name': this.state.reportName
+        }
+        //  console.log(this.state.selectedDrugs);
+        this.setState({
+            buttonText: "Loading ...",
+            buttonDisabled: true,
 
-        var reportRequest = {'drugs':selectedDrugs, 'drugDetails':this.state.selectedDrugDetails,
-        'providers': this.state.selectedProviders}
-      //  console.log(this.state.selectedDrugs);
-      this.setState({
-        buttonText:"Loading ...",
-        buttonDisabled:true,
+        });
+        console.log(reportRequest);
+        reportRequest.token = window.sessionStorage.getItem("token");
+        let options = {
+            responseType: 'blob',
 
-      });
-      
-        Axios.post('http://localhost:8081/masterList/manualReport', reportRequest)
+        }
+        Axios.post('https://drug-pricing-backend.cfapps.io/create/report/manual', reportRequest, options)
             .then(response => {
-                console.log(response.data);
-                this.exportReport(response.data);
+                const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
+                const link = document.createElement('a');
+
+                link.href = url;
+                link.setAttribute('download', 'poi-generated-file.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                console.log(response.data)
+                // this.exportReport(response.data);
                 this.setState({
-                    buttonText:"Create Manual Report",
-                    buttonDisabled:false,
-                  });
+                    buttonText: "Create Manual Report",
+                    buttonDisabled: false,
+                });
             });
 
-        
+
     }
     getLatestReport() {
-        Axios.get('http://localhost:8081/masterList/getLast')
+        Axios.get('https://drug-pricing-backend.cfapps.io/drugmaster/get/all')
             .then(response => {
 
                 this.setState({
-                    drugList: response.data.drug,
+                    drugList: response.data,
                 });
-                this.mapOptions(response.data.drug);
+                this.mapOptions(response.data);
             });
     }
-    mapOptions(drugList){
+    mapOptions(drugList) {
         var newOptions = [];
         console.log(drugList);
-        drugList.map((drug)=>{
-            newOptions.push({value:drug, label: drug.name +" "+ drug.dosageStrength+ drug.dosageUOM +" "+"("+drug.quantity+")"})
+        drugList.map((drug) => {
+            newOptions.push({ value: drug, label: drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")" })
         })
         this.setState({
-            options:newOptions
+            options: newOptions
         })
         console.log(newOptions);
     }
-    renderValue(selected){
-      
-        var str = "";
-        selected.forEach((drug)=>{
-          
-                str = str+" "+ drug.name+",";
-         
-        });
-        return str.substring(1,20);
+    renderValue(selected) {
 
-        
+        var str = "";
+        selected.forEach((drug) => {
+
+            str = str + " " + drug.name + ",";
+
+        });
+        return str.substring(1, 20);
+
+
     }
-    handleDrugDetailsChange(event){
+    handleDrugDetailsChange(event) {
         this.setState({
             selectedDrugDetails: event.target.value,
         });
@@ -123,7 +193,7 @@ class ManualReportDialog extends React.Component {
         console.log(data);
         var exportList = [];
         data.forEach((element, index) => {
-            
+
 
             exportList.push(element);
 
@@ -145,98 +215,115 @@ class ManualReportDialog extends React.Component {
         link.click(); // This will download the data file named "my_data.csv".
         console.log("REPORT");
     }
-    isChecked(drug, drugList){
-        var checked=false ;
-        drugList.forEach((d)=>{
-            if(d.id === drug.id){
+    isChecked(drug, drugList) {
+        var checked = false;
+        drugList.forEach((d) => {
+            if (d.id === drug.id) {
                 checked = true;
             }
         });
 
         return checked;
     }
-    handleProvidersChange(event){
+    handleProvidersChange(event) {
         this.setState({
             selectedProviders: event.target.value,
         });
 
     }
-    handleDrugChange (selectedOption) {
+    handleDrugChange(selectedOption) {
 
-        this.setState({ selectedOption });
+        this.setState({ selectedOption: selectedOption });
         console.log(`Option selected:`, selectedOption);
-      };
+        console.log(this.state.selectedDrugs);
+    };
 
 
     render() {
         return (
 
-            <Dialog 
+            <Dialog
                 onClose={() => this.props.onCloseFunc()}
                 aria-labelledby="customized-dialog-title"
                 open={this.props.dialog}
-                style={{overflowY:'inherit'}}
+                style={{ overflowY: 'inherit' }}
             >
                 <DialogTitle id="customized-dialog-title" onClose={() => this.props.onCloseFunc()}>
-                   Create Manual Report
+                    Create Manual Report
                     </DialogTitle>
-                <DialogContent className="textCenter" style={{maxHeight:'600px', overflowY:'initial'}}>
-                    <Container style={{overflowY:'inherit'}}>
+                <DialogContent className="textCenter" style={{ maxHeight: '600px', overflowY: 'initial' }}>
+                    <Container style={{ overflowY: 'inherit' }}>
+
                         <Grid container spacing={1}>
+                            <Grid container item xs={12} spacing={3}>
+                                <Grid item xs={6}>
+                                    Load Previous Manual Report:
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Select
+
+                                        value={this.state.selectedPrevious}
+                                        onChange={this.handlePrevious.bind(this)}
+                                        style={{ width: '200px' }}
+                                        renderValue={selected => (selected + "").substring(0, 20)}>
+                                        <MenuItem key='none' value="none" >
+                                            None
+                                        </MenuItem>
+                                        {this.state.previousReports.map((report, index) => (
+                                            <MenuItem key={index} value={report} >
+                                                <ListItemText primary={report.name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+
+
+
+                                </Grid>
+                            </Grid>
                             <Grid container item xs={12} spacing={3}>
                                 <Grid item xs={6}>
                                     Select Drug(s):
                             </Grid>
                                 <Grid item xs={6}>
-                                    {/* <Select
-                                        multiple
-                                        value={this.state.selectedDrugs}
-                                        onChange={this.handleChange.bind(this)}
-                                        style={{width:'200px'}}
-                                        renderValue={selected => this.renderValue(selected)}
-                                      
-                                    >
-                                        {this.state.drugList.map(drug => (
-                                            <MenuItem key={drug.id} value={drug} >
-                                                <Checkbox
-                                                 checked={this.isChecked(drug, this.state.selectedDrugs)} />
-                                                <ListItemText primary={drug.name + ", "+drug.dosageStrength+drug.dosageUOM+"("+drug.quantity+")"} />
-                                            </MenuItem>
-                                        ))}
-                                    </Select> */}
-                                   <Select2
+
+                                    {/* <Select2
                                    closeMenuOnSelect= {false}
                                    cropWithEllipsis= {true}
-                                   styles={{maxHeight:'200px'}}
+                                    styles={{maxHeight:'200px'}}
                                    isMulti={true}
                                    isSearchable={true}
                                     value={this.state.selectedOption}
                                     onChange={this.handleDrugChange.bind(this)}
-                                    options={this.state.options} />
+                                    options={this.state.options}
+                                   /> */}
+                                    <IntegrationReactSelect drugValue={this.state.selectedOption}
+                                        drugOnChange={this.handleDrugChange.bind(this)} listOfDrugs={this.state.options}></IntegrationReactSelect>
+
                                 </Grid>
                             </Grid>
                             <Grid container item xs={12} spacing={3}>
                                 <Grid item xs={6}>
                                     Select Drug Details:
-                            </Grid>
+                                </Grid>
                                 <Grid item xs={6}>
-                                 <Select
+                                    <Select
                                         multiple
                                         value={this.state.selectedDrugDetails}
                                         onChange={this.handleDrugDetailsChange.bind(this)}
-                                        style={{width:'200px'}}
-                                        renderValue={selected => (selected+"").substring(0,20)}>
+                                        style={{ width: '200px' }}
+                                        renderValue={selected => (selected + "").substring(0, 20)}>
                                         {this.state.drugDetails.map(drug => (
                                             <MenuItem key={drug} value={drug} >
                                                 <Checkbox
-                                                 checked={this.state.selectedDrugDetails.indexOf(drug) > -1} />
+                                                    checked={this.state.selectedDrugDetails.indexOf(drug) > -1} />
                                                 <ListItemText primary={drug} />
                                             </MenuItem>
                                         ))}
-                                    </Select> 
-                                   
-                                   
-                                    
+
+                                    </Select>
+
+
+
                                 </Grid>
                             </Grid>
                             <Grid container item xs={12} spacing={3}>
@@ -244,29 +331,48 @@ class ManualReportDialog extends React.Component {
                                     Select Providers:
                             </Grid>
                                 <Grid item xs={6}>
-                                <Select
+                                    <Select
                                         multiple
                                         value={this.state.selectedProviders}
                                         onChange={this.handleProvidersChange.bind(this)}
-                                        style={{width:'200px'}}
-                                        renderValue={selected => (selected+"").substring(0,20)}
-                                      
+                                        style={{ width: '200px' }}
+                                        renderValue={selected => (selected + "").substring(0, 20)}
+
                                     >
                                         {this.state.providers.map(drug => (
                                             <MenuItem key={drug} value={drug} >
                                                 <Checkbox
-                                                 checked={this.state.selectedProviders.indexOf(drug) > -1} />
+                                                    checked={this.state.selectedProviders.indexOf(drug) > -1} />
                                                 <ListItemText primary={drug} />
                                             </MenuItem>
                                         ))}
                                     </Select>
                                 </Grid>
                             </Grid>
-                        
+                            <Grid container item xs={12} spacing={3}>
+                                <Grid item xs={6}>
+                                    Save Report:
+                            </Grid>
+                                <Grid item xs={6}>
+                                    <Checkbox checked={this.state.isSaved} onClick={() => {
+                                        this.setState({ isSaved: !this.state.isSaved });
+                                    }} />
+                                </Grid>
+                            </Grid>
+                            <Grid container item xs={12} spacing={3}>
+                                <Grid item xs={6}>
+                                    Name Report:
+                             </Grid>
+                                <Grid item xs={6}>
+                                    <Input required value={this.state.reportName} onChange={this.handleInputChange.bind(this)} />
+
+                                </Grid>
+                            </Grid>
+
 
                         </Grid>
                     </Container>
-                    <button disabled={this.state.buttonDisabled} style={{ marginTop: '10px' }} type="button" onClick={() => { this.handleSubmit() }} className="btn btn-outline-primary">{ this.state.buttonText}</button>
+                    <button disabled={this.state.buttonDisabled} style={{ marginTop: '10px' }} type="button" onClick={() => { this.handleSubmit() }} className="btn btn-outline-primary">{this.state.buttonText}</button>
                     <br />
 
                 </DialogContent>

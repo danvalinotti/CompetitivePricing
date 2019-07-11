@@ -67,17 +67,21 @@ class Reports extends Component {
         this.clickReports = this.clickReports.bind(this);
             console.log("hello");
             
+            
 
     }
     getAllReports(){
-        Axios.get('http://localhost:8081/masterList/getAll')
+        Axios.get('https://drug-pricing-backend.cfapps.io/reports/getAll')
             .then(response => {
-               
+                console.log("REPORTS"); 
+               console.log(response);
+               this.state.reports = response.data;
                 this.setState({
                     reports: response.data,
                     selectedReports: new Array(response.data.length).fill(false),
 
                 });
+                this.sortBy("", {"func":this.compareNewestToOldest.bind(this)});
             });
     }
     routeToSearch() {
@@ -94,7 +98,7 @@ class Reports extends Component {
             loadingDialog: true
         });
 
-        Axios.get('http://localhost:8081/masterList/addToMasterList')
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/addToMasterList')
             .then(response => {
                 this.exportReport(response.data.drug);
                 this.handleCloseLoading();
@@ -154,7 +158,7 @@ class Reports extends Component {
     }
     deleteDrug(id) {
 
-        Axios.delete('http://localhost:8081/removeDrug/' + id)
+        Axios.delete('https://drug-pricing-backend.cfapps.io/removeDrug/' + id)
             .then(response => {
                 this.props.actions.dashBoardDrugs();
                 this.setState({
@@ -167,7 +171,7 @@ class Reports extends Component {
             })
     }
     getDashboardDrugs() {
-        fetch('http://localhost:8081/getAllPharmacy')
+        fetch('https://drug-pricing-backend.cfapps.io/getAllPharmacy')
             .then(res => res.json())
             .then(json => {
                 this.setState({
@@ -416,36 +420,24 @@ class Reports extends Component {
         });
     }
     exportReport(data) {
-        console.log(data);
-        var exportList = [["Drug Name", "Drug Type", "Dosage Strength",
-            "Quantity", "Zip Code", "Inside Rx Price", "U.S Pharmacy Card Price",
-            "Well Rx Price", "MedImpact Price", "Singlecare Price",
-            "Recommended Price", "Difference"]];
-        data.forEach((element, index) => {
-            var row = [element.name, element.drugType, element.dosageStrength + " " + element.dosageUOM,
-            element.quantity, '= "' + element.zipcode + '"', element.programs[0].price, element.programs[1].price,
-            element.programs[2].price, element.programs[3].price, element.programs[4].price,
-            element.recommendedPrice, element.recommendedDiff];
+        console.log(data); 
+        let options = {
+            responseType: 'blob',
 
-            exportList.push(row);
+        }
+        Axios.get('https://drug-pricing-backend.cfapps.io/reportdrugs/get/' + data.id,options)
+        .then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
+                const link = document.createElement('a');
 
+                link.href = url;
+                link.setAttribute('download', 'poi-generated-file.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                console.log(response.data)
+               
+                
         });
-
-        console.log(exportList);
-        let csvContent = "data:text/csv;charset=utf-8,";
-
-        exportList.forEach(function (rowArray) {
-            let row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "DashboardDrugs.csv");
-        document.body.appendChild(link); // Required for FF
-
-        link.click(); // This will download the data file named "my_data.csv".
-        console.log("REPORT");
     }
     getDailyReports() {
         console.log("test");
@@ -453,7 +445,7 @@ class Reports extends Component {
         var inputVal = document.getElementById("mui-pickers-date").value;
         console.log("INPUTVAL");
         console.log(inputVal);
-        Axios.get('http://localhost:8081/masterList/getByDate/' + inputVal)
+        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
             .then(response => {
 
                 var inner = <div><br />
@@ -550,15 +542,17 @@ class Reports extends Component {
        
     }
     downloadSelected() {
+        console.log("this.state.selectedReports");
+        console.log(this.state.selectedReports);
         this.state.selectedReports.forEach((report, index) => {
             if(report==true){
-                this.exportReport(this.state.reports[index].drug);
+               this.exportReport(this.state.reports[index]);
             }
             
         })
     }
     sortBy(event, compare) {
-
+        console.log(compare);
         console.log("sort ing");
         var list = this.state.reports;
         console.log(list);
@@ -589,9 +583,10 @@ class Reports extends Component {
         // });
     }
     compareNewestToOldest(a, b) {
-
-        var dateA = new Date(a.batchDetails.batchStart);
-        var dateB = new Date(b.batchDetails.batchStart);
+        console.log("compare")
+        console.log(a);
+        var dateA = new Date(a.timestamp);
+        var dateB = new Date(b.timestamp);
 
         if (dateA < dateB) return 1;
         if (dateB < dateA) return -1;
@@ -599,9 +594,10 @@ class Reports extends Component {
         return 0;
     }
     compareOldestToNewest(a, b) {
-
-        var dateA = new Date(a.batchDetails.batchStart);
-        var dateB = new Date(b.batchDetails.batchStart);
+        console.log("compare")
+        console.log(a);
+        var dateA = new Date(a.timestamp);
+        var dateB = new Date(b.timestamp);
 
         if (dateA > dateB) return 1;
         if (dateB > dateA) return -1;
@@ -609,8 +605,10 @@ class Reports extends Component {
         return 0;
     }
     compareNumberOfDrugs(a, b) {
-        if (a.drug.length < b.drug.length) return 1;
-        if (b.drug.length < a.drug.length) return -1;
+        console.log("compare")
+        console.log(a);
+        if (a.drugCount < b.drugCount) return 1;
+        if (b.drugCount < a.drugCount) return -1;
 
         return 0;
     }
@@ -620,7 +618,7 @@ class Reports extends Component {
         });
     }
     getBetweenDates(start, end) {
-        Axios.get('http://localhost:8081/masterList/getBetweenTime/' + start + '/' + end)
+        Axios.get('https://drug-pricing-backend.cfapps.io/reports/get/between/' + start + '/' + end)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -631,7 +629,7 @@ class Reports extends Component {
         //Not Yet
     }
     equalDate(date) {
-        Axios.get('http://localhost:8081/masterList/getByDate/' + date)
+        Axios.get('https://drug-pricing-backend.cfapps.io/reports/get/date/' + date)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -640,7 +638,7 @@ class Reports extends Component {
     }
     getWithDrugCount(drugCount) {
 
-        Axios.get('http://localhost:8081/masterList/getNumberOfDrugs/' + drugCount)
+        Axios.get('https://drug-pricing-backend.cfapps.io/reports/get/drugCount/' + drugCount)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -684,7 +682,7 @@ class Reports extends Component {
         }
         return (
             <div>
-                <HeaderComponent value={2} clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports} />
+                <HeaderComponent value={2} clickHome={this.clickHome}history={this.props.history} clickDashboard={this.clickDashboard} clickReports={this.clickReports} />
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <h4 className="row" style={{ paddingTop: '3%', marginRight: '0px', marginLeft: '0px' }}>
                         <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>
@@ -750,9 +748,9 @@ class Reports extends Component {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell>{new Date(report.batchDetails.batchStart).toLocaleString()} </TableCell>
-                                            <TableCell size="small"> {report.drug.length}</TableCell>
-                                            <TableCell padding="checkbox" onClick={() => this.exportReport(this.state.reports[this.state.page * this.state.rowsPerPage +index].drug)}> <Icons icon="save" height="24" width="24" /></TableCell>
+                                            <TableCell>{new Date(report.timestamp).toLocaleString()} </TableCell>
+                                            <TableCell size="small"> {report.drugCount}</TableCell>
+                                            <TableCell padding="checkbox" onClick={() => this.exportReport(this.state.reports[this.state.page * this.state.rowsPerPage +index])}> <Icons icon="save" height="24" width="24" /></TableCell>
                                         </TableRow>
                                     ))}
 

@@ -72,7 +72,7 @@ class DrugInformation extends React.Component {
 
     getDrugDetails(drugRequest) {
 
-        axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
+        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
             .then(response => {
                 this.props.toggleDialog();
                 this.setState({
@@ -119,7 +119,7 @@ class DrugInformation extends React.Component {
     addDrug() {
 
         this.props.toggleDialog();
-        axios.post('http://localhost:8081/addDrugToDashBoard', this.props.drugRequest)
+        axios.post('https://drug-pricing-backend.cfapps.io/dashboard/drugs/add', this.props.drugRequest)
             .then(response => {
                 
                 this.props.toggleDialog();
@@ -195,6 +195,7 @@ class DrugInformation extends React.Component {
         }
         return (
             <div style={{backgroundColor:'#F8F8F8',borderBottomStyle:'solid' , borderBottomColor:'#B3B3B3'}}>
+                <br/>
         <div className="page description">
            
             <h2 className="drugName row">
