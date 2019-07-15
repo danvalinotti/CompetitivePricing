@@ -521,7 +521,7 @@ class DashBoardViewComponent extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-
+                  
                                 {this.state.filteredList.map((drug, index) => {
                                     return (
                                         <tr className="dashboardRows" key={index}>
@@ -554,6 +554,7 @@ class DashBoardViewComponent extends Component {
                                 })}
                             </tbody>
                         </table>
+                        {(this.state.filteredList.length == 0)?<div style={{textAlign: 'center'}} className="highlightedCell">No Drugs Added To Dashboard</div>:<div></div>}                      
                     </div>
                 </div>
                 <Dialog onClose={() => this.handleClose()}

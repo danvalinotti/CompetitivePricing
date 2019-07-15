@@ -170,9 +170,9 @@ class TabBar extends React.Component {
               value={this.state.value}
               onChange={(event, value) => this.handleChange(event, value)}
             >
-              <Tab style={{color:'white'}} onClick={() => this.props.clickHome()} label="Search" />
-              <Tab style={{color:'white'}} onClick={() => this.props.clickDashboard()} label="Dashboard" />
-              <Tab style={{color:'white'}} onClick={() => this.props.clickReports()} label="Reports" />
+              <Tab style={{color:'white'}} onClick={() => this.props.clickHome()} label={this.props.tab1} />
+              <Tab style={{color:'white'}} onClick={() => this.props.clickDashboard()} label={this.props.tab2} />
+              <Tab style={{color:'white'}} onClick={() => this.props.clickReports()} label={this.props.tab3} />
             </Tabs>
             <div style={{ marginLeft: "auto", marginRight: -12}}>
               <IconButton

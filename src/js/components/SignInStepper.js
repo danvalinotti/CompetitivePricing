@@ -41,8 +41,7 @@ function getStepContent(step , props) {
 export default function HorizontalLinearStepper(props) {
  
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
-   
+  
   const [skipped, setSkipped] = React.useState(new Set());
   const steps = props.steps;
 
@@ -55,46 +54,36 @@ export default function HorizontalLinearStepper(props) {
   }
 
   function handleNext(props) {
-    if(activeStep === steps.length - 1){
+    console.log("handleNext")
+    if(props.activeStep === steps.length - 1){
             props.submit();
     }
     let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
+    if (isStepSkipped(props.activeStep)) {
       newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+      newSkipped.delete(props.activeStep);
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    props.setActiveStep(prevActiveStep => prevActiveStep + 1);
     setSkipped(newSkipped);
   }
 
-  function handleBack() {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+  function handleBack(props) {
+    console.log("handleBack")
+    props.setActiveStep(prevActiveStep => prevActiveStep - 1);
   }
 
-  function handleSkip() {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setSkipped(prevSkipped => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  }
-
-  function handleReset() {
-    setActiveStep(0);
+  function handleReset(props) {
+    console.log("handleReset")
+    props.setActiveStep(0);
   }
 
   return (
     <div className={classes.root}>
     <Grid container direction="column" alignItems="center" justify="center" >
-      <Stepper activeStep={activeStep} style={{backgroundColor:'whitesmoke'}}>
+    <br/>
+      <Stepper activeStep={props.activeStep} style={{backgroundColor:'whitesmoke'}}>
         {steps.map((label, index) => {
           const stepProps = {};
           const labelProps = {};
@@ -115,25 +104,25 @@ export default function HorizontalLinearStepper(props) {
       </Stepper>
       </Grid>
       <div>
-        {activeStep === steps.length ? (
+        {props.activeStep === steps.length ? (
           <div>
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
             </Typography>
-            <Button onClick={handleReset} className={classes.button}>
+            <Button onClick={handleReset(props)} className={classes.button}>
               Reset
             </Button>
           </div>
         ) : (
           <div>
             <Typography className={classes.instructions}>
-              {getStepContent(activeStep, props)}
+              {getStepContent(props.activeStep, props)}
             </Typography>
             <div>
             <Grid container alignItems="center" justify="center" >
               <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
+                disabled={props.activeStep === 0}
+                onClick={()=>handleBack(props)}
                 className={classes.button}
               >
                 Back
@@ -145,7 +134,7 @@ export default function HorizontalLinearStepper(props) {
                 onClick={()=>{handleNext(props)}}
                 className={classes.button}
               >
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                {props.activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>
               </Grid>
             </div>

@@ -13,18 +13,20 @@ import ViewDrugDetailsContainer from "./container/ViewDrugDetailsContainer";
 import ReportsContainer from "./container/ReportsContainer";
 import SignInContainer from "./container/SignInContainer";
 import SignUpContainer from "./container/SignUpContainer";
-
+import ManageUsersContainer from "./container/ManageUsersContainer";
 render(
     <Provider store={store}>
         <HashRouter>
             <div>
-                <Route exact path="/" component={DashBoardContainer} />
+                <Route exact path="/" component={SignInContainer} />
                 <Route path="/search" component={DashBoardContainer} />
                 <Route path="/viewdrugs" component={ViewDrugDetailsContainer} />
                 <Route path="/viewDashBoard" component={DashBoardViewContainer} />
                 <Route path="/reports" component={ReportsContainer} />
                 <Route path="/signin" component={SignInContainer} />
                 <Route path="/signup" component={SignUpContainer} />
+                <Route path="/admin/manage/users" component={ManageUsersContainer} />
+                <Route exact path="/admin" component={ManageUsersContainer} />
             </div>
         </HashRouter>
     </Provider>,

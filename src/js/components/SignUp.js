@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import HorizontalLinearStepper from './SignInStepper'
 import TextField from '@material-ui/core/TextField'
+import galaxeLogo from "../../assests/images/galaxeLogo.png";
+import Divider from '@material-ui/core/Divider';
 
 class SignUp extends Component {
     constructor(props) {
@@ -78,7 +80,7 @@ class SignUp extends Component {
     }
     renderFinalStep(){
         return(<div>
-            Final Step
+            Sign Up
         </div>);
     }
     handleSubmit(){
@@ -100,20 +102,25 @@ class SignUp extends Component {
     
         
       }
+      signInNav(){
+          this.props.history.push("/signin");
+      }
 
 
 
     render() {
       
         return (
-            <div><br/><br/><br/>
+            <div><br/>
                 <Grid container direction="column" alignItems="center" justify="center">
                 <Card style={{maxWidth:'500px', backgroundColor:'whitesmoke'}}>
                
                     <CardContent>
-                    <Grid container spacing={1}>
-                            <Grid container item xs={12} spacing={3}>
-                         
+                    <Grid container spacing={1} direction="column" alignItems="center" justify="center">
+                    <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
+                        <Typography variant="h4">Sign Up</Typography><br/>
+                      
+                         <img src={galaxeLogo} width="100px"height="100px"/>
                             </Grid>
                                 
                             <Grid container item xs={12} spacing={3}>
@@ -127,8 +134,10 @@ class SignUp extends Component {
                                 >
                                
                             </HorizontalLinearStepper>
-                            </Grid>
-                       
+                            </Grid><br/>
+                            <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
+                                    <Button variant="contained"  onClick={ this.signInNav.bind(this)}>Sign In</Button>
+                            </Grid>                       
                         </Grid>
                     </CardContent>
                     

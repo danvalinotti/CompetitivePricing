@@ -24,7 +24,7 @@ class HeaderComponent extends Component {
 
 
             // </div>
-            <TabBar value={this.props.value}history={this.props.history} clickHome={this.props.clickHome} clickDashboard={this.props.clickDashboard} clickReports={this.props.clickReports}></TabBar>
+            <TabBar value={this.props.value}history={this.props.history} tab1={"Home"} clickHome={this.props.clickHome} tab2={"Dashboard"} clickDashboard={this.props.clickDashboard} tab3={"Reports"} clickReports={this.props.clickReports}></TabBar>
         )
     }
 
