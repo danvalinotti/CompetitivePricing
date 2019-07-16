@@ -37,6 +37,7 @@ import ManualReportDialog from './ManualReportDialog'
 class Reports extends Component {
     constructor(props) {
         super(props);
+        this.authenticateUser();
 
         this.state = {
             dashBoardDrugsData: this.props.dashBoardDrugsData,
@@ -59,7 +60,9 @@ class Reports extends Component {
             filterFunc: null,
             selectedReports: [],
             openManualReport:false,
+            loggedInProfile:{},
         }
+        this.authenticateUser.bind(this);
         this.getAllReports();
         
         this.clickHome = this.clickHome.bind(this);
@@ -69,6 +72,31 @@ class Reports extends Component {
             
             
 
+    }
+    authenticateUser(){
+       
+        var userToken = {};
+        userToken.name = window.sessionStorage.getItem("token");
+
+        Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
+        .then(r => {
+            console.log(r.data)
+            if(r.data.password != "false"){
+              this.setState({
+                openSignIn : false,
+                loggedIn : true,
+                loggedInProfile: r.data
+              });
+              console.log("LOGGED IN");
+             
+              window.sessionStorage.setItem("token",r.data.password);
+              window.sessionStorage.setItem("loggedIn","true");
+            //   this.props.history.push({ pathname: '/search' });
+            }else{
+               console.log("incorrect");
+               this.props.history.push({ pathname: '/signIn' });
+            }
+        })
     }
     getAllReports(){
         Axios.get('https://drug-pricing-backend.cfapps.io/reports/getAll')
@@ -682,7 +710,7 @@ class Reports extends Component {
         }
         return (
             <div>
-                <HeaderComponent value={2} clickHome={this.clickHome}history={this.props.history} clickDashboard={this.clickDashboard} clickReports={this.clickReports} />
+                <HeaderComponent profile={this.state.loggedInProfile} value={2} clickHome={this.clickHome}history={this.props.history} clickDashboard={this.clickDashboard} clickReports={this.clickReports} />
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <h4 className="row" style={{ paddingTop: '3%', marginRight: '0px', marginLeft: '0px' }}>
                         <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>

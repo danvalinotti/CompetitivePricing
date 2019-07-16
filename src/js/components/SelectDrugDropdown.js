@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
-import {components} from 'react-select'
+import { components } from 'react-select'
 import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
@@ -129,8 +129,7 @@ inputComponent.propTypes = {
 };
 
 function Control(props) {
-    console.log("CONTROL");
-    console.log(props);
+
   const {
     children,
     innerProps,
@@ -263,9 +262,18 @@ Menu.propTypes = {
   selectProps: PropTypes.object,
 };
 const MenuList = props => {
+
+  var listItems;
+  try {
+    listItems = props.children.slice(0, 50)
+  } catch (error) {
+    listItems = ["No Results Found"]
+  }
+
   return (
-    <components.MenuList {...props}>      
-      { props.children.slice(0, 50) }
+    <components.MenuList {...props}>
+      {listItems}
+
     </components.MenuList>
   );
 };
@@ -283,18 +291,17 @@ const components2 = {
   DropdownIndicator,
 };
 const DropdownIndicator = props => {
-    return (
-      components.DropdownIndicator && (
-        <components.DropdownIndicator {...props}>
+  return (
+    components.DropdownIndicator && (
+      <components.DropdownIndicator {...props}>
         <svg class="MuiSvgIcon-root MuiSelect-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="M7 10l5 5 5-5z"></path></svg>
-        </components.DropdownIndicator>
-      )
-    );
-  };
+      </components.DropdownIndicator>
+    )
+  );
+};
 
 export default function IntegrationReactSelect(props) {
-   console.log("MAIN")
-    console.log(props);
+
   const classes = useStyles();
   const theme = useTheme();
   const [single, setSingle] = React.useState(null);
@@ -317,36 +324,36 @@ export default function IntegrationReactSelect(props) {
       },
     }),
   };
-  
+
   return (
     // <div className={classes.root}>
     //   <NoSsr>
-        
-    //     <div className={classes.divider} />
-        <Select
-         closeMenuOnSelect= {false}
-         cropWithEllipsis= {true}
-        //  onFocus={(e) => e.target.size = 5}
-          styles={{maxHeight:'100px'}}
-          classes={classes}
 
-          maxMenuHeight={200}
-        //   styles={selectStyles}
-          inputId="react-select-multiple"
-          TextFieldProps={{
-           
-            InputLabelProps: {
-              htmlFor: 'react-select-multiple',
-              shrink: true,
-            },
-             
-          }}
-          options={props.listOfDrugs}
-          components={components2}
-          value={props.drugValue}
-          onChange={props.drugOnChange}
-          isMulti
-        />
+    //     <div className={classes.divider} />
+    <Select
+      closeMenuOnSelect={false}
+      cropWithEllipsis={true}
+      //  onFocus={(e) => e.target.size = 5}
+      styles={{ maxHeight: '100px' }}
+      classes={classes}
+
+      maxMenuHeight={200}
+      //   styles={selectStyles}
+      inputId="react-select-multiple"
+      TextFieldProps={{
+
+        InputLabelProps: {
+          htmlFor: 'react-select-multiple',
+          shrink: true,
+        },
+
+      }}
+      options={props.listOfDrugs}
+      components={components2}
+      value={props.drugValue}
+      onChange={props.drugOnChange}
+      isMulti
+    />
     //   </NoSsr>
     // </div>
   );

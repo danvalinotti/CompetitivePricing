@@ -14,14 +14,15 @@ import GoodRxImg from "../../assests/images/goodRx2.png";
 import HeaderWithSearch from "../components/HeaderWithSearch";
 import Arrow from "../components/Arrow";
 import DrugInformation from "../components/DrugInformation";
-
+import Axios from "axios";
 class ViewDrugDetails extends React.Component {
   constructor(props) {
     super(props);
+    this.authenticateUser();
     var quantityList = [];
     
     if (!this.props.state.location.state) {
-      this.props.history.push('/');
+      this.props.history.push('/search');
       this.state = {};
     } else {
       var response = this.props.state.location.state.response;
@@ -49,14 +50,41 @@ class ViewDrugDetails extends React.Component {
         drugDetails: response,
         toDashboard: true,
         toggleDialog: false,
+        loggedInProfile:{},
       };
      
     }
+    this.authenticateUser.bind(this);
     this.clickHome = this.clickHome.bind(this);
     this.clickDashboard = this.clickDashboard.bind(this);
     this.clickReports = this.clickReports.bind(this);
 
   }
+  authenticateUser(){
+    console.log("dashboardContainer")
+    var userToken = {};
+    userToken.name = window.sessionStorage.getItem("token");
+
+    Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
+    .then(r => {
+        console.log(r.data)
+        if(r.data.password != "false"){
+          this.setState({
+            openSignIn : false,
+            loggedIn : true,
+            loggedInProfile: r.data
+          });
+          console.log("LOGGED IN");
+         
+          window.sessionStorage.setItem("token",r.data.password);
+          window.sessionStorage.setItem("loggedIn","true");
+        //   this.props.history.push({ pathname: '/search' });
+        }else{
+           console.log("incorrect");
+           this.props.history.push({ pathname: '/signIn' });
+        }
+    })
+}
   getIndexByLabel(label, list){
     var index = 0;
     list.map((obj,i)=>{
@@ -92,6 +120,7 @@ class ViewDrugDetails extends React.Component {
       zipCode: request.zipcode,
       drugStrength: drugStrength,
       drugQuantity: drugQuantity,
+   
     })
 
   }
@@ -178,10 +207,12 @@ clickReports(){
 
         <div>
           <HeaderWithSearch
+          
             updateProperties={this.updateProperties.bind(this)}
             toggleDialog={this.toggleDialog.bind(this)}
             history={this.props.history}
             value={0}
+            profile={this.state.loggedInProfile}
             clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}
           ></HeaderWithSearch>
       

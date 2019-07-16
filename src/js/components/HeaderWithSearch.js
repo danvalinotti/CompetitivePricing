@@ -17,9 +17,10 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup'; 
+import FormGroup from '@material-ui/core/FormGroup';
 import Menu from '@material-ui/core/Menu';
-
+import AutoSuggestComponent2 from "./AutoSuggestComponent.1";
+import Grid from '@material-ui/core/Grid';
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;
@@ -43,12 +44,12 @@ class HeaderWithSearch extends React.Component {
 
   constructor(props) {
     super(props);
- 
+
     var loggedIn = window.sessionStorage.getItem("loggedIn");
-    
-    if(!(loggedIn == "true")){
+
+    if (!(loggedIn == "true")) {
       loggedIn = false;
-    }else{
+    } else {
       loggedIn = true;
     }
 
@@ -68,12 +69,12 @@ class HeaderWithSearch extends React.Component {
       toDashboard: true,
       open: false,
       averagePriceColor: null,
-      value: 0 ,
-      anchorEl:null,
+      value: 0,
+      anchorEl: null,
       profileMenuOpen: false,
-      loggedIn:loggedIn,
-      openSignIn:false,
-      openSignUp:false
+      loggedIn: loggedIn,
+      openSignIn: false,
+      openSignUp: false
     };
   }
   onChangeZipCode(event) {
@@ -81,7 +82,7 @@ class HeaderWithSearch extends React.Component {
       zipCode: event.target.value,
     });
   }
-   handleChange(event, newValue) {
+  handleChange(event, newValue) {
     this.setState({
       value: newValue
     }
@@ -94,6 +95,7 @@ class HeaderWithSearch extends React.Component {
 
     this.getProviderPrices(event.target.value);
   };
+
 
   getProviderPrices(drugName) {
     fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName)
@@ -179,18 +181,18 @@ class HeaderWithSearch extends React.Component {
     console.log("PRovider Price");
     console.log(this.state.providerPrices[0]);
     this.state.providerPrices[0];
-    if(this.state.selectedDrug  == null){
+    if (this.state.selectedDrug == null) {
       this.state.selectedDrug = this.state.providerPrices[0];
       var drug = this.state.selectedDrug;
       this.dosageList = drug.dose;
-    this.setState({
-      inputValue: drug.name,
-      selectedDrug: drug,
-      strengthList: drug.dose,
-      drugStrength: drug.dose[0],
-      quantityList: drug.dose[0].quantity,
-      drugQuantity: drug.dose[0].quantity[0],
-    });
+      this.setState({
+        inputValue: drug.name,
+        selectedDrug: drug,
+        strengthList: drug.dose,
+        drugStrength: drug.dose[0],
+        quantityList: drug.dose[0].quantity,
+        drugQuantity: drug.dose[0].quantity[0],
+      });
     }
 
 
@@ -201,17 +203,17 @@ class HeaderWithSearch extends React.Component {
     const quantity = this.state.selectedDrug.dose[0].defaultQuantity;
     const drugName = this.state.selectedDrug.name;
     const drugRequest = { "drugNDC": drugNDC, "drugName": drugName, "drugType": drugType, "dosageStrength": drugStrength, "quantity": quantity, "zipcode": zipCode, "longitude": "longitude", "latitude": "latitude" }
-    
+
     this.setState({
       drugRequest: drugRequest,
     });
     this.getDrugDetails(drugRequest);
 
   }
-  navigateProfile(){
-    
+  navigateProfile() {
+
   }
-  openProfileMenu(event){
+  openProfileMenu(event) {
     console.log("hellothere");
     console.log(event);
     this.setState({
@@ -219,49 +221,65 @@ class HeaderWithSearch extends React.Component {
       anchorEl: event.target
     })
   }
-  closeProfileMenu(event){
+  closeProfileMenu(event) {
     console.log("hellothere");
     console.log(event);
     this.setState({
-      profileMenuOpen:false,
+      profileMenuOpen: false,
       anchorEl: event.target
     })
   }
   loadMenuItems(){
     
     if(this.state.loggedIn == true){
-      return(<div>
-      <MenuItem >My Account</MenuItem>
-      <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
+      if(this.props.profile.role == "admin"){
+        return(<div>
+          <MenuItem >My Account</MenuItem>
+          <MenuItem onClick={this.goToAdmin.bind(this)} >Go To Admin</MenuItem>
+          <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
+      }else{
+        return(<div>
+          <MenuItem >My Account</MenuItem>
+          <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
+      }
+     
     }else{
       return(<div>
         <MenuItem onClick={this.signIn.bind(this)} >Sign In</MenuItem>
         <MenuItem onClick={this.signUp.bind(this)} >Sign Up</MenuItem></div>);
     }
-  }
-  logout(){
+  } 
+  logout() {
     this.setState({
       loggedIn: false,
     });
-    window.sessionStorage.setItem("loggedIn",false);
-    window.sessionStorage.setItem("token","");
+    window.sessionStorage.setItem("loggedIn", false);
+    window.sessionStorage.setItem("token", "");
 
     this.props.history.push({ pathname: '/signin' });
   }
-  signIn(){
+  signIn() {
     this.setState({
       // loggedIn: true,
-      openSignIn:true
+      openSignIn: true
     });
     // window.sessionStorage.setItem("loggedIn",true);
   }
-  signUp(){
+  signUp() {
     console.log("signup");
     this.setState({
       // loggedIn: true,
-      openSignUp:true
+      openSignUp: true
     });
+
     // window.sessionStorage.setItem("loggedIn",true);
+  }
+  updateDrug(drug) {
+    this.onClickDrug(drug);
+    console.log("SET update drug");
+  }
+  setFirstChoice() {
+    console.log("SET FIRST CHOICE");
   }
 
   render() {
@@ -281,7 +299,7 @@ class HeaderWithSearch extends React.Component {
       //           <div><img src={image} style={{ float: 'right', width: '130px', height: '30px' }} /> </div></div>
       //       </div>
       //       <div className="headerCol col-sm-8 searchHeader " style ={{padding:'0px'}}>
-              
+
       //       </div>
       //     </div>
 
@@ -289,92 +307,49 @@ class HeaderWithSearch extends React.Component {
 
       // </div>
       <AppBar position="static" style={{ background: "orange" }}>
-      <Toolbar>
-     
-       {/* <div className="col-sm-7">  */}
-        <div className= "row">
-        <span onClick={()=>this.props.clickHome()} className="headerHelp pointer" style={{marginTop:'1.5%'}}>
-          <span ><svg style={{ marginLeft: '30%', width: '70px', paddingTop: '5px' ,height:'25px' }}
-            xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></span>
-          <span><img src={image} style={{paddingRight:'20px' , float: 'right', width: '130px', height: '30px' }} /> </span></span>
-        <Tabs
-          value={this.state.value}
+        <Toolbar>
 
-          onChange={(event, value) => this.handleChange(event, value)}
-        >
-          <Tab onClick={() => this.props.clickHome()} label="Search" />
-          <Tab onClick={() => this.props.clickDashboard()} label="Dashboard" />
-          <Tab onClick={() => this.props.clickReports()} label="Reports" />
-        </Tabs>
-        </div> 
-       {/* </div> */}
-        {/* <div className="col-sm-5"> */}
-        <div className="row">
-                <div className="col-sm-6 headerButton" style={{padding:'0px'}}>
-                  <Downshift onSelect={(drug) => this.onClickDrug(drug)} itemToString={i => { return i ? i.name : '' }} id="downshift-simple" >
-                    {({
-                      theme = { theme },
-                      getInputProps,
-                      getItemProps,
-                      getMenuProps,
-                      handleInputChange,
-                      highlightedIndex,
-                      inputValue,
-                      isOpen,
-                      selectedItem,
+          <Grid container sm={12} direction="row">
+          <Grid container sm={5}direction="row">
+            <span onClick={() => this.props.clickHome()} className="headerHelp pointer" style={{ marginTop: '1.5%' }}>
+              {/* <span ><svg style={{ width: '70px', paddingTop: '5px', height: '25px' }}
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></span> */}
+              <span><img src={image} style={{ paddingRight: '20px', float: 'right', width: '130px', height: '30px' }} /> </span></span>
+            <Tabs  value={this.state.value} onChange={(event, value) => this.handleChange(event, value)}
+            >
+              <Tab style={{ minWidth: 50 }} onClick={() => this.props.clickHome()} label={<span style={{ color: 'white' }}> Home</span>}/>
+              <Tab style={{ minWidth: 50 }} onClick={() => this.props.clickDashboard()} label={<span style={{ color: 'white' }}>Dashboard</span>} />
+              <Tab style={{ minWidth: 50 }} onClick={() => this.props.clickReports()} label={<span style={{ color: 'white' }}>Reports</span>}/>
+            </Tabs>
 
-                    }) => (
-                        <div className={classes.container} className="form-control search-bar ">
-                          {renderInput({
-                            fullWidth: true,
-                            classes,
+            </Grid>
+            <Grid container sm={7} direction="row">
+            <div className="headerButton" style={{width:'350px', padding: '0px' }}>
+            
+                <AutoSuggestComponent2 name="autoSuggestValue"
+                  AutoSuggestComponent={this.props.drugStrengthArray}
 
-                            InputProps: getInputProps({
-                              placeholder: 'Search A Drug',
-                              className: 'removeLine ',
-                              onChange: this.handleInputChange.bind(this),
-                              value: this.state.inputValue,
-                              style:{flexWrap:'inherit'}
-                            }),
+                  setFirstChoice={this.setFirstChoice.bind(this)}
+                  drugSearchResult={this.props.drugSearchResult}
+                  actions={this.props.actions}
+                  drugStrengthArray={this.props.drugStrengthArray}
+                  updateDrug={this.updateDrug.bind(this)}
 
-                          })}
-                          <div {...getMenuProps()}>
-                            {isOpen ? (
-                              <Paper className={classes.paper} square className="" style={{
-                                position: 'relative',
-                                zIndex: 5,
-                                maxHeight:'200px',
-                                overflowY:'scroll'
-                            }}>
-                                {this.getSuggestions(inputValue).map((suggestion, index) =>
-                                  this.renderSuggestion({
-                                    suggestion,
-                                    index,
-                                    itemProps: getItemProps({ item: suggestion }),
-                                    highlightedIndex,
-                                    selectedItem,
+                > </AutoSuggestComponent2>
+            
+            </div>
+          
+            <div className=" headerZip" style={{width:'100px', padding: '0px', paddingRight: '5px' }}>
+              <input className="form-control " style={{height:'50px'}} onChange={this.onChangeZipCode.bind(this)} type="text" id="myZipCode" placeholder="Zip Code" />
+            </div>
+            <div className="headerButton" style={{ padding: '0px', paddingRight: '5px' }}>
+              <button className="searchButton1 search-bar-copy-4" onClick={this.onClickSearch.bind(this)}>
+                Search
+                </button>
+            </div>
 
-                                  }),
-                                )}
-                              </Paper>
-                            ) : null}
-                          </div>
-                        </div>
-                      )}
-                  </Downshift>
-                </div>
-                <div className="col-sm-3 headerZip" style={{padding:'0px', paddingRight:'5px'}}>
-                  <input className="form-control search-bar " onChange={this.onChangeZipCode.bind(this)} type="text" id="myZipCode" placeholder="Zip Code" />
-                </div>
-                <div className="col-sm-3 headerButton" style={{padding:'0px',paddingRight:'5px'}}>
-                  <button className="searchButton1 search-bar-copy-4" onClick={this.onClickSearch.bind(this)}>
-                    Search
-                  </button>
-                </div>
-                </div>
-              {/* </div> */}
-              <div style={{ marginLeft: "auto", marginRight: -12}}>
+            <div style={{ marginLeft: "auto", marginRight: -12 }}>
               <IconButton
                 aria-label="Account of current user"
                 aria-controls="menu-appbar"
@@ -382,31 +357,33 @@ class HeaderWithSearch extends React.Component {
                 onClick={this.openProfileMenu.bind(this)}
                 color="white"
               >
-                <AccountCircle style={{color:'white'}} />
+                <AccountCircle style={{ color: 'white' }} />
               </IconButton>
               <Menu
                 id="menu-appbar"
                 open={this.state.profileMenuOpen}
-               onChange= {()=>{this.navigateProfile}}
-               onBlur={this.closeProfileMenu.bind(this)}
+                onChange={() => { this.navigateProfile }}
+                onBlur={this.closeProfileMenu.bind(this)}
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'right',
                 }}
                 getContentAnchorEl={null}
                 anchorEl={this.state.anchorEl}
-                
+
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-               
+
               >{this.loadMenuItems()}
               </Menu>
             </div>
-      </Toolbar>
-    </AppBar>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
 
     );
   };

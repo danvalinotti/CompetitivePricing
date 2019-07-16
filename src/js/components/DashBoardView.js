@@ -18,6 +18,7 @@ import KJUR from 'jsrsasign'
 class DashBoardViewComponent extends Component {
     constructor(props) {
         super(props);
+        this.authenticateUser();
         this.state = {
             dashBoardDrugsData: [],
             filteredList: [],
@@ -30,13 +31,40 @@ class DashBoardViewComponent extends Component {
             singleCareSort: "off",
             lowestPriceSort: "off",
             showDialog: false,
-            reports: <div></div>
+            reports: <div></div>,
+            loggedInProfile:{},
 
         }
+        this.authenticateUser.bind(this);
         this.getDashboardDrugs();
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
+    }
+    authenticateUser(){
+        console.log("dashboardContainer")
+        var userToken = {};
+        userToken.name = window.sessionStorage.getItem("token");
+
+        Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
+        .then(r => {
+            console.log(r.data)
+            if(r.data.password != "false"){
+              this.setState({
+                openSignIn : false,
+                loggedIn : true,
+                loggedInProfile: r.data
+              });
+              console.log("LOGGED IN");
+             
+              window.sessionStorage.setItem("token",r.data.password);
+              window.sessionStorage.setItem("loggedIn","true");
+            //   this.props.history.push({ pathname: '/search' });
+            }else{
+               console.log("incorrect");
+               this.props.history.push({ pathname: '/signIn' });
+            }
+        })
     }
     routeToSearch() {
         this.props.history.push({ pathname: '/search' });
@@ -484,7 +512,7 @@ class DashBoardViewComponent extends Component {
         // }
         return (
             <div>
-                <HeaderComponent value={1} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
+                <HeaderComponent profile={this.state.loggedInProfile} value={1} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <h4 className="row" style={{ paddingTop: '3%', marginRight: '0px', marginLeft: '0px' }}>
                         <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>

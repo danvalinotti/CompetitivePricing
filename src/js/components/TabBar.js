@@ -91,18 +91,32 @@ class TabBar extends React.Component {
     });
     // window.sessionStorage.setItem("loggedIn",true);
   }
+  goToAdmin(){
+    if(this.props.page){
+      this.props.history.push("/search");  
+    }else{
+      this.props.history.push("/admin/manage/users");
+    }
+  }
 
   loadMenuItems(){
-    
-    if(this.state.loggedIn == true){
-      return(<div>
-      <MenuItem >My Account</MenuItem>
-      <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
-    }else{
-      return(<div>
-        <MenuItem onClick={this.signIn.bind(this)} >Sign In</MenuItem>
-        <MenuItem onClick={this.signUp.bind(this)} >Sign Up</MenuItem></div>);
-    }
+      if(this.props.profile.role == "admin"){
+        if(this.props.page){
+          return(<div>
+            <MenuItem >My Account</MenuItem>
+            <MenuItem onClick={this.goToAdmin.bind(this)} >Go To User View</MenuItem>
+            <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);  
+        }
+        return(<div>
+          <MenuItem >My Account</MenuItem>
+          <MenuItem onClick={this.goToAdmin.bind(this)} >Go To Admin</MenuItem>
+          <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
+      }else{
+        return(<div>
+          <MenuItem >My Account</MenuItem>
+          <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
+      }
+     
   }
   closeSignIn(){
   
@@ -158,7 +172,7 @@ class TabBar extends React.Component {
   render() {
     return (
       <div>
-        <AppBar position="static" style={{ background: "orange" }}>
+        <AppBar position="static" style={{ background: this.props.color }}>
           <Toolbar>
            
             <span onClick={()=>this.props.clickHome()} className="headerHelp pointer">

@@ -40,6 +40,8 @@ import TabBar from "./TabBar";
 class ManageUsers extends Component {
     constructor(props) {
         super(props);
+        console.log("ManageUsers")
+        console.log(props)
         this.authenticateUser();
 
         this.state = {
@@ -50,8 +52,10 @@ class ManageUsers extends Component {
             newProfileDialog: false,
             email: '',
             name:'',
-            isAdmin:false
+            isAdmin:false,
+            loggedInProfile:{},
         }
+        this.authenticateUser.bind(this);
         //    this.populateProfiles.bind(this);
         this.populateProfiles();
 
@@ -70,7 +74,7 @@ class ManageUsers extends Component {
               this.setState({
                 openSignIn : false,
                 loggedIn : true,
-                
+                loggedInProfile: r.data
               });
               console.log("LOGGED IN");
              
@@ -111,12 +115,14 @@ class ManageUsers extends Component {
     }
     clickHome() {
         console.log("HOME");
+        console.log(this.props);
+        this.props.history.push("/admin/manage/users");
     }
     clickDashboard() {
-        console.log("Dashboard");
+        this.props.history.push("/admin/manage/users");
     }
     clickReports() {
-        console.log("Reports");
+        this.props.history.push("/admin/manage/drugs");
     }
     handleClose() {
         this.setState({
@@ -188,12 +194,12 @@ class ManageUsers extends Component {
 
         return (
             <div>
-                 <TabBar value={0} history={this.props.history} tab1={"Home"} clickHome={this.clickHome} tab2={"Manage Users"} clickDashboard={this.props.clickDashboard} tab3={"Manage Drugs"} clickReports={this.props.clickReports}></TabBar>
+                <TabBar  page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={1} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)}></TabBar>
                 {/* <HeaderComponent value={2} clickHome={this.clickHome} history={this.props.history} clickDashboard={this.clickDashboard} clickReports={this.clickReports} /> */}
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <br />
                     Manage Users
-                    <div style={{ paddingTop: '30px' }}>
+                    <div style={{ paddingTop: '30px'}}>
                         <Container >
                             <Grid container spacing={1}>
 

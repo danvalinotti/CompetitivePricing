@@ -55,7 +55,9 @@ class DashBoard extends React.Component {
             showDialog: false,
             firstChoice:null,
            // actions: sock,
-            messages: []
+            messages: [],
+            loggedInProfile:{},
+            
         };
 
         this.authenticateUser.bind(this);
@@ -79,7 +81,7 @@ class DashBoard extends React.Component {
               this.setState({
                 openSignIn : false,
                 loggedIn : true,
-                
+                loggedInProfile: r.data
               });
               console.log("LOGGED IN");
              
@@ -273,7 +275,7 @@ class DashBoard extends React.Component {
             <div>
                 <form id='Simple' className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}
                 >
-                    <HeaderComponent value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
+                    <HeaderComponent profile={this.state.loggedInProfile} value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
                     <div className="title ">
                         <div style={{ float: 'right', paddingTop:'10px'}}>
                             <img className="gxImage" src={gxImage} />
