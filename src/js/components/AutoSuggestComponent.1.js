@@ -1,19 +1,10 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-import Autosuggest from "react-autosuggest";
 import Paper from "@material-ui/core/Paper/Paper";
 import Downshift from 'downshift';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-function getSuggestionValue(suggestion) {
-    return suggestion.name;
-}
 
-function renderSuggestion(suggestion) {
-    return (
-        <span>{suggestion.name}</span>
-    );
-}
 
 function renderInput(inputProps) {
     const { InputProps, classes, ref, ...other } = inputProps;
@@ -23,10 +14,6 @@ function renderInput(inputProps) {
         <TextField style={{width:'100%',height:'100%'}}
             InputProps={{
                 inputRef: ref,
-                // classes: {
-                //     root: classes.inputRoot,
-                //     input: classes.inputInput,
-                // },
                 ...InputProps,
             }}
             {...other}
@@ -41,12 +28,7 @@ class AutoSuggestComponent2 extends React.Component {
 
         this.state = {
             inputValue: '',
-            suggestions: [],
             selectedItem: [],
-            selectedDrug: null,
-            drugRequest: null,
-            drugDetails: null,
-            onSelected: true,
             providerPrices: [],
           
         };
@@ -55,7 +37,6 @@ class AutoSuggestComponent2 extends React.Component {
 
     getSuggestions(value) {
         const providerPrices = this.state.providerPrices;
-
         return providerPrices;
     }
     onClickDrug(drug) {
@@ -63,7 +44,6 @@ class AutoSuggestComponent2 extends React.Component {
         this.dosageList = drug.dose;
         this.setState({
             inputValue: drug.name,
-            selectedDrug: drug,
             strengthList: drug.dose,
             drugStrength: drug.dose[0],
             quantityList: drug.dose[0].quantity,
@@ -84,8 +64,6 @@ class AutoSuggestComponent2 extends React.Component {
         fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName)
             .then(res => res.json())
             .then(json => {
-                console.log("json");
-                console.log(json);
                 this.props.setFirstChoice(json[0]);
                 this.setState({
                     providerPrices: json
@@ -120,13 +98,8 @@ class AutoSuggestComponent2 extends React.Component {
     render() {
 
         const { value, onSelected } = this.state;
-        const { classes } = this.props;
-        const { input, label } = this.props;
-        const inputProps = {
-            placeholder: "Search Drug",
-            value,
-            onChange: this.onChange
-        };
+        const { classes } = this.props; 
+         
 
         const theme = {
             input: {

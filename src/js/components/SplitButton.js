@@ -38,7 +38,6 @@ class SplitButton extends Component {
      }else{
       this.props.masterFunction(event, option);
      }
-     console.log(this.state.selectedIndex);
      this.setState({
        selectedIndex:-1,
      })

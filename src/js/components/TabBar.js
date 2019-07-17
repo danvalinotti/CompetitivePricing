@@ -1,24 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Toolbar from "@material-ui/core/Toolbar";
-import MenuIcon from "@material-ui/icons/Menu";
 import image from "../../assests/images/InsideLogo_1.svg";
 import IconButton from '@material-ui/core/IconButton'; 
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { isNullOrUndefined } from "util";
 import SignInDialog from './SignInDialog';
 import SignUpDialog from './SignUpDialog';
 import Axios from "axios";
+import Toolbar from "@material-ui/core/Toolbar"
 
 class TabBar extends React.Component {
 
@@ -49,9 +41,7 @@ class TabBar extends React.Component {
     }
     );
   }
-  navigateProfile(){
-    
-  }
+  
   openProfileMenu(event){
    
     this.setState({
@@ -76,21 +66,7 @@ class TabBar extends React.Component {
     this.props.history.push({ pathname: '/signin' });
 
   }
-  signIn(){
-    this.setState({
-      // loggedIn: true,
-      openSignIn:true
-    });
-    // window.sessionStorage.setItem("loggedIn",true);
-  }
-  signUp(){
-    console.log("signup");
-    this.setState({
-      // loggedIn: true,
-      openSignUp:true
-    });
-    // window.sessionStorage.setItem("loggedIn",true);
-  }
+ 
   goToAdmin(){
     if(this.props.page){
       this.props.history.push("/search");  
@@ -131,11 +107,9 @@ class TabBar extends React.Component {
     })
   }
   submitSignUp(profile){
-    console.log("profile");
-    console.log(profile);
     Axios.post('https://drug-pricing-backend.cfapps.io/signUp' , profile)
     .then(response => {
-      console.log(response.data);
+      console.log("response");
     });
 
     this.setState({
@@ -143,17 +117,12 @@ class TabBar extends React.Component {
     })
   }
   submitSignIn(profile){
-   console.log("profile");
-   console.log(profile)
     Axios.post('https://drug-pricing-backend.cfapps.io/create/token' , profile)
     .then(response => {
       
-        console.log("response.data"); 
-        console.log(response.data); 
         var p = {};
         Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , response.data)
         .then(r => {
-            console.log(r.data)
             if(r.data.password != "false"){
               this.setState({
                 openSignIn : false,

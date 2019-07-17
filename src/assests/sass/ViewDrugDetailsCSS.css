@@ -373,6 +373,10 @@ th{
 .reportDate{
   padding:20px;
 }
+.makeStyles-valueContainer-414{
+  max-height: 100px ;
+  overflow-y: auto !important;
+}
 .pointer{
   cursor: pointer;
 }

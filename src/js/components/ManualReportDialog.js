@@ -1,12 +1,10 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import '../../assests/sass/ViewDrugDetailsCSS.css'
-import DatePicker from './DatePicker'
+import '../../assests/sass/ViewDrugDetailsCSS.css' 
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid'; 
 import Container from '@material-ui/core/Container';
 import Axios from "axios";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -14,9 +12,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import Input from "@material-ui/core/Input";
-import IntegrationReactSelect from './SelectDrugDropdown'
-import Select2 from 'react-select';
-import fileDownload from 'js-file-download';
+import IntegrationReactSelect from './SelectDrugDropdown' 
 
 class ManualReportDialog extends React.Component {
 
@@ -24,9 +20,9 @@ class ManualReportDialog extends React.Component {
         super(props);
 
         this.state = {
-            isOpen: true,
-            drugList: [],
-            selectedDrugs: [],
+          
+          
+          
             drugDetails: ["Brand Type", "Dosage Strength", "Quantity", "Zip Code", "Recommended Price", "Difference"],
             selectedDrugDetails: [],
             providers: ["InsideRx", "WellRx", "SingleCare", "MedImpact", "U.S Pharmacy Card"],
@@ -43,8 +39,6 @@ class ManualReportDialog extends React.Component {
                 { value: 'vanilla', label: 'Vanilla' },
             ],
             selectedOption: null,
-
-
         }
         this.getLatestReport();
         this.loadPreviousReports();
@@ -57,13 +51,6 @@ class ManualReportDialog extends React.Component {
         Axios.post('https://drug-pricing-backend.cfapps.io/reports/saved/get', sender)
             .then(response => {
 
-                console.log("response.data"); console.log(response.data);
-                // this.setState({
-                //     selectedProviders:response.data.providers,
-                //     selectedDrugDetails: response.data.drug_fields,
-                //     selectedDrugs: response.data.drug_ids,
-
-                // })
                 this.setState({
                     previousReports: response.data
                 })
@@ -78,10 +65,8 @@ class ManualReportDialog extends React.Component {
                 selectedOption: [],
             })
         } else {
-            console.log(event.target.value.drug_ids);
             var arr = [];
             event.target.value.drug_ids.map((drug, index) => {
-                console.log(drug);
                 arr.push({ 'label': drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")", 'value': drug })
             })
             this.setState({
@@ -90,7 +75,6 @@ class ManualReportDialog extends React.Component {
                 selectedDrugDetails: event.target.value.drug_fields,
                 selectedOption: arr,
             })
-            console.log(arr);
         }
 
     }
@@ -99,33 +83,21 @@ class ManualReportDialog extends React.Component {
             reportName: event.target.value
         })
     }
-    handleChange(event) {
-
-
-        this.setState({
-            selectedDrugs: event.target.value,
-        });
-
-        this.state.selectedDrugs.indexOf(event.target.value);
-    }
+    
     handleSubmit() {
         var selectedDrugs = [];
         this.state.selectedOption.map((option) => {
             selectedDrugs.push(option.value);
         })
-        console.log("this.state.isSaved");
-        console.log(this.state.isSaved);
         var reportRequest = {
             'drugs': selectedDrugs, 'drugDetails': this.state.selectedDrugDetails,
             'providers': this.state.selectedProviders, 'isSaved': this.state.isSaved, 'name': this.state.reportName
         }
-        //  console.log(this.state.selectedDrugs);
         this.setState({
             buttonText: "Loading ...",
             buttonDisabled: true,
 
         });
-        console.log(reportRequest);
         reportRequest.token = window.sessionStorage.getItem("token");
         let options = {
             responseType: 'blob',
@@ -140,8 +112,6 @@ class ManualReportDialog extends React.Component {
                 link.setAttribute('download', 'poi-generated-file.xlsx');
                 document.body.appendChild(link);
                 link.click();
-                console.log(response.data)
-                // this.exportReport(response.data);
                 this.setState({
                     buttonText: "Create Manual Report",
                     buttonDisabled: false,
@@ -162,69 +132,22 @@ class ManualReportDialog extends React.Component {
     }
     mapOptions(drugList) {
         var newOptions = [];
-        console.log(drugList);
         drugList.map((drug) => {
             newOptions.push({ value: drug, label: drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")" })
         })
         this.setState({
             options: newOptions
         })
-        console.log(newOptions);
     }
-    renderValue(selected) {
-
-        var str = "";
-        selected.forEach((drug) => {
-
-            str = str + " " + drug.name + ",";
-
-        });
-        return str.substring(1, 20);
-
-
-    }
+   
     handleDrugDetailsChange(event) {
         this.setState({
             selectedDrugDetails: event.target.value,
         });
 
     }
-    exportReport(data) {
-        console.log(data);
-        var exportList = [];
-        data.forEach((element, index) => {
-
-
-            exportList.push(element);
-
-        });
-
-        console.log(exportList);
-        let csvContent = "data:text/csv;charset=utf-8,";
-
-        exportList.forEach(function (rowArray) {
-            let row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "DashboardDrugs.csv");
-        document.body.appendChild(link); // Required for FF
-
-        link.click(); // This will download the data file named "my_data.csv".
-        console.log("REPORT");
-    }
-    isChecked(drug, drugList) {
-        var checked = false;
-        drugList.forEach((d) => {
-            if (d.id === drug.id) {
-                checked = true;
-            }
-        });
-
-        return checked;
-    }
+    
+  
     handleProvidersChange(event) {
         this.setState({
             selectedProviders: event.target.value,
@@ -234,8 +157,6 @@ class ManualReportDialog extends React.Component {
     handleDrugChange(selectedOption) {
 
         this.setState({ selectedOption: selectedOption });
-        console.log(`Option selected:`, selectedOption);
-        console.log(this.state.selectedDrugs);
     };
 
 
@@ -285,17 +206,6 @@ class ManualReportDialog extends React.Component {
                                     Select Drug(s):
                             </Grid>
                                 <Grid item xs={6}>
-
-                                    {/* <Select2
-                                   closeMenuOnSelect= {false}
-                                   cropWithEllipsis= {true}
-                                    styles={{maxHeight:'200px'}}
-                                   isMulti={true}
-                                   isSearchable={true}
-                                    value={this.state.selectedOption}
-                                    onChange={this.handleDrugChange.bind(this)}
-                                    options={this.state.options}
-                                   /> */}
                                     <IntegrationReactSelect drugValue={this.state.selectedOption}
                                         drugOnChange={this.handleDrugChange.bind(this)} listOfDrugs={this.state.options}></IntegrationReactSelect>
 

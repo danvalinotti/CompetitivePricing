@@ -21,7 +21,7 @@ class FilterDialogs extends React.Component {
     }
     handleSubmit(){
         var date = document.getElementById("mui-pickers-date").value;
-        console.log(date);
+      
         this.props.filterFunc(date);
 
         this.props.updateDialog("off");

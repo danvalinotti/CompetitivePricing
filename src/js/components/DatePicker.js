@@ -21,7 +21,7 @@ class DatePicker extends React.Component {
   }
   
   setSelectedDate(date){
-    console.log(date);
+    
 
     this.setState({
       selectedDate :date,
@@ -30,7 +30,7 @@ class DatePicker extends React.Component {
 
 
  handleDateChange(date) {
-   console.log("Handle");
+   
     this.setSelectedDate(date);
   }
   render(){

@@ -15,22 +15,13 @@ class DrugInformation extends React.Component {
        
         var drugQuantity;
         var drugStrength;
-        console.log("drugQuantity");
-        console.log(this.props.drugQuantity);
-        console.log("drugStrength");
-        console.log(this.props.strengthList);
+      
         drugQuantity = this.getIndexWithValue(this.props.drugQuantity,this.props.quantityList);
         drugStrength = this.getIndexWithLabel(this.props.drugStrength,this.props.strengthList);
-        console.log(drugStrength);
-        
+       
         this.state = {
             drugRequest: '',
             selectedDrug: null,
-            strengthList: this.props.strengthList,
-            quantityList: this.props.quantityList,
-            drugQuantity:drugQuantity,
-            drugStrength: drugStrength,
-            open: false,
             dosageForm:"",
             pastDrugName: this.props.drugRequest.drugName,
         }
@@ -38,12 +29,10 @@ class DrugInformation extends React.Component {
         this.getDosageForm();
     }
     getDosageForm(){
-        console.log("getDosageForm")
+      
         fetch( "https://api.fda.gov/drug/ndc.json?search=brand_name:"+ this.props.response.name)
         .then(res => res.json())
         .then(json => {
-            console.log("json.routes[0]");
-            console.log(json.results[0].route[0]);
             this.setState({
                 dosageForm: json.results[0].route[0]
             })
@@ -84,21 +73,11 @@ class DrugInformation extends React.Component {
                
             })
     };
-    onStrengthChange(event) {
-
-        if (event) {
-            this.setState({
-                drugStrength: this.getDose(event.target.value),
-                quantityList: this.getDose(event.target.value).quantity,
-
-            });
-        }
-
-    }
+  
 
     onClickFilterSearch() {
         this.props.toggleDialog();
-        console.log(this.props.drugRequest);
+       
         const zipCode = this.props.drugRequest.zipcode;
         const drugType = "BRAND_WITH_GENERIC";
         const drugStrength =this.props.strengthList[this.props.drugStrength].label;
@@ -112,9 +91,7 @@ class DrugInformation extends React.Component {
         });
         this.getDrugDetails(drugRequest);
     }
-    getDose(index) {
-        return this.state.strengthList[index];
-    }
+  
    
     addDrug() {
 
@@ -128,10 +105,7 @@ class DrugInformation extends React.Component {
 
     }
     getNDC(strength, response){
-        console.log("strength");
-        console.log(strength);
-        console.log("response");
-        console.log(response);
+       
 
         var drugNDC = "";
         response.dose.forEach(dose => {
@@ -140,43 +114,13 @@ class DrugInformation extends React.Component {
                 drugNDC = dose.value;
             }
         });
-        console.log(drugNDC);
+       
         return drugNDC;
     }
 
-    updateProperties(request, info, response, drugStrengthList, drugQuantityList, drugStrength, drugQuantity) {
-        this.setState({
-            selectedDrug: info,
-            drugRequest: request,
-            drugDetails: response,
-            strengthList: drugStrengthList,
-            quantityList: drugQuantityList,
-            zipCode: request.zipcode,
-            drugStrength: drugStrength,
-            drugQuantity: drugQuantity,
-        })
-
-    }
-    onStrengthChange(event){
-        this.props.onStrengthChange(event);
-        console.log(event.target.value);
-        this.setState({
-            drugStrength:event.target.value,
-            quantityList:this.state.strengthList[event.target.value].quantity
-        });
-    }
-    updateQuantity(event){
-        this.props.updateQuantity(event);
-        console.log(event.target.value);
-        this.setState({
-            drugQuantity:event.target.value,
-        });
-    }
-    onClickToDashboard(){
-        console.log("this.onClickToDashboard")
-        this.props.history.push("/viewDashBoard");
-
-    }
+   
+   
+    
     format(str){
         var text = str;
         text = text.toLowerCase();

@@ -20,9 +20,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function getSteps() {
-  return ["Enter Email Address", "Enter Password", "Login"];
-}
 
 function getStepContent(step , props) {
     
@@ -54,7 +51,6 @@ export default function HorizontalLinearStepper(props) {
   }
 
   function handleNext(props) {
-    console.log("handleNext")
     if(props.activeStep === steps.length - 1){
             props.submit();
     }
@@ -69,13 +65,11 @@ export default function HorizontalLinearStepper(props) {
   }
 
   function handleBack(props) {
-    console.log("handleBack")
     props.setActiveStep(prevActiveStep => prevActiveStep - 1);
   }
 
 
   function handleReset(props) {
-    console.log("handleReset")
     props.setActiveStep(0);
   }
 

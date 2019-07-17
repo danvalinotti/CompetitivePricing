@@ -5,15 +5,7 @@ import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
 import Icons from "./Icons"
-import { isNumber } from "util";
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { runInThisContext } from "vm";
-import DatePicker from './DatePicker'
-import KJUR from 'jsrsasign'
+
 
 class DashBoardViewComponent extends Component {
     constructor(props) {
@@ -30,8 +22,6 @@ class DashBoardViewComponent extends Component {
             pharmCardSort: "off",
             singleCareSort: "off",
             lowestPriceSort: "off",
-            showDialog: false,
-            reports: <div></div>,
             loggedInProfile:{},
 
         }
@@ -42,48 +32,31 @@ class DashBoardViewComponent extends Component {
         this.clickReports = this.clickReports.bind(this);
     }
     authenticateUser(){
-        console.log("dashboardContainer")
+       
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
         Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
         .then(r => {
-            console.log(r.data)
+         
             if(r.data.password != "false"){
               this.setState({
                 openSignIn : false,
                 loggedIn : true,
                 loggedInProfile: r.data
               });
-              console.log("LOGGED IN");
-             
+           
               window.sessionStorage.setItem("token",r.data.password);
               window.sessionStorage.setItem("loggedIn","true");
             //   this.props.history.push({ pathname: '/search' });
             }else{
-               console.log("incorrect");
+             
                this.props.history.push({ pathname: '/signIn' });
             }
         })
     }
-    routeToSearch() {
-        this.props.history.push({ pathname: '/search' });
-    }
-    handleClose() {
-        console.log("CLOSE");
-        this.setState({
-            showDialog: false
-        });
-    }
-    toggleDialog() {
-        this.setState({
-            showDialog: !this.state.showDialog,
-        });
-    }
-    viewSummaries() {
-        this.toggleDialog();
-        console.log("view");
-    }
+   
+ 
     exportDrugs() {
         var exportList = [["Drug Name", "Drug Type", "Dosage Strength",
             "Quantity", "Zip Code", "Inside Rx Price", "U.S Pharmacy Card Price",
@@ -99,7 +72,7 @@ class DashBoardViewComponent extends Component {
 
         });
 
-        console.log(exportList);
+       
         let csvContent = "data:text/csv;charset=utf-8,";
 
         exportList.forEach(function (rowArray) {
@@ -115,9 +88,7 @@ class DashBoardViewComponent extends Component {
         link.click(); // This will download the data file named "my_data.csv".
     }
     deleteDrug(drug, index) {
-            console.log("delete");
-            console.log(drug);
-            console.log(index);
+           
             
         Axios.post('https://drug-pricing-backend.cfapps.io/dashboard/drug/delete' , drug)
             .then(response => {
@@ -128,15 +99,14 @@ class DashBoardViewComponent extends Component {
     }
     getDashboardDrugs() {
         var strtoken = window.sessionStorage.getItem("token");
-        console.log("strtoken");
-        console.log(strtoken);
+       
         var token = {};
         token.value = strtoken;
         token.key = strtoken;
-        console.log(token);
+     
         Axios.post('https://drug-pricing-backend.cfapps.io/dashboard/get', token)
         .then(response => {
-            console.log(response);
+          
                 this.setState({
                     dashBoardDrugsData: response.data,
                     filteredList: response.data
@@ -191,11 +161,7 @@ class DashBoardViewComponent extends Component {
         }
 
     }
-    // setFilterList(){
-    //     this.setState({
-    //         filteredList:this.state.dashBoardDrugsData
-    //     })
-    // }
+   
     filterList(event) {
         var str = event.target.value.toLowerCase();
         var filteredList = [];
@@ -206,35 +172,14 @@ class DashBoardViewComponent extends Component {
             }
 
         })
-        console.log("filteredList"); 
-        console.log(filteredList);
+       
         this.setState({
             filteredList: filteredList
         });
     }
-    commandList(event) {
-        if (event.key === 'Enter') {
-            this.sortList();
-            //  var command = this.parseCommand(event.target.value);
-        }
-    }
-    parseCommand(strCommand) {
-        var command = [];
-        var i = strCommand.indexOf(":");
-        command.push(strCommand.substring(0, i));
-        command.push(strCommand.substring(i + 1, strCommand.length));
-        console.log(command);
-        return command;
-    }
-    sortList(sortBy) {
-
-        var sorted = Sorting.sortByQuantity(this.state.filteredList, 1);
-        this.setState({
-            filteredList: sorted
-        })
-        console.log("sorted");
-        console.log(sorted);
-    }
+  
+   
+   
     sortByName() {
         var sort = "off";
         switch (this.state.drugSort) {
@@ -337,7 +282,7 @@ class DashBoardViewComponent extends Component {
         });
     }
     sortByMedImpact() {
-        console.log(this.state.medImpactSort);
+     
         var sort = "off";
         switch (this.state.medImpactSort) {
             case 'off':
@@ -351,7 +296,7 @@ class DashBoardViewComponent extends Component {
                 break;
 
         }
-        //   console.log(sort);
+       
         this.setState({
             drugSort: "off",
             insideRxSort: "off",
@@ -389,72 +334,8 @@ class DashBoardViewComponent extends Component {
             filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 4, sort)
         });
     }
-    exportReport(data) {
-        console.log(data);
-        var exportList = [["Drug Name", "Drug Type", "Dosage Strength",
-            "Quantity", "Zip Code", "Inside Rx Price", "U.S Pharmacy Card Price",
-            "Well Rx Price", "MedImpact Price", "Singlecare Price",
-            "Recommended Price", "Difference"]];
-        data.forEach((element, index) => {
-            var row = [element.name, element.drugType, element.dosageStrength + " " + element.dosageUOM,
-            element.quantity, '= "' + element.zipcode + '"', element.programs[0].price, element.programs[1].price,
-            element.programs[2].price, element.programs[3].price, element.programs[4].price,
-            element.recommendedPrice, element.recommendedDiff];
-
-            exportList.push(row);
-
-        });
-
-        console.log(exportList);
-        let csvContent = "data:text/csv;charset=utf-8,";
-
-        exportList.forEach(function (rowArray) {
-            let row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "DashboardDrugs.csv");
-        document.body.appendChild(link); // Required for FF
-
-        link.click(); // This will download the data file named "my_data.csv".
-        console.log("REPORT");
-    }
-    getDailyReports() {
-
-
-        console.log("test");
-        var self = this;
-        var inputVal = document.getElementById("mui-pickers-date").value;
-        console.log("INPUTVAL");
-        console.log(inputVal);
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
-            .then(response => {
-
-                var inner = <div><br />
-                    {response.data.map(item => (
-                        <div>
-                            <Button style={{marginBottom:'10px'}} variant="outlined" color="default" onClick={() => this.exportReport(item.drug)}>
-                                Batch for {this.getDate(item.batchDetails.batchStart)}
-                                <Icons icon="save" height="24" width="24" />
-                            </Button>
-                            <br />
-                        </div>
-
-                    ))} </div>
-
-                if(response.data.length === 0 ){
-                    inner = <div> <br/> No Results Found</div>
-                }
-
-
-                this.setState({
-                    reports: inner
-                });
-            });
-
-    }
+  
+    
     clickHome(){
         this.props.history.push({ pathname: '/search' });
     }
@@ -464,12 +345,7 @@ class DashBoardViewComponent extends Component {
     clickReports(){
         this.props.history.push({ pathname: '/reports' });
     }
-    getDate(batchStart) {
-
-        var d = new Date(batchStart);
-        
-        return d.toLocaleString();
-    }
+   
     sortByLowestPrice() {
         var sort = "off";
         switch (this.state.lowestPriceSort) {
@@ -502,14 +378,7 @@ class DashBoardViewComponent extends Component {
 
 
     render() {
-        // if (this.props.dashBoardDrugsData != this.state.dashBoardDrugsData) {
-        //     this.setState({
-        //         dashBoardDrugsData: this.props.dashBoardDrugsData,
-
-        //     });
-        //     var element = document.getElementById("myZipCode").value;
-        //     this.filterList({ target: { value: element } });
-        // }
+       
         return (
             <div>
                 <HeaderComponent profile={this.state.loggedInProfile} value={1} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
@@ -523,14 +392,11 @@ class DashBoardViewComponent extends Component {
                             <div className=" headerZip" style={{ padding: '0px' }}>
                                 <input className="form-control search-bar " onChange={() => { this.filterList(event) }} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
                             </div>
-                            {/* <div className="col-sm-3 headerZip" style={{ padding: '0px' }}>
-                            <input className="form-control search-bar " onKeyPress={()=>{this.commandList(event)}} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
-                        </div> */}
+                            
                         </div>
                         <div className="col-sm-6 " style={{ paddingRight: '0px', }}>
                             <div className="float-sm-right">
                                 <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.exportDrugs() }} className="btn btn-outline-primary">Export</button>
-                                {/* <button type="button" onClick={() => { this.routeToSearch() }} className="btn btn-outline-primary">Search Drug</button> */}
                             </div>
                         </div>
                     </h4>
@@ -585,18 +451,7 @@ class DashBoardViewComponent extends Component {
                         {(this.state.filteredList.length == 0)?<div style={{textAlign: 'center'}} className="highlightedCell">No Drugs Added To Dashboard</div>:<div></div>}                      
                     </div>
                 </div>
-                <Dialog onClose={() => this.handleClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.showDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
-                        Daily Summaries
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                        <DatePicker></DatePicker><br />
-                        <button style={{ marginTop: '10px' }} type="button" onClick={() => { this.getDailyReports() }} className="btn btn-outline-primary">View Daily Summary</button>
-                        {this.state.reports}
-
-                    </DialogContent>
-                </Dialog>
+                
             </div>
         )
     }

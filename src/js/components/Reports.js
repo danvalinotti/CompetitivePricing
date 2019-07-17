@@ -4,14 +4,12 @@ import * as Sorting from "./Sorting";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
-import Icons from "./Icons"
-import { isNumber } from "util";
+import Icons from "./Icons" 
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { runInThisContext } from "vm";
+import CircularProgress from "@material-ui/core/CircularProgress"; 
 import DatePicker from './DatePicker';
 import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
@@ -21,13 +19,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
+import TableHead from '@material-ui/core/TableHead'; 
 import SplitButton from './SplitButton';
 import Grid from '@material-ui/core/Grid';
 import FilterDialogs from './FilterDialogs'
@@ -68,7 +60,6 @@ class Reports extends Component {
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
-            console.log("hello");
             
             
 
@@ -80,20 +71,17 @@ class Reports extends Component {
 
         Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
         .then(r => {
-            console.log(r.data)
             if(r.data.password != "false"){
               this.setState({
                 openSignIn : false,
                 loggedIn : true,
                 loggedInProfile: r.data
               });
-              console.log("LOGGED IN");
              
               window.sessionStorage.setItem("token",r.data.password);
               window.sessionStorage.setItem("loggedIn","true");
             //   this.props.history.push({ pathname: '/search' });
             }else{
-               console.log("incorrect");
                this.props.history.push({ pathname: '/signIn' });
             }
         })
@@ -101,8 +89,6 @@ class Reports extends Component {
     getAllReports(){
         Axios.get('https://drug-pricing-backend.cfapps.io/reports/getAll')
             .then(response => {
-                console.log("REPORTS"); 
-               console.log(response);
                this.state.reports = response.data;
                 this.setState({
                     reports: response.data,
@@ -112,101 +98,24 @@ class Reports extends Component {
                 this.sortBy("", {"func":this.compareNewestToOldest.bind(this)});
             });
     }
-    routeToSearch() {
-        this.props.history.push({ pathname: '/search' });
-    }
-    resetSelected(){
-        var arr = new Array(this.state.count).fill(false);
-        this.setState({
-            selectedReports:arr
-        });
-    }
-    manualReport() {
-        this.setState({
-            loadingDialog: true
-        });
-
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/addToMasterList')
-            .then(response => {
-                this.exportReport(response.data.drug);
-                this.handleCloseLoading();
-            });
-
-    }
+  
+   
     handleClose() {
-        console.log("CLOSE");
+      
         this.setState({
             reportsDialog: false
         });
     }
     handleCloseLoading() {
-        console.log("closing loading");
         this.setState({
             loadingDialog: false
         });
     }
-    toggleDialog() {
-        this.setState({
-            reportsDialog: !this.state.reportsDialog,
-        });
-    }
-    viewSummaries() {
-        this.toggleDialog();
-        console.log("view");
-    }
-    exportDrugs() {
-        var exportList = [["Drug Name", "Drug Type", "Dosage Strength",
-            "Quantity", "Zip Code", "Inside Rx Price", "U.S Pharmacy Card Price",
-            "Well Rx Price", "MedImpact Price", "Singlecare Price",
-            "Recommended Price", "Difference"]];
-        this.state.filteredList.forEach((element, index) => {
-            var row = [element.name, element.drugType, element.dosageStrength + " " + element.dosageUOM,
-            element.quantity, '= "' + element.zipcode + '"', element.programs[0].price, element.programs[1].price,
-            element.programs[2].price, element.programs[3].price, element.programs[4].price,
-            element.recommendedPrice, element.recommendedDiff];
-
-            exportList.push(row);
-
-        });
-
-        console.log(exportList);
-        let csvContent = "data:text/csv;charset=utf-8,";
-
-        exportList.forEach(function (rowArray) {
-            let row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "DashboardDrugs.csv");
-        document.body.appendChild(link); // Required for FF
-
-        link.click(); // This will download the data file named "my_data.csv".
-    }
-    deleteDrug(id) {
-
-        Axios.delete('https://drug-pricing-backend.cfapps.io/removeDrug/' + id)
-            .then(response => {
-                this.props.actions.dashBoardDrugs();
-                this.setState({
-                    dashBoardDrugsData: this.props.dashBoardDrugsData,
-
-                })
-                var element = document.getElementById("myZipCode").value;
-                this.filterList({ target: { value: element } });
-
-            })
-    }
-    getDashboardDrugs() {
-        fetch('https://drug-pricing-backend.cfapps.io/getAllPharmacy')
-            .then(res => res.json())
-            .then(json => {
-                this.setState({
-                    dashBoardDrugsData: json
-                })
-            });
-    }
+  
+  
+   
+  
+ 
     round(num) {
         var num2 = Number(num).toFixed(2);
         if (num2 === "NaN") {
@@ -227,34 +136,8 @@ class Reports extends Component {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    getDiv(program) {
-        if (program.diff >= 0) {
-            return (<div style={{ color: "#08ca00" }}>
-                <span>{this.round(program.price)}</span>
-                <div style={{ fontWeight: 'normal' }}>{this.round(program.diff)}</div>
-            </div>)
-        } else {
-            return (<div style={{ color: "red" }}>
-                <span>{this.round(program.price)}</span>
-                <div style={{ fontWeight: 'normal' }}>{this.round(program.diff)}</div>
-            </div>)
-        }
-
-    }
-    getDiv2(price, diff) {
-        if (diff >= 0) {
-            return (<div style={{ color: "#08ca00" }}>
-                <span>{this.round(price)}</span>
-                <div style={{ fontWeight: 'normal' }}>{this.round(diff)}</div>
-            </div>)
-        } else {
-            return (<div style={{ color: "red" }}>
-                <span>{this.round(price)}</span>
-                <div style={{ fontWeight: 'normal' }}>{this.round(diff)}</div>
-            </div>)
-        }
-
-    }
+   
+    
     filterList(event) {
         var str = event.target.value.toLowerCase();
         var filteredList = [];
@@ -265,190 +148,16 @@ class Reports extends Component {
             }
 
         })
-        console.log(filteredList);
         this.setState({
             filteredList: filteredList
         });
     }
-    commandList(event) {
-        if (event.key === 'Enter') {
-            this.sortList();
-            //  var command = this.parseCommand(event.target.value);
-        }
-    }
-    parseCommand(strCommand) {
-        var command = [];
-        var i = strCommand.indexOf(":");
-        command.push(strCommand.substring(0, i));
-        command.push(strCommand.substring(i + 1, strCommand.length));
-        console.log(command);
-        return command;
-    }
-    sortList(sortBy) {
-
-        var sorted = Sorting.sortByQuantity(this.state.filteredList, 1);
-        this.setState({
-            filteredList: sorted
-        })
-        console.log("sorted");
-        console.log(sorted);
-    }
-    sortByName() {
-        var sort = "off";
-        switch (this.state.drugSort) {
-            case "off":
-                sort = "up";
-                break;
-            case "up":
-                sort = "down";
-                break;
-            case "down":
-                sort = "off";
-                break;
-        }
-        this.setState({
-            drugSort: sort,
-            insideRxSort: "off",
-            pharmCardSort: "off",
-            wellRxSort: "off",
-            medImpactSort: "off",
-            pharmCardSort: "off",
-            singleCareSort: "off",
-            lowestPriceSort: "off",
-            filteredList: Sorting.sortByName(this.state.filteredList, sort)
-        });
-
-    }
-    sortByInsideRx() {
-        var sort = "off";
-        switch (this.state.insideRxSort) {
-            case "off":
-                sort = "up";
-                break;
-            case "up":
-                sort = "down";
-                break;
-            case "down":
-                sort = "off";
-                break;
-        }
-        this.setState({
-            drugSort: "off",
-            insideRxSort: sort,
-            pharmCardSort: "off",
-            wellRxSort: "off",
-            medImpactSort: "off",
-            pharmCardSort: "off",
-            singleCareSort: "off",
-            lowestPriceSort: "off",
-            filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 0, sort)
-        });
-    }
-    sortByPharmCard() {
-        var sort = "off";
-        switch (this.state.pharmCardSort) {
-            case "off":
-                sort = "up";
-                break;
-            case "up":
-                sort = "down";
-                break;
-            case "down":
-                sort = "off";
-                break;
-        }
-        this.setState({
-            drugSort: "off",
-            insideRxSort: "off",
-            pharmCardSort: "off",
-            wellRxSort: "off",
-            medImpactSort: "off",
-            pharmCardSort: sort,
-            singleCareSort: "off",
-            lowestPriceSort: "off",
-            filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 1, sort)
-        });
-    }
-    sortByWellRx() {
-        var sort = "off";
-        switch (this.state.wellRxSort) {
-            case "off":
-                sort = "up";
-                break;
-            case "up":
-                sort = "down";
-                break;
-            case "down":
-                sort = "off"
-                break;
-        }
-        this.setState({
-            drugSort: "off",
-            insideRxSort: "off",
-            pharmCardSort: "off",
-            wellRxSort: sort,
-            medImpactSort: "off",
-            pharmCardSort: "off",
-            singleCareSort: "off",
-            lowestPriceSort: "off",
-            filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 2, sort)
-        });
-    }
-    sortByMedImpact() {
-        console.log(this.state.medImpactSort);
-        var sort = "off";
-        switch (this.state.medImpactSort) {
-            case 'off':
-                sort = "up";
-                break;
-            case 'up':
-                sort = "down";
-                break;
-            case 'down':
-                sort = "off";
-                break;
-
-        }
-        //   console.log(sort);
-        this.setState({
-            drugSort: "off",
-            insideRxSort: "off",
-            pharmCardSort: "off",
-            wellRxSort: "off",
-            medImpactSort: sort,
-            pharmCardSort: "off",
-            singleCareSort: "off",
-            lowestPriceSort: "off",
-            filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 3, sort)
-        });
-    }
-    sortBySingleCare() {
-        var sort = "off";
-        switch (this.state.singleCareSort) {
-            case "off":
-                sort = "up";
-                break;
-            case "up":
-                sort = "down";
-                break;
-            case "down":
-                sort = "off"
-                break;
-        }
-        this.setState({
-            drugSort: "off",
-            insideRxSort: "off",
-            pharmCardSort: "off",
-            wellRxSort: "off",
-            medImpactSort: "off",
-            pharmCardSort: "off",
-            singleCareSort: sort,
-            lowestPriceSort: "off",
-            filteredList: Sorting.sortByProgramPrice(this.state.filteredList, 4, sort)
-        });
-    }
+   
+  
+  
+   
+  
     exportReport(data) {
-        console.log(data); 
         let options = {
             responseType: 'blob',
 
@@ -462,17 +171,14 @@ class Reports extends Component {
                 link.setAttribute('download', 'poi-generated-file.xlsx');
                 document.body.appendChild(link);
                 link.click();
-                console.log(response.data)
+              
                
                 
         });
     }
     getDailyReports() {
-        console.log("test");
         var self = this;
         var inputVal = document.getElementById("mui-pickers-date").value;
-        console.log("INPUTVAL");
-        console.log(inputVal);
         Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
             .then(response => {
 
@@ -513,34 +219,8 @@ class Reports extends Component {
         var d = new Date(batchStart);
         return d.toLocaleString();
     }
-    sortByLowestPrice() {
-        var sort = "off";
-        switch (this.state.lowestPriceSort) {
-            case "off":
-                sort = "up";
-                break;
-            case "up":
-                sort = "down";
-                break;
-            case "down":
-                sort = "off";
-                break;
-        }
-        this.setState({
-            drugSort: "off",
-            insideRxSort: "off",
-            pharmCardSort: "off",
-            wellRxSort: "off",
-            medImpactSort: "off",
-            pharmCardSort: "off",
-            singleCareSort: "off",
-            lowestPriceSort: sort,
-            filteredList: Sorting.sortByLowestPrice(this.state.filteredList, sort)
-        });
-    }
+   
     handleChangePage(event, newPage) {
-        console.log("handleChangePAge");
-        console.log(this.state.selectedReports);
         this.setState({
             page: newPage, 
         });
@@ -552,8 +232,6 @@ class Reports extends Component {
         });
     }
     handleChange(event, index) {
-        console.log(this.state.selectedReports);
-        console.log(index);
     
         if (event.target.checked) {
             this.state.selectedReports[index]= true;
@@ -570,8 +248,7 @@ class Reports extends Component {
        
     }
     downloadSelected() {
-        console.log("this.state.selectedReports");
-        console.log(this.state.selectedReports);
+       
         this.state.selectedReports.forEach((report, index) => {
             if(report==true){
                this.exportReport(this.state.reports[index]);
@@ -580,12 +257,8 @@ class Reports extends Component {
         })
     }
     sortBy(event, compare) {
-        console.log(compare);
-        console.log("sort ing");
         var list = this.state.reports;
-        console.log(list);
         list.sort(compare.func);
-        console.log(list);
         this.setState({
             selectedReports: [],
             reports: list
@@ -602,17 +275,8 @@ class Reports extends Component {
 
 
     }
-    filterByHelper(option) {
-        var list = this.state.reports;
-        console.log("filterhelper");
-        option.func()
-        // this.setState({
-        //     reports:list
-        // });
-    }
+  
     compareNewestToOldest(a, b) {
-        console.log("compare")
-        console.log(a);
         var dateA = new Date(a.timestamp);
         var dateB = new Date(b.timestamp);
 
@@ -622,8 +286,6 @@ class Reports extends Component {
         return 0;
     }
     compareOldestToNewest(a, b) {
-        console.log("compare")
-        console.log(a);
         var dateA = new Date(a.timestamp);
         var dateB = new Date(b.timestamp);
 
@@ -633,8 +295,6 @@ class Reports extends Component {
         return 0;
     }
     compareNumberOfDrugs(a, b) {
-        console.log("compare")
-        console.log(a);
         if (a.drugCount < b.drugCount) return 1;
         if (b.drugCount < a.drugCount) return -1;
 
@@ -653,9 +313,7 @@ class Reports extends Component {
                 });
             });
     }
-    getBetweenDrugs(start, end) {
-        //Not Yet
-    }
+    
     equalDate(date) {
         Axios.get('https://drug-pricing-backend.cfapps.io/reports/get/date/' + date)
             .then(response => {
@@ -678,20 +336,7 @@ class Reports extends Component {
             openManualReport:true,
         })
     }
-    reportIncludes(selectedReports, givenReport) {
-        console.log("REPORT")
-        var found = false;
-        var batchStart = givenReport.batchDetails.batchStart;
-        for (var i = 0; i < selectedReports.length; i++) {
-            console.log(selectedReports[i].batchDetails.batchStart == batchStart);
-            if (selectedReports[i].batchDetails.batchStart == batchStart) {
-                found = true;
-                break;
-            }
-        }
-        console.log(found);
-        return found
-    }
+ 
     handleManualReportClose() {
 
         this.setState({
@@ -716,16 +361,10 @@ class Reports extends Component {
                         <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>
                             <div style={{ padding: '10px', paddingLeft: '0px' }}>Reports </div>
                             <div className=" headerZip" style={{ padding: '0px' }}>
-                                {/* <input className="form-control search-bar " onChange={() => { this.filterList(event) }} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" /> */}
                             </div>
-                            {/* <div className="col-sm-3 headerZip" style={{ padding: '0px' }}>
-                            <input className="form-control search-bar " onKeyPress={()=>{this.commandList(event)}} type="text" id="myZipCode" placeholder="Filter Dashboard Drugs" />
-                        </div> */}
                         </div>
                         <div className="col-sm-6 " style={{ paddingRight: '0px', }}>
                             <div className="float-sm-right">
-                                {/* <button type="button" style={{ marginRight: '10px' }} onClick={() => { this.viewSummaries() }} className="btn btn-outline-primary">View Daily Summaries</button>
-                                <button type="button" onClick={() => { this.manualReport() }} className="btn btn-outline-primary">Manual Report</button> */}
                             </div>
                         </div>
                     </h4>

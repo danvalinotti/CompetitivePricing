@@ -12,45 +12,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import PropTypes from 'prop-types';
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -334,7 +295,7 @@ export default function IntegrationReactSelect(props) {
       closeMenuOnSelect={false}
       cropWithEllipsis={true}
       //  onFocus={(e) => e.target.size = 5}
-      styles={{ maxHeight: '100px' }}
+     
       classes={classes}
 
       maxMenuHeight={200}
@@ -353,6 +314,7 @@ export default function IntegrationReactSelect(props) {
       value={props.drugValue}
       onChange={props.drugOnChange}
       isMulti
+      styles={{ maxHeight: '100px', overflow:'auto' }}
     />
     //   </NoSsr>
     // </div>

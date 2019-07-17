@@ -1,22 +1,19 @@
 import React, { Component } from "react";
-import HeaderComponent from "./HeaderComponent";
-import * as Sorting from "./Sorting";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
-import Icons from "./Icons"
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
+import Card from "@material-ui/core/Card"
+import CardContent from "@material-ui/core/CardContent"
 import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import Dialog from "@material-ui/core/Dialog";
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles'; 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import HorizontalLinearStepper from './SignInStepper'
 import TextField from '@material-ui/core/TextField'
 import galaxeLogo from "../../assests/images/galaxeLogo.png";
 import Divider from '@material-ui/core/Divider';
-import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
@@ -32,26 +29,59 @@ class SignIn extends Component {
             updateDialog:false,
             oldPassword:'',
             newPassword:'',
-            credWarning:''
+            credWarning:'',
+            emailErrorText:'',
+            passwordErrorText:'',
         }
         this.setActiveStep  = this.setActiveStep.bind(this);
         this.submitSignIn =this.submitSignIn.bind(this);
     }
     handleEmailChange(event) {
-        this.setState({
-            email: event.target.value
-        });
+        if(event.target.value.length ==0){
+            this.setState({
+                email: event.target.value,
+                emailErrorText:'Email must not be empty'
+
+            });
+        }else{
+            console.log(event.target.value.includes('@'));
+            if(event.target.value.includes('@')){
+                this.setState({
+                    email: event.target.value,
+                    emailErrorText:''
+                });
+            }else{
+                this.setState({
+                    email: event.target.value,
+                    emailErrorText:'Email not valid'
+                });
+                
+            }
+        }
+       
     }
 
     handlePasswordChange(event) {
-        this.setState({
-            password: event.target.value
-        });
+        if(event.target.value.length ==0){
+            this.setState({
+                password: event.target.value,
+                passwordErrorText:'Password must not be empty'
+
+            });
+        }else{
+            this.setState({
+                password: event.target.value,
+                passwordErrorText:''
+            });
+        }
     }
     renderEmailStep() {
         return (<div> {this.state.warning}
             <Grid container direction="column" alignItems="center" justify="center">
                 <TextField
+                    required
+                    error ={this.state.emailErrorText.length === 0 ? false : true }
+                    helperText = {this.state.emailErrorText}
                     id="standard-name"
                     label="Email"
                     value={this.state.email}
@@ -65,6 +95,9 @@ class SignIn extends Component {
         return (<div>
             <Grid container direction="column" alignItems="center" justify="center">
                 <TextField
+                    required
+                    error ={this.state.passwordErrorText.length === 0 ? false : true }
+                    helperText = {this.state.passwordErrorText}
                     id="standard-name"
                     label="Password"
                     type="password"
@@ -84,31 +117,27 @@ class SignIn extends Component {
         var profile = {};
         profile.username = this.state.email;
         profile.password = this.state.password;
-        // profile.name = this.state.name ; 
-        // profile.role = "user"
-        console.log("resetFunc");
-        console.log(resetFunc);
+        
+      
         this.submitSignIn(profile, resetFunc);
     }
     submitSignIn(profile) {
-        console.log("profile");
-        console.log(profile)
+      
         Axios.post('https://drug-pricing-backend.cfapps.io/create/token', profile)
             .then(response => {
 
-                console.log("response.data");
-                console.log(response.data);
+              
                 var p = {};
                 Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token', response.data)
                     .then(r => {
-                        console.log(r.data)
+                      
                         if (r.data.password != "false") {
                             this.setState({
                                 openSignIn: false,
                                 loggedIn: true,
 
                             });
-                            console.log("LOGGED IN");
+                        
 
                             window.sessionStorage.setItem("token", r.data.password);
                             window.sessionStorage.setItem("loggedIn", "true");
@@ -123,11 +152,11 @@ class SignIn extends Component {
 
                            
                         } else {
-                            console.log("incorrect");
+                        
                             this.setActiveStep((data)=>{return 0})
                         }
                     })
-                    // this.setActiveStep((data)=>{return 0}) 
+                  
             });
           
     }
@@ -136,6 +165,9 @@ class SignIn extends Component {
         this.props.history.push("/signup");
     }
     setActiveStep(newStep) {
+        if(this.state.emailErrorText == '' && this.state.passwordErrorText == ''){
+
+        
         if(newStep == 0){
         }else {
             if(newStep()==0){
@@ -146,8 +178,6 @@ class SignIn extends Component {
                     warning :<div style={{color:"red"}}>Wrong credentials, try again.</div>,
                 })
             }else{
-                console.log("setActiveStep")
-                console.log(newStep);
                 var step = newStep(this.state.activeStep);
                 this.setState({
                     activeStep:step
@@ -155,7 +185,7 @@ class SignIn extends Component {
             }
         }
         
-        
+    }
        
     }
     handleClose(){

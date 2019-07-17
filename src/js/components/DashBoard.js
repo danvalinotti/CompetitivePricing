@@ -1,6 +1,6 @@
 import React from "react";
 import axios from 'axios';
-import { PageHeader } from 'react-bootstrap';
+
 import DrugStrengthDropDown from "./drugStrengthDropdown";
 import DrugQuantityDropDown from "./DrugQuantityDropDown";
 import "../../assests/sass/searchPage.css"
@@ -13,49 +13,24 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from "@material-ui/core/CircularProgress";
-//import SockJS from "sockjs-client";
+
 
 class DashBoard extends React.Component {
 
     constructor(props) {
         super(props);
         this.authenticateUser();
-        //SockJS
-
-        // var sock = new SockJS('http://localhost:8980/gs-guide-websocket');
-
-
-        // sock.onopen = function () {
-        //     console.log('open');
-
-        // };
-
-        // sock.onmessage = function (e) {
-        //     console.log('message', e.data);
-        //     // sock.close();
-        // };
-
-        // sock.onclose = function () {
-        //     console.log('close');
-        // };
-
-        // console.log("SOCK");
+        
         this.state = { 
             drugName: '',
-            drugNDC: '',
             dosageStrength: '',
             drugType: 'BRAND_WITH_GENERIC',
             quantity: '',
-            zipcode: '',
-            longitude: 'longitude',
-            latitude: 'latitude',
             drugStrengthArray: [],
             drugQuantityArray: [],
             selectedDrug: null,
             showDialog: false,
             firstChoice:null,
-           // actions: sock,
-            messages: [],
             loggedInProfile:{},
             
         };
@@ -70,64 +45,47 @@ class DashBoard extends React.Component {
 
     }
     authenticateUser(){
-        console.log("dashboardContainer")
+      
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
         axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
         .then(r => {
-            console.log(r.data)
+          
             if(r.data.password != "false"){
               this.setState({
                 openSignIn : false,
                 loggedIn : true,
                 loggedInProfile: r.data
               });
-              console.log("LOGGED IN");
+            
              
               window.sessionStorage.setItem("token",r.data.password);
               window.sessionStorage.setItem("loggedIn","true");
             //   this.props.history.push({ pathname: '/search' });
             }else{
-               console.log("incorrect");
+             
                this.props.history.push({ pathname: '/signIn' });
             }
         })
     }
    
-    onConnected() {
-        //  stompClient.subscribe('/topic/greetings', onMessageReceived);
+   
 
-        // Tell your username to the server
-        stompClient.send("/app/greeting?name=hello");
-        console.log("sent");
-    }
-
-    changeStrengthList(strengthList) {
-        this.selectedDrug({
-            drugStrengthArray: strengthList
-        })
-    }
-    changeQuantityList(quantityList) {
-        this.selectedDrug({
-            drugQuantityArray: quantityList
-        })
-    }
+ 
+   
     setFirstChoice(drug){
         this.setState({
             firstChoice:drug,
         });
     }
     handleSubmit(data) {
-        console.log("this.state.firstChoice");
-        console.log(this.state.firstChoice);
+      
         var drugName = this.state.drugName;
         var dosageStrength = this.state.dosageStrength;
         var quantity = this.state.quantity;
         if(this.state.drugName === ""){
-            console.log("HEELLLLLLLLLLLOOOOOOOOOO");
-            console.log(this.state.firstChoice.name);
-            
+           
                 drugName = this.state.firstChoice.name;
                 dosageStrength =this.state.firstChoice.dose[0];
                 quantity = this.state.firstChoice.dose[0].quantity[0].value;
@@ -135,7 +93,7 @@ class DashBoard extends React.Component {
 
         }
         this.setState({
-            zipcode: data.myZipCode,
+          
             drugType: data.drugType,
         });
         this.toggleDialog();
@@ -159,7 +117,7 @@ class DashBoard extends React.Component {
             }).catch(error => {
                 // handle error
                 this.toggleDialog();
-                console.log(error);
+               
               })
     }
 
@@ -200,13 +158,7 @@ class DashBoard extends React.Component {
         })
     }
 
-    goToDashboard() {
-      //  this.state.actions.
-       //     this.state.actions.send("testing");
-     //   console.log("GO TO DASHBOARD");
-      this.props.history.push({ pathname: '/viewDashboard' });
-
-    }
+   
     toggleDialog() {
 
         this.setState({
@@ -226,16 +178,6 @@ class DashBoard extends React.Component {
 
 
     render() {
-
-        const searchBarStyle = {
-
-            height: '60px ',
-            width: '100% ',
-            border: '1px solid #B3B3B3 ',
-            backgroundColor: ' #FFFFFF ',
-            borderRadius: '8px ',
-            boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08) '
-        }
 
         const searchBarCopy = {
 
@@ -269,8 +211,6 @@ class DashBoard extends React.Component {
             boxShadow: '0 10px 20px -10px rgba(0, 0, 0, 0.26) !important'
         }
         
-
-
         return (
             <div>
                 <form id='Simple' className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}

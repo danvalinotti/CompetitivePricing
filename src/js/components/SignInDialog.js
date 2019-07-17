@@ -1,22 +1,11 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import '../../assests/sass/ViewDrugDetailsCSS.css'
-import DatePicker from './DatePicker'
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField'
-import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
-import Axios from "axios";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Select from "@material-ui/core/Select";
-import Checkbox from "@material-ui/core/Checkbox";
-import Input from "@material-ui/core/Input";
-import IntegrationReactSelect from './SelectDrugDropdown'
-import Select2 from 'react-select';
 
 import HorizontalLinearStepper from './SignInStepper'
 

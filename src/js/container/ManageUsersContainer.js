@@ -8,19 +8,8 @@ import TabBar from "../components/TabBar";
 class ManageUsersContainer extends Component {
     constructor(props) {
         super(props);
-        console.log("ManageUsersContainer");
-        console.log(props);
     }
-    clickHome() {
-        console.log("HOME");
-    }
-    clickDashboard() {
-        console.log("Dashboard");
-    }
-    clickReports() {
-        console.log("Reports");
-    }
-
+   
 
     render() {
         return (

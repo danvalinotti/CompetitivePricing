@@ -10,35 +10,15 @@ import image from "../../assests/images/InsideLogo_1.svg";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
+
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
+
 import Menu from '@material-ui/core/Menu';
 import AutoSuggestComponent2 from "./AutoSuggestComponent.1";
 import Grid from '@material-ui/core/Grid';
 
-function renderInput(inputProps) {
-  const { InputProps, classes, ref, ...other } = inputProps;
-
-  return (
-    <TextField
-      InputProps={{
-        inputRef: ref,
-        classes: {
-          root: classes.inputRoot,
-          input: classes.inputInput,
-        },
-        ...InputProps,
-      }}
-      {...other}
-    />
-  );
-}
 
 class HeaderWithSearch extends React.Component {
 
@@ -88,30 +68,7 @@ class HeaderWithSearch extends React.Component {
     }
     );
   }
-  handleInputChange(event) {
-    this.setState({
-      inputValue: event.target.value,
-    })
-
-    this.getProviderPrices(event.target.value);
-  };
-
-
-  getProviderPrices(drugName) {
-    fetch('https://drug-pricing-backend.cfapps.io/getDrugInfo/' + drugName)
-      .then(res => res.json())
-      .then(json => {
-        this.setState({
-          providerPrices: json
-        });
-        return json;
-      });
-  };
-  getSuggestions(value) {
-    const providerPrices = this.state.providerPrices;
-
-    return providerPrices;
-  }
+  
   onClickDrug(drug) {
 
     this.dosageList = drug.dose;
@@ -125,13 +82,7 @@ class HeaderWithSearch extends React.Component {
     });
 
   };
-  handleInputChange(event) {
-    this.setState({
-      inputValue: event.target.value,
-    })
-
-    this.getProviderPrices(event.target.value);
-  };
+ 
   getDrugDetails(drugRequest) {
     this.props.toggleDialog();
     axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
@@ -156,30 +107,8 @@ class HeaderWithSearch extends React.Component {
         }
       })
   };
-  renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
-    const isHighlighted = highlightedIndex === index;
-
-    return (
-      <MenuItem
-        {...itemProps}
-        key={suggestion.name + "1"}
-        value={suggestion}
-        selected={isHighlighted}
-
-        component="div"
-        style={{
-
-          backgroundColor: isHighlighted ? 'lightgrey' : 'white',
-          zIndex: 4,
-        }}
-      >
-        {suggestion.name}
-      </MenuItem>
-    );
-  }
+  
   onClickSearch() {
-    console.log("PRovider Price");
-    console.log(this.state.providerPrices[0]);
     this.state.providerPrices[0];
     if (this.state.selectedDrug == null) {
       this.state.selectedDrug = this.state.providerPrices[0];
@@ -210,28 +139,26 @@ class HeaderWithSearch extends React.Component {
     this.getDrugDetails(drugRequest);
 
   }
-  navigateProfile() {
-
-  }
+ 
   openProfileMenu(event) {
-    console.log("hellothere");
-    console.log(event);
+     
     this.setState({
       profileMenuOpen: !this.state.openProfileMenu,
       anchorEl: event.target
     })
   }
   closeProfileMenu(event) {
-    console.log("hellothere");
-    console.log(event);
+    
     this.setState({
       profileMenuOpen: false,
       anchorEl: event.target
     })
   }
+  goToAdmin(){
+    this.props.history.push("/admin/manage/users");
+  }
   loadMenuItems(){
     
-    if(this.state.loggedIn == true){
       if(this.props.profile.role == "admin"){
         return(<div>
           <MenuItem >My Account</MenuItem>
@@ -242,12 +169,6 @@ class HeaderWithSearch extends React.Component {
           <MenuItem >My Account</MenuItem>
           <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
       }
-     
-    }else{
-      return(<div>
-        <MenuItem onClick={this.signIn.bind(this)} >Sign In</MenuItem>
-        <MenuItem onClick={this.signUp.bind(this)} >Sign Up</MenuItem></div>);
-    }
   } 
   logout() {
     this.setState({
@@ -258,25 +179,10 @@ class HeaderWithSearch extends React.Component {
 
     this.props.history.push({ pathname: '/signin' });
   }
-  signIn() {
-    this.setState({
-      // loggedIn: true,
-      openSignIn: true
-    });
-    // window.sessionStorage.setItem("loggedIn",true);
-  }
-  signUp() {
-    console.log("signup");
-    this.setState({
-      // loggedIn: true,
-      openSignUp: true
-    });
-
-    // window.sessionStorage.setItem("loggedIn",true);
-  }
+ 
+ 
   updateDrug(drug) {
     this.onClickDrug(drug);
-    console.log("SET update drug");
   }
   setFirstChoice() {
     console.log("SET FIRST CHOICE");
@@ -286,26 +192,6 @@ class HeaderWithSearch extends React.Component {
     const { classes } = this.props;
     return (
 
-      // <div className="header" >
-      //   <div className="searchArea">
-
-      //     <div className="headerRow row" style={{padding:'.5%'}}>
-      //       <div className="headerCol col-sm-4" style ={{padding:'0px'}} >
-      //         <div className="headerHelp" style ={{paddingTop: '2%' , paddingLeft: '4%'}}>
-      //           <div ><svg style={{width: '35px', height:'35px'}}
-      //             xmlns="http://www.w3.org/2000/svg">
-      //             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
-
-      //           <div><img src={image} style={{ float: 'right', width: '130px', height: '30px' }} /> </div></div>
-      //       </div>
-      //       <div className="headerCol col-sm-8 searchHeader " style ={{padding:'0px'}}>
-
-      //       </div>
-      //     </div>
-
-      //   </div>
-
-      // </div>
       <AppBar position="static" style={{ background: "orange" }}>
         <Toolbar>
 

@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import USProviderImg from "../../assests/images/usPharmCard2.png";
 import WellRxImg from "../../assests/images/wellRx2.png";
-import BlinkImg from "../../assests/images/blinkLogo.png";
 import SingleCareImg from "../../assests/images/singleCare2.png";
 import MedImpactImg from "../../assests/images/medImpact2.png";
 import GoodRxImg from "../../assests/images/goodRx2.png";
@@ -36,19 +35,17 @@ class ViewDrugDetails extends React.Component {
         }
       });
       this.state = {
-        inputValue: '',
-
-        selectedItem: [],
-        providerPrices: response.programs,
+    
+      
+        
         strengthList: info.dose,
         quantityList: quantityList,
-        zipCode: request.zipcode,
         drugStrength: this.getIndexByLabel(request.dosageStrength, info.dose),
         drugQuantity: this.getIndexByValue(request.quantity, quantityList),
         selectedDrug: info,
         drugRequest: request,
         drugDetails: response,
-        toDashboard: true,
+        
         toggleDialog: false,
         loggedInProfile:{},
       };
@@ -61,26 +58,22 @@ class ViewDrugDetails extends React.Component {
 
   }
   authenticateUser(){
-    console.log("dashboardContainer")
     var userToken = {};
     userToken.name = window.sessionStorage.getItem("token");
 
     Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
     .then(r => {
-        console.log(r.data)
         if(r.data.password != "false"){
           this.setState({
             openSignIn : false,
             loggedIn : true,
             loggedInProfile: r.data
           });
-          console.log("LOGGED IN");
          
           window.sessionStorage.setItem("token",r.data.password);
           window.sessionStorage.setItem("loggedIn","true");
         //   this.props.history.push({ pathname: '/search' });
         }else{
-           console.log("incorrect");
            this.props.history.push({ pathname: '/signIn' });
         }
     })
@@ -103,9 +96,7 @@ class ViewDrugDetails extends React.Component {
     });
     return index ;
   }
-  getIndexByObject(obj, list){
-    list.findIndex(obj);
-  }
+
   round(num) {
     return Number(num).toFixed(2);
   }
