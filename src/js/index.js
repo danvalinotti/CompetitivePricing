@@ -15,7 +15,7 @@ import SignInContainer from "./container/SignInContainer";
 import SignUpContainer from "./container/SignUpContainer";
 import ManageUsersContainer from "./container/ManageUsersContainer";
 import ManageDrugsContainer from "./container/ManageDrugsContainer";
-
+import ManageAlertsContainer from "./container/ManageAlertsContainer";
 render(
     <Provider store={store}>
         <HashRouter>
@@ -29,6 +29,7 @@ render(
                 <Route path="/signup" component={SignUpContainer} />
                 <Route path="/admin/manage/users" component={ManageUsersContainer}/>
                 <Route path="/admin/manage/drugs" component={ManageDrugsContainer} />
+                <Route path="/admin/manage/alerts" component={ManageAlertsContainer} />
             </div>
         </HashRouter>
     </Provider>,
