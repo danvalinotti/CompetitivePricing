@@ -391,6 +391,10 @@ th{
   width:200px;
   margin: auto;
 }
+.MuiFormControl-marginNormal{
+  margin: 0px;
+  margin-top:0px;
+}
 
 @media (max-width: 576px) {
 

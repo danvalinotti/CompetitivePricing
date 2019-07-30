@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server --open",
-    "test": "babel-node spec/run.js --presets airbnb"
+    "test": "babel-node spec/run.js --presets airbnb",
+    "deploy": "aws s3 sync dist/ s3://react-pharmapp"
   },
   "engines": {
     "node": "8.12.0",

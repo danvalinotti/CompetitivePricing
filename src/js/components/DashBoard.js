@@ -49,7 +49,7 @@ class DashBoard extends React.Component {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
+        axios.post('http://100.25.217.246:8081/authenticate/token' , userToken)
         .then(r => {
           
             if(r.data.password != "false"){
@@ -109,7 +109,7 @@ class DashBoard extends React.Component {
             "latitude": "latitude"
         };
 
-        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', requestObject)
+        axios.post('http://100.25.217.246:8081/getPharmacyPrice', requestObject)
             .then(response => {
                 this.toggleDialog();
                 this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
@@ -131,7 +131,7 @@ class DashBoard extends React.Component {
     }
 
     updateDrug(drug) {
-
+        console.log(drug)
         this.setState({
             drugName: drug.name,
             selectedDrug: drug,

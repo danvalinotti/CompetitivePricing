@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent"
 import CardActions from '@material-ui/core/CardActions';
 import Dialog from "@material-ui/core/Dialog";
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles'; 
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import HorizontalLinearStepper from './SignInStepper'
@@ -24,54 +24,54 @@ class SignIn extends Component {
         this.state = {
             email: '',
             password: '',
-            warning :'',
-            activeStep:0,
-            updateDialog:false,
-            oldPassword:'',
-            newPassword:'',
-            credWarning:'',
-            emailErrorText:'',
-            passwordErrorText:'',
+            warning: '',
+            activeStep: 0,
+            updateDialog: false,
+            oldPassword: '',
+            newPassword: '',
+            credWarning: '',
+            emailErrorText: '',
+            passwordErrorText: '',
         }
-        this.setActiveStep  = this.setActiveStep.bind(this);
-        this.submitSignIn =this.submitSignIn.bind(this);
+        this.setActiveStep = this.setActiveStep.bind(this);
+        this.submitSignIn = this.submitSignIn.bind(this);
     }
     handleEmailChange(event) {
-        if(event.target.value.length ==0){
+        if (event.target.value.length == 0) {
             this.setState({
                 email: event.target.value,
-                emailErrorText:'Email must not be empty'
+                emailErrorText: 'Email must not be empty'
 
             });
-        }else{
+        } else {
             console.log(event.target.value.includes('@'));
-            if(event.target.value.includes('@')){
+            if (event.target.value.includes('@')) {
                 this.setState({
                     email: event.target.value,
-                    emailErrorText:''
+                    emailErrorText: ''
                 });
-            }else{
+            } else {
                 this.setState({
                     email: event.target.value,
-                    emailErrorText:'Email not valid'
+                    emailErrorText: 'Email not valid'
                 });
-                
+
             }
         }
-       
+
     }
 
     handlePasswordChange(event) {
-        if(event.target.value.length ==0){
+        if (event.target.value.length == 0) {
             this.setState({
                 password: event.target.value,
-                passwordErrorText:'Password must not be empty'
+                passwordErrorText: 'Password must not be empty'
 
             });
-        }else{
+        } else {
             this.setState({
                 password: event.target.value,
-                passwordErrorText:''
+                passwordErrorText: ''
             });
         }
     }
@@ -80,8 +80,8 @@ class SignIn extends Component {
             <Grid container direction="column" alignItems="center" justify="center">
                 <TextField
                     required
-                    error ={this.state.emailErrorText.length === 0 ? false : true }
-                    helperText = {this.state.emailErrorText}
+                    error={this.state.emailErrorText.length === 0 ? false : true}
+                    helperText={this.state.emailErrorText}
                     id="standard-name"
                     label="Email"
                     value={this.state.email}
@@ -96,8 +96,8 @@ class SignIn extends Component {
             <Grid container direction="column" alignItems="center" justify="center">
                 <TextField
                     required
-                    error ={this.state.passwordErrorText.length === 0 ? false : true }
-                    helperText = {this.state.passwordErrorText}
+                    error={this.state.passwordErrorText.length === 0 ? false : true}
+                    helperText={this.state.passwordErrorText}
                     id="standard-name"
                     label="Password"
                     type="password"
@@ -113,120 +113,125 @@ class SignIn extends Component {
             Log in
         </div>);
     }
-    handleSubmit(resetFunc) {
+    handleSubmit() {
         var profile = {};
         profile.username = this.state.email;
         profile.password = this.state.password;
-        
-      
-        this.submitSignIn(profile, resetFunc);
+
+
+        this.submitSignIn(profile);
     }
     submitSignIn(profile) {
-      
-        Axios.post('https://drug-pricing-backend.cfapps.io/create/token', profile)
+
+        Axios.post('http://100.25.217.246:8081/create/token', profile)
             .then(response => {
 
-              
+
                 var p = {};
-                Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token', response.data)
+                Axios.post('http://100.25.217.246:8081/authenticate/token', response.data)
                     .then(r => {
-                      
+
                         if (r.data.password != "false") {
                             this.setState({
                                 openSignIn: false,
                                 loggedIn: true,
 
                             });
-                        
+
 
                             window.sessionStorage.setItem("token", r.data.password);
                             window.sessionStorage.setItem("loggedIn", "true");
-                            if(r.data.role.startsWith("created")){
+                            if (r.data.role.startsWith("created")) {
                                 //Open Dialog
                                 this.setState({
-                                    updateDialog:true
+                                    updateDialog: true
                                 })
-                            }else{
+                            } else {
                                 this.props.history.push({ pathname: '/search' });
                             }
 
-                           
+
                         } else {
-                        
-                            this.setActiveStep((data)=>{return 0})
+
+                            this.setActiveStep((data) => { return 0 })
                         }
                     })
-                  
+
             });
-          
+
     }
 
     signUpNav() {
         this.props.history.push("/signup");
     }
     setActiveStep(newStep) {
-        if(this.state.emailErrorText == '' && this.state.passwordErrorText == ''){
+        if (this.state.emailErrorText == '' && this.state.passwordErrorText == '') {
 
-        
-        if(newStep == 0){
-        }else {
-            if(newStep()==0){
-                this.setState({
-                    activeStep:0,
-                    email : '',
-                    password: '',
-                    warning :<div style={{color:"red"}}>Wrong credentials, try again.</div>,
-                })
-            }else{
-                var step = newStep(this.state.activeStep);
-                this.setState({
-                    activeStep:step
-                })
+
+            if (newStep == 0) {
+            } else {
+                if (newStep() == 0) {
+                    this.setState({
+                        activeStep: 0,
+                        email: '',
+                        password: '',
+                        warning: <div style={{ color: "red" }}>Wrong credentials, try again.</div>,
+                    })
+                } else {
+                    var step = newStep(this.state.activeStep);
+                    this.setState({
+                        activeStep: step
+                    })
+                }
             }
+
         }
-        
+
     }
-       
-    }
-    handleClose(){
+    handleClose() {
         this.setState({
-            updateDialog:false
+            updateDialog: false
         })
     }
-    handleOldPassword(event){
+    handleOldPassword(event) {
         this.setState({
-            oldPassword : event.target.value
+            oldPassword: event.target.value
         });
     }
-    handleNewPassword(event){
+    handleNewPassword(event) {
         this.setState({
-            newPassword : event.target.value
+            newPassword: event.target.value
         });
     }
-    updatePassword(){
+    updatePassword() {
         var profile = {};
-       
-        profile.password = this.state.oldPassword ; 
-        profile.username = this.state.email; 
-        profile.role = this.state.newPassword; 
-        Axios.post('https://drug-pricing-backend.cfapps.io/update/password', profile)
-        .then(response => {
-            if(response.data == null){
-                this.setState({
-                    credWarning:'Incorrect password'
-                });
-            }else{
-                this.props.history.push("/search");
-            }
-        });
-       
+
+        profile.password = this.state.oldPassword;
+        profile.username = this.state.email;
+        profile.role = this.state.newPassword;
+        Axios.post('http://100.25.217.246:8081/update/password', profile)
+            .then(response => {
+                if (response.data == null) {
+                    this.setState({
+                        credWarning: 'Incorrect password'
+                    });
+                } else {
+                    this.props.history.push("/search");
+                }
+            });
+
     }
+    handleKeyPress (event){
+        if(event.key === 'Enter'){
+          this.handleSubmit();
+        }
+      }
     render() {
 
         return (
             <div><br /><br />
                 <Grid container direction="column" alignItems="center" justify="center">
-                    <Card style={{ maxWidth: '500px', backgroundColor: 'whitesmoke' }} >
+                    <Card style={{ maxWidth: '500px',minWidth: '300px', backgroundColor: 'whitesmoke' }} >
                         <CardContent>
                             <Grid container spacing={1} direction="column" alignItems="center" justify="center">
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
@@ -236,9 +241,9 @@ class SignIn extends Component {
                                     <img src={galaxeLogo} width="100px" height="100px" />
                                 </Grid>
 
-                                <Grid container item xs={12} spacing={3}>
+                                <Grid container item direction="column" spacing={3}>
 
-                                    <HorizontalLinearStepper
+                                    {/* <HorizontalLinearStepper
                                         step1={this.renderEmailStep.bind(this)}
                                         step2={this.renderPasswordStep.bind(this)}
                                         step3={this.renderFinalStep.bind(this)}
@@ -248,10 +253,48 @@ class SignIn extends Component {
                                         setActiveStep = {this.setActiveStep.bind(this)}
                                     >
 
-                                    </HorizontalLinearStepper>
+                                    </HorizontalLinearStepper> */}
+                                    <div><br /> 
+                                        <Grid container item xs={12} direction="column" alignItems="center" justify="center">
+                                        <Typography verticalAlign="bottom">{this.state.warning}</Typography>
+
+                                            <TextField
+                                                width="auto"
+                                                required
+                                                error={this.state.emailErrorText.length === 0 ? false : true}
+                                                helperText={this.state.emailErrorText}
+                                                id="standard-name"
+                                                label="Email"
+                                                value={this.state.email}
+                                                onChange={this.handleEmailChange.bind(this)}
+                                                margin="normal"
+                                                onKeyPress={this.handleKeyPress.bind(this)}
+                                            />
+                                        </Grid>
+                                    </div>
+                                    <div>
+                                        <Grid container item xs={12} direction="column" alignItems="center" justify="center">
+                                            <TextField
+                                                required
+                                                error={this.state.passwordErrorText.length === 0 ? false : true}
+                                                helperText={this.state.passwordErrorText}
+                                                id="standard-name"
+                                                label="Password"
+                                                type="password"
+                                                value={this.state.password}
+                                                onChange={this.handlePasswordChange.bind(this)}
+                                                margin="normal"
+                                                onKeyPress={this.handleKeyPress.bind(this)}
+                                            />
+                                        </Grid>
+                                    </div>
+
                                 </Grid><br />
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button variant="contained"  onClick={ this.signUpNav.bind(this)}>Sign Up</Button>
+                                    <Button variant="contained" onClick={this.handleSubmit.bind(this)}>Sign In</Button>
+                                </Grid><br />
+                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
+                                    <Button variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -266,10 +309,10 @@ class SignIn extends Component {
                     <DialogContent className="textCenter">
                         <Grid container>
                             <Grid item xs={5}>
-                            <Typography verticalAlign="bottom"> Old Password:</Typography>
+                                <Typography verticalAlign="bottom"> Old Password:</Typography>
 
-                             </Grid>
-                             {this.state.credWarning}
+                            </Grid>
+                            {this.state.credWarning}
                             <Grid item xs={7}>
                                 <TextField
                                     id="standard-name"
@@ -282,8 +325,8 @@ class SignIn extends Component {
                         </Grid>
                         <Grid container >
                             <Grid item xs={5}>
-                            <Typography verticalAlign="bottom">New Password:</Typography> 
-                             </Grid>
+                                <Typography verticalAlign="bottom">New Password:</Typography>
+                            </Grid>
                             <Grid item xs={7}>
                                 <TextField
                                     id="standard-name"
@@ -294,7 +337,7 @@ class SignIn extends Component {
                                 />
                             </Grid>
                         </Grid>
-                       
+
 
                         <Button style={{ fontSize: '13px', height: '32px' }} onClick={() => { this.updatePassword() }} variant="contained" color="primary">Update Password</Button>
                     </DialogContent>

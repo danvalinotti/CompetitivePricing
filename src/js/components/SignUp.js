@@ -139,7 +139,7 @@ class SignUp extends Component {
     }
     submitSignUp(profile) {
         
-        Axios.post('https://drug-pricing-backend.cfapps.io/signUp', profile)
+        Axios.post('http://100.25.217.246:8081/signUp', profile)
             .then(response => {
                 console.log(response.data.username)
                 if(response.data.username === "Exists"){

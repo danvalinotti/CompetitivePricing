@@ -48,7 +48,7 @@ class ManualReportDialog extends React.Component {
         var sender = {};
         sender.value = window.sessionStorage.getItem("token");
         sender.key = window.sessionStorage.getItem("token");
-        Axios.post('https://drug-pricing-backend.cfapps.io/reports/saved/get', sender)
+        Axios.post('http://100.25.217.246:8081/reports/saved/get', sender)
             .then(response => {
 
                 this.setState({
@@ -103,7 +103,7 @@ class ManualReportDialog extends React.Component {
             responseType: 'blob',
 
         }
-        Axios.post('https://drug-pricing-backend.cfapps.io/create/report/manual', reportRequest, options)
+        Axios.post('http://100.25.217.246:8081/create/report/manual', reportRequest, options)
             .then(response => {
                 const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
                 const link = document.createElement('a');
@@ -121,7 +121,7 @@ class ManualReportDialog extends React.Component {
 
     }
     getLatestReport() {
-        Axios.get('https://drug-pricing-backend.cfapps.io/drugmaster/get/all')
+        Axios.get('http://100.25.217.246:8081/drugmaster/get/all')
             .then(response => {
 
                 this.setState({

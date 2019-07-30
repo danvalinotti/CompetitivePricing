@@ -52,7 +52,7 @@ return fetch(`${url}${queryParam}`, fetchRequest)
     });
 };
 function drugSearchService(name) {
-    const url = `https://drug-pricing-backend.cfapps.io/getDrugInfo/${name}`;
+    const url = `http://100.25.217.246:8081/getDrugInfo/${name}`;
     // executeFetch(url,'GET')
     return fetch(
         url,

@@ -107,7 +107,7 @@ class TabBar extends React.Component {
     })
   }
   submitSignUp(profile){
-    Axios.post('https://drug-pricing-backend.cfapps.io/signUp' , profile)
+    Axios.post('http://100.25.217.246:8081/signUp' , profile)
     .then(response => {
       console.log("response");
     });
@@ -117,11 +117,11 @@ class TabBar extends React.Component {
     })
   }
   submitSignIn(profile){
-    Axios.post('https://drug-pricing-backend.cfapps.io/create/token' , profile)
+    Axios.post('http://100.25.217.246:8081/create/token' , profile)
     .then(response => {
       
         var p = {};
-        Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , response.data)
+        Axios.post('http://100.25.217.246:8081/authenticate/token' , response.data)
         .then(r => {
             if(r.data.password != "false"){
               this.setState({

@@ -45,7 +45,7 @@ class ManageUsers extends Component {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
+        Axios.post('http://100.25.217.246:8081/authenticate/token' , userToken)
         .then(r => {
             if(r.data.password != "false"){
               this.setState({
@@ -66,7 +66,7 @@ class ManageUsers extends Component {
         })
     }
     populateProfiles() {
-        Axios.get('https://drug-pricing-backend.cfapps.io/admin/get/users')
+        Axios.get('http://100.25.217.246:8081/admin/get/users')
             .then(response => {
                 this.setState({
                     profiles: response.data,
@@ -119,7 +119,7 @@ class ManageUsers extends Component {
       }
      
 
-      Axios.post('https://drug-pricing-backend.cfapps.io/admin/create/user' , profile)
+      Axios.post('http://100.25.217.246:8081/admin/create/user' , profile)
             .then(response => {
                 this.populateProfiles(); 
                   this.setState({

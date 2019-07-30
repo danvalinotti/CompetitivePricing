@@ -69,7 +69,7 @@ class Reports extends Component {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        Axios.post('https://drug-pricing-backend.cfapps.io/authenticate/token' , userToken)
+        Axios.post('http://100.25.217.246:8081/authenticate/token' , userToken)
         .then(r => {
             if(r.data.password != "false"){
               this.setState({
@@ -87,7 +87,7 @@ class Reports extends Component {
         })
     }
     getAllReports(){
-        Axios.get('https://drug-pricing-backend.cfapps.io/reports/getAll')
+        Axios.get('http://100.25.217.246:8081/reports/getAll')
             .then(response => {
                this.state.reports = response.data;
                 this.setState({
@@ -162,7 +162,7 @@ class Reports extends Component {
             responseType: 'blob',
 
         }
-        Axios.get('https://drug-pricing-backend.cfapps.io/reportdrugs/get/' + data.id,options)
+        Axios.get('http://100.25.217.246:8081/reportdrugs/get/' + data.id,options)
         .then(response => {
             const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
                 const link = document.createElement('a');
@@ -179,7 +179,7 @@ class Reports extends Component {
     getDailyReports() {
         var self = this;
         var inputVal = document.getElementById("mui-pickers-date").value;
-        Axios.get('https://drug-pricing-backend.cfapps.io/masterList/getByDate/' + inputVal)
+        Axios.get('http://100.25.217.246:8081/masterList/getByDate/' + inputVal)
             .then(response => {
 
                 var inner = <div><br />
@@ -306,7 +306,7 @@ class Reports extends Component {
         });
     }
     getBetweenDates(start, end) {
-        Axios.get('https://drug-pricing-backend.cfapps.io/reports/get/between/' + start + '/' + end)
+        Axios.get('http://100.25.217.246:8081/reports/get/between/' + start + '/' + end)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -315,7 +315,7 @@ class Reports extends Component {
     }
     
     equalDate(date) {
-        Axios.get('https://drug-pricing-backend.cfapps.io/reports/get/date/' + date)
+        Axios.get('http://100.25.217.246:8081/reports/get/date/' + date)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -324,7 +324,7 @@ class Reports extends Component {
     }
     getWithDrugCount(drugCount) {
 
-        Axios.get('https://drug-pricing-backend.cfapps.io/reports/get/drugCount/' + drugCount)
+        Axios.get('http://100.25.217.246:8081/reports/get/drugCount/' + drugCount)
             .then(response => {
                 this.setState({
                     reports: response.data

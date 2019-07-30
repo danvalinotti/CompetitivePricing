@@ -24,9 +24,12 @@ class DrugInformation extends React.Component {
             selectedDrug: null,
             dosageForm:"",
             pastDrugName: this.props.drugRequest.drugName,
+            drugDescription:''
         }
        this.getDosageForm = this.getDosageForm.bind(this);
+       this.getDrugDescription = this.getDrugDescription.bind(this);
         this.getDosageForm();
+        this.getDrugDescription();
     }
     getDosageForm(){
       
@@ -39,6 +42,18 @@ class DrugInformation extends React.Component {
          
         });
     }
+    getDrugDescription(){
+        axios.get('https://api.uspharmacycard.com/drug/price/147/none/07001/'+this.props.selectedDrug.defaultDose+'/'+this.props.selectedDrug.slug+'/'+this.props.response.drugType+'/'+this.props.selectedDrug.dose[0].defaultQuantity+'/8')
+        .then(response => {
+           console.log(response.data);
+            this.setState({
+                drugDescription: response.data.drugInfo,
+            });
+        });
+      
+    }
+ 
+    // 
     getIndexWithValue(value,list){
         var index = 0;
         list.map((v,i)=>{
@@ -61,7 +76,7 @@ class DrugInformation extends React.Component {
 
     getDrugDetails(drugRequest) {
 
-        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
+        axios.post('http://100.25.217.246:8081/getPharmacyPrice', drugRequest)
             .then(response => {
                 this.props.toggleDialog();
                 this.setState({
@@ -96,7 +111,7 @@ class DrugInformation extends React.Component {
     addDrug() {
 
         this.props.toggleDialog();
-        axios.post('https://drug-pricing-backend.cfapps.io/dashboard/drugs/add', this.props.drugRequest)
+        axios.post('http://100.25.217.246:8081/dashboard/drugs/add', this.props.drugRequest)
             .then(response => {
                 
                 this.props.toggleDialog();
@@ -154,7 +169,7 @@ class DrugInformation extends React.Component {
                 <i> {this.props.selectedDrug ? this.props.selectedDrug.formalName : "Formal Name"}</i>
             </h3>
             <div className="drugDescription">
-                {this.props.selectedDrug ? this.props.selectedDrug.description : "Drug Description"}
+                {this.props.selectedDrug ? this.state.drugDescription : "Drug Description"}
             </div>
             <div>
                 <div className="row" style={{paddingBottom:'10px', paddingTop:'10px'}}>

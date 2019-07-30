@@ -2,7 +2,7 @@ import fetch from "fetch-retry";
 
 
 function getDashBoardDrugsService() {
-    const url = 'https://drug-pricing-backend.cfapps.io/dashboard/get';
+    const url = 'http://100.25.217.246:8081/dashboard/get';
     // executeFetch(url,'GET')
     return fetch(
         url,
