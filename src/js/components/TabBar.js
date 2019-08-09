@@ -157,6 +157,7 @@ class TabBar extends React.Component {
               <Tab style={{color:'white'}} onClick={() => this.props.clickDashboard()} label={this.props.tab2} />
               <Tab style={{color:'white'}} onClick={() => this.props.clickReports()} label={this.props.tab3} />
               {this.props.tab4 ? <Tab style={{color:'white'}} onClick={() => this.props.clickTab4()} label={this.props.tab4} />: ''}
+              {this.props.tab5 ? <Tab style={{color:'white'}} onClick={() => this.props.clickTab5()} label={this.props.tab5} />: ''}
             </Tabs>
             <div style={{ marginLeft: "auto", marginRight: -12}}>
               <IconButton

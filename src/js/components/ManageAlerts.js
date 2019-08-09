@@ -256,6 +256,9 @@ class ManageAlerts extends Component {
         });
 
     }
+    clickRequests() {
+        this.props.history.push("/admin/manage/requests");
+    }
     handlePercentChange(event) {
         this.setState({
             percentChange: event.target.value,
@@ -277,7 +280,7 @@ class ManageAlerts extends Component {
 
         return (
             <div>
-                <TabBar page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={3} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Alerts"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}></TabBar>
+                <TabBar page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={3} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <br />
                     <div style={{ paddingTop: '30px' }}>

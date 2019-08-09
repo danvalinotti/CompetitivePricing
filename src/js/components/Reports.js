@@ -111,11 +111,7 @@ class Reports extends Component {
             loadingDialog: false
         });
     }
-  
-  
-   
-  
- 
+    
     round(num) {
         var num2 = Number(num).toFixed(2);
         if (num2 === "NaN") {
@@ -135,8 +131,6 @@ class Reports extends Component {
     addCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
-
-   
     
     filterList(event) {
         var str = event.target.value.toLowerCase();
@@ -151,16 +145,11 @@ class Reports extends Component {
         this.setState({
             filteredList: filteredList
         });
-    }
-   
-  
-  
-   
+    }   
   
     exportReport(data) {
         let options = {
             responseType: 'blob',
-
         }
         Axios.get('http://100.25.217.246:8081/reportdrugs/get/' + data.id,options)
         .then(response => {

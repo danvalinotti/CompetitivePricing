@@ -261,6 +261,9 @@ class ManageDrugs extends Component {
     drugChange(drugs) {
         console.log(drugs);
     }
+    clickRequests() {
+        this.props.history.push("/admin/manage/requests");
+    }
     renderDrugDosage(drugStrength, drugUOM) {
         if (drugUOM == null) {
             return drugStrength
@@ -308,7 +311,7 @@ class ManageDrugs extends Component {
 
         return (
             <div>
-                <TabBar  page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={2} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}></TabBar>
+                <TabBar  page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={2} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
 
 

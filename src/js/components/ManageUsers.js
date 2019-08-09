@@ -91,6 +91,9 @@ class ManageUsers extends Component {
     clickAlerts() {
         this.props.history.push("/admin/manage/alerts");
     }
+    clickRequests() {
+        this.props.history.push("/admin/manage/requests");
+    }
     clickDashboard() {
         this.props.history.push("/admin/manage/users");
     }
@@ -160,7 +163,7 @@ class ManageUsers extends Component {
 
         return (
             <div>
-                <TabBar  page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={1} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}></TabBar>
+                <TabBar  page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={1} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <br />
                     Manage Users
