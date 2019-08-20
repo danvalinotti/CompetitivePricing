@@ -63,7 +63,7 @@ class ManageRequests extends Component {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        Axios.post('http://100.25.217.246:8081/authenticate/token', userToken)
+        Axios.post('http://localhost:8081/authenticate/token', userToken)
             .then(r => {
                 if (r.data.password != "false") {
                     this.setState({
@@ -84,9 +84,9 @@ class ManageRequests extends Component {
             })
     }
     populateRequests() {
-        Axios.get('http://100.25.217.246:8081/get/requests/all')
+        Axios.get('http://localhost:8081/get/requests/all')
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.setState({
                     requests: response.data,
                 })
@@ -167,7 +167,7 @@ class ManageRequests extends Component {
 
 
     editRequest(event, request){
-        console.log(request);
+        // console.log(request);
         
         this.setState({
             selectedRequest:request,
@@ -195,8 +195,8 @@ class ManageRequests extends Component {
         drugRequest.latitude = this.state.newLatitude;
         drugRequest.longitude = this.state.newLongitude;
         
-        console.log(drugRequest);
-        Axios.post('http://100.25.217.246:8081/request/edit', drugRequest)
+        // console.log(drugRequest);
+        Axios.post('http://localhost:8081/request/edit', drugRequest)
             .then(response => {
                 this.populateRequests();
                 this.setState({
@@ -208,7 +208,7 @@ class ManageRequests extends Component {
 
         return (
             <div>
-                <TabBar page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={4} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Reports"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
+                <TabBar page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={4} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <br />
                     <div style={{ paddingTop: '30px' }}>
@@ -232,7 +232,7 @@ class ManageRequests extends Component {
                                     // addFunction: () => this.addDrug.bind(this),
                                     onRowUpdate: (newData, oldData) =>
                                     new Promise((resolve, reject) => {
-                                        console.log("update")
+                                        // console.log("update")
                                     }),
                                     editFunction: () => this.editRequest.bind(this)
                                 }}
@@ -253,7 +253,7 @@ class ManageRequests extends Component {
                 <Dialog fullWidth onClose={()=>this.handleClose()}
                     aria-labelledby="customized-dialog-title" open={this.state.editRequestDialog}>
                     <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
-                    Edit {this.state.selectedRequest ? this.state.selectedRequest.drugName: ''} {this.state.selectedRequest.program}
+                    Edit {this.state.selectedRequest ? this.state.selectedRequest.drugName: ''} {this.state.selectedRequest.program} Request
                     </DialogTitle>
                     <DialogContent className="textCenter">
                         <Grid container >

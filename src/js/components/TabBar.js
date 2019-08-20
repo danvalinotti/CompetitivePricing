@@ -107,9 +107,9 @@ class TabBar extends React.Component {
     })
   }
   submitSignUp(profile){
-    Axios.post('http://100.25.217.246:8081/signUp' , profile)
+    Axios.post('http://localhost:8081/signUp' , profile)
     .then(response => {
-      console.log("response");
+      // console.log("response");
     });
 
     this.setState({
@@ -117,11 +117,11 @@ class TabBar extends React.Component {
     })
   }
   submitSignIn(profile){
-    Axios.post('http://100.25.217.246:8081/create/token' , profile)
+    Axios.post('http://localhost:8081/create/token' , profile)
     .then(response => {
       
         var p = {};
-        Axios.post('http://100.25.217.246:8081/authenticate/token' , response.data)
+        Axios.post('http://localhost:8081/authenticate/token' , response.data)
         .then(r => {
             if(r.data.password != "false"){
               this.setState({

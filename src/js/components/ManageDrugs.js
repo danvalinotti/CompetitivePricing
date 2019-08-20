@@ -48,7 +48,7 @@ class ManageDrugs extends Component {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        Axios.post('http://100.25.217.246:8081/authenticate/token', userToken)
+        Axios.post('http://localhost:8081/authenticate/token', userToken)
             .then(r => {
                 if (r.data.password != "false") {
                     this.setState({
@@ -70,7 +70,7 @@ class ManageDrugs extends Component {
     }
     populateDrugs() {
 
-        Axios.get('http://100.25.217.246:8081/drugmaster/get/all')
+        Axios.get('http://localhost:8081/drugmaster/get/all')
             .then(response => {
                 console.log("POPULATE DURGS");
                 console.log(response);
@@ -110,7 +110,7 @@ class ManageDrugs extends Component {
         // updateStrength={this.updateStrength.bind(this)}
         // drugStrength={this.state.drugStrengthIndex}
         // value={this.state.editDrugStrength} /><br /><br />
-        Axios.get('http://100.25.217.246:8081/getDrugInfo/' + drug.name)
+        Axios.get('http://localhost:8081/getDrugInfo/' + drug.name)
             .then(response => {
                 console.log(response.data[0]);
                 var drugDetails = response.data[0];
@@ -176,7 +176,7 @@ class ManageDrugs extends Component {
         drug.quantity = this.state.quantity;
         drug.drugNDC = this.state.dosageStrength.value;
         drug.reportFlag = this.state.reportFlag;
-        Axios.post('http://100.25.217.246:8081/report/add/drug/last', drug)
+        Axios.post('http://localhost:8081/report/add/drug/last', drug)
             .then(response => {
                 this.populateDrugs();
                 this.setState({
@@ -278,7 +278,7 @@ class ManageDrugs extends Component {
         })
     }
     getDrugDetails(drugName) {
-        Axios.get('http://100.25.217.246:8081/getDrugInfo/' + drugName)
+        Axios.get('http://localhost:8081/getDrugInfo/' + drugName)
             .then(response => {
                 console.log(response.data[0]);
                 return response.data[0];
@@ -295,7 +295,7 @@ class ManageDrugs extends Component {
             drug.drugNDC = this.state.drugStrengthArray[this.state.editDrugStrength].value;
             drug.reportFlag = this.state.reportFlag;
             
-            Axios.post('http://100.25.217.246:8081/report/add/drug/last', drug)
+            Axios.post('http://localhost:8081/report/add/drug/last', drug)
                 .then(response => {
                     this.populateDrugs();
                     this.setState({

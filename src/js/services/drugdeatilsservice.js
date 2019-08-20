@@ -55,7 +55,7 @@ const parseJSON = (response) => response.json();
 };
 
 function drugDetailService(drugName) {
-    const url = `http://100.25.217.246:8081/getDrugInfo/${drugName}`;
+    const url = `http://localhost:8081/getDrugInfo/${drugName}`;
     // executeFetch(url,'GET')
     return fetch(
         url,

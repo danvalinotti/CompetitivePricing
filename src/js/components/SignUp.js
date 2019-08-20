@@ -39,7 +39,7 @@ class SignUp extends Component {
 
             });
         }else{
-            console.log(event.target.value.includes('@'));
+            // console.log(event.target.value.includes('@'));
             if(event.target.value.includes('@')){
                 this.setState({
                     email: event.target.value,
@@ -139,9 +139,9 @@ class SignUp extends Component {
     }
     submitSignUp(profile) {
         
-        Axios.post('http://100.25.217.246:8081/signUp', profile)
+        Axios.post('http://localhost:8081/signUp', profile)
             .then(response => {
-                console.log(response.data.username)
+                // console.log(response.data.username)
                 if(response.data.username === "Exists"){
                     this.setActiveStep((data)=>{return 0});
                 }else{

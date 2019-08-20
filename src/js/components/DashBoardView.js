@@ -36,7 +36,7 @@ class DashBoardViewComponent extends Component {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        Axios.post('http://100.25.217.246:8081/authenticate/token' , userToken)
+        Axios.post('http://localhost:8081/authenticate/token' , userToken)
         .then(r => {
          
             if(r.data.password != "false"){
@@ -90,7 +90,7 @@ class DashBoardViewComponent extends Component {
     deleteDrug(drug, index) {
            
             
-        Axios.post('http://100.25.217.246:8081/dashboard/drug/delete' , drug)
+        Axios.post('http://localhost:8081/dashboard/drug/delete' , drug)
             .then(response => {
                   this.setState({
                     dashBoardDrugsData:   this.state.dashBoardDrugsData.splice(index,1),
@@ -104,7 +104,7 @@ class DashBoardViewComponent extends Component {
         token.value = strtoken;
         token.key = strtoken;
      
-        Axios.post('http://100.25.217.246:8081/dashboard/get', token)
+        Axios.post('http://localhost:8081/dashboard/get', token)
         .then(response => {
           
                 this.setState({

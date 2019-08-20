@@ -52,7 +52,7 @@ return fetch(`${url}${queryParam}`, fetchRequest)
     });
 };
 function drugSearchService(name) {
-    const url = `http://100.25.217.246:8081/getDrugInfo/${name}`;
+    const url = `http://localhost:8081/getDrugInfo/${name}`;
     // executeFetch(url,'GET')
     return fetch(
         url,

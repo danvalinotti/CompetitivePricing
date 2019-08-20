@@ -56,6 +56,7 @@ class ManageAlerts extends Component {
             selectedDrug:null,
             allDrugs:[],
             percentChange:0.0,
+            alertAllDrugs:true,
         }
         this.authenticateUser.bind(this);
         this.getAllUsers = this.getAllUsers.bind(this);
@@ -64,13 +65,14 @@ class ManageAlerts extends Component {
         this.populateAlerts();
         this.getAllDrugs();
         this.getAllUsers();
+        
     }
     
     authenticateUser() {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        Axios.post('http://100.25.217.246:8081/authenticate/token', userToken)
+        Axios.post('http://localhost:8081/authenticate/token', userToken)
             .then(r => {
                 if (r.data.password != "false") {
                     this.setState({
@@ -91,9 +93,9 @@ class ManageAlerts extends Component {
             })
     }
     populateAlerts() {
-        Axios.get('http://100.25.217.246:8081/get/alerts/all')
+        Axios.get('http://localhost:8081/get/alerts/all')
             .then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 this.setState({
                     alerts: response.data,
 
@@ -147,19 +149,19 @@ class ManageAlerts extends Component {
         this.setState({
             newAlertDialog: true
         })
-        console.log("addDrug")
+        // console.log("addDrug")
     }
     getAllUsers(){
-        Axios.get('http://100.25.217.246:8081/admin/get/users')
+        Axios.get('http://localhost:8081/admin/get/users')
             .then(response => {
-            console.log(response.data)
+            // console.log(response.data)
                 this.setState({
                     users: response.data,
                 })
             })
     }
     getAllDrugs(){
-        Axios.get('http://100.25.217.246:8081/drugmaster/get/all')
+        Axios.get('http://localhost:8081/drugmaster/get/all')
             .then(response => {
            
                 this.setState({
@@ -182,19 +184,24 @@ class ManageAlerts extends Component {
         alert.deliveryType  = "email";
         alert.active = true;
         alert.recipients = recipientIds.toString();
-        console.log(alert);
+        // console.log(alert);
         var rule = {};
-        rule.drugId = this.state.selectedDrug.id;
+        if(this.state.alertAllDrugs == true){
+            rule.drugId = 0;
+        }else{
+            rule.drugId = this.state.selectedDrug.id;
+        }
+        
         rule.percentChange = this.state.percentChange;
-        console.log(rule);
-        Axios.post('http://100.25.217.246:8081/create/alert/type', alert)
+        // console.log(rule);
+        Axios.post('http://localhost:8081/create/alert/type', alert)
             .then(response => {
                 rule.alertTypeId = response.data.id
                 this.setState({
                     newAlertDialog: false,
                 });
                 
-                Axios.post('http://100.25.217.246:8081/create/drug/rule', rule)
+                Axios.post('http://localhost:8081/create/drug/rule', rule)
                 .then(response => {
                     
                 });
@@ -265,6 +272,12 @@ class ManageAlerts extends Component {
         });
 
     }
+    handleAlertAllDrugs(event){
+        this.setState({
+            alertAllDrugs : !this.state.alertAllDrugs,
+        });
+        // console.log(event);
+    }
     renderSelected(selectedArr){
         var str = ""
         selectedArr.forEach(element => {
@@ -297,7 +310,7 @@ class ManageAlerts extends Component {
                                 editable={{
                                     onRowAdd: newData =>
                                         new Promise((resolve, reject) => {
-                                            console.log("add")
+                                            // console.log("add")
                                         }),
                                     addFunction: () => this.addDrug.bind(this),
 
@@ -337,7 +350,7 @@ class ManageAlerts extends Component {
                             </Grid>
                             <Grid item xs={7}>
 
-                                <TextField id="outlined-multiline-flexible" label="Multiline"  margin="normal"
+                                <TextField id="outlined-multiline-flexible"  margin="normal"
                                     multiline rows="4" value={this.state.summary} variant="outlined"
                                     onChange={this.handleSummaryChange.bind(this)} />
                             </Grid>
@@ -348,7 +361,7 @@ class ManageAlerts extends Component {
                             </Grid>
                             <Grid item xs={7}>
                             
-                                <TextField id="outlined-multiline-flexible" label="Multiline"margin="normal"
+                                <TextField id="outlined-multiline-flexible" margin="normal"
                                     multiline rows="4" value={this.state.header} variant="outlined"
                                     onChange={this.handleHeaderChange.bind(this)} />
                             </Grid>
@@ -359,7 +372,7 @@ class ManageAlerts extends Component {
                             </Grid>
                             <Grid item xs={7}>
                         
-                                <TextField id="outlined-multiline-flexible" label="Multiline" margin="normal"
+                                <TextField id="outlined-multiline-flexible"  margin="normal"
                                     multiline rows="4" value={this.state.footer} variant="outlined"
                                     onChange={this.handleFooterChange.bind(this)} />
                             </Grid>
@@ -389,6 +402,15 @@ class ManageAlerts extends Component {
                         </Grid>
                         <Grid container  >
                             <Grid item xs={5}>
+                                <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Alert for All Drugs:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                            <Checkbox checked={this.state.alertAllDrugs} onChange={this.handleAlertAllDrugs.bind(this)}/>
+                            </Grid>
+                        </Grid>
+                        {this.state.alertAllDrugs ==false ? 
+                        <Grid container  >
+                            <Grid item xs={5}>
                                 <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Drug:</Typography>
                             </Grid>
                             <Grid item xs={7}>
@@ -407,7 +429,7 @@ class ManageAlerts extends Component {
                                     </Select>
                                 </FormControl>
                             </Grid>
-                        </Grid>
+                        </Grid>: ''}
                         <Grid container   >
                             <Grid item xs={5}>
                                 <Typography style={{padding:'5%'}} verticalAlign="bottom"> Percentage Change:</Typography>

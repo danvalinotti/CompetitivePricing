@@ -85,7 +85,7 @@ class HeaderWithSearch extends React.Component {
  
   getDrugDetails(drugRequest) {
     this.props.toggleDialog();
-    axios.post('http://100.25.217.246:8081/getPharmacyPrice', drugRequest)
+    axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
       .then(response => {
 
         this.setState({
@@ -185,7 +185,7 @@ class HeaderWithSearch extends React.Component {
     this.onClickDrug(drug);
   }
   setFirstChoice() {
-    console.log("SET FIRST CHOICE");
+    // console.log("SET FIRST CHOICE");
   }
 
   render() {

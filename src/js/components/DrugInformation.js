@@ -45,7 +45,7 @@ class DrugInformation extends React.Component {
     getDrugDescription(){
         axios.get('https://api.uspharmacycard.com/drug/price/147/none/07001/'+this.props.selectedDrug.defaultDose+'/'+this.props.selectedDrug.slug+'/'+this.props.response.drugType+'/'+this.props.selectedDrug.dose[0].defaultQuantity+'/8')
         .then(response => {
-           console.log(response.data);
+        //    console.log(response.data);
             this.setState({
                 drugDescription: response.data.drugInfo,
             });
@@ -76,7 +76,7 @@ class DrugInformation extends React.Component {
 
     getDrugDetails(drugRequest) {
 
-        axios.post('http://100.25.217.246:8081/getPharmacyPrice', drugRequest)
+        axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
             .then(response => {
                 this.props.toggleDialog();
                 this.setState({
@@ -111,7 +111,7 @@ class DrugInformation extends React.Component {
     addDrug() {
 
         this.props.toggleDialog();
-        axios.post('http://100.25.217.246:8081/dashboard/drugs/add', this.props.drugRequest)
+        axios.post('http://localhost:8081/dashboard/drugs/add', this.props.drugRequest)
             .then(response => {
                 
                 this.props.toggleDialog();

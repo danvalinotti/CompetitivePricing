@@ -61,7 +61,7 @@ class ViewDrugDetails extends React.Component {
     var userToken = {};
     userToken.name = window.sessionStorage.getItem("token");
 
-    Axios.post('http://100.25.217.246:8081/authenticate/token' , userToken)
+    Axios.post('http://localhost:8081/authenticate/token' , userToken)
     .then(r => {
         if(r.data.password != "false"){
           this.setState({

@@ -45,7 +45,7 @@ class ManageUsers extends Component {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
 
-        Axios.post('http://100.25.217.246:8081/authenticate/token' , userToken)
+        Axios.post('http://localhost:8081/authenticate/token' , userToken)
         .then(r => {
             if(r.data.password != "false"){
               this.setState({
@@ -66,7 +66,7 @@ class ManageUsers extends Component {
         })
     }
     populateProfiles() {
-        Axios.get('http://100.25.217.246:8081/admin/get/users')
+        Axios.get('http://localhost:8081/admin/get/users')
             .then(response => {
                 this.setState({
                     profiles: response.data,
@@ -122,7 +122,7 @@ class ManageUsers extends Component {
       }
      
 
-      Axios.post('http://100.25.217.246:8081/admin/create/user' , profile)
+      Axios.post('http://localhost:8081/admin/create/user' , profile)
             .then(response => {
                 this.populateProfiles(); 
                   this.setState({

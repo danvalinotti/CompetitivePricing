@@ -32,6 +32,7 @@ class SignIn extends Component {
             credWarning: '',
             emailErrorText: '',
             passwordErrorText: '',
+            confirmNewPassword: '',
         }
         this.setActiveStep = this.setActiveStep.bind(this);
         this.submitSignIn = this.submitSignIn.bind(this);
@@ -44,7 +45,7 @@ class SignIn extends Component {
 
             });
         } else {
-            console.log(event.target.value.includes('@'));
+            // console.log(event.target.value.includes('@'));
             if (event.target.value.includes('@')) {
                 this.setState({
                     email: event.target.value,
@@ -123,12 +124,12 @@ class SignIn extends Component {
     }
     submitSignIn(profile) {
 
-        Axios.post('http://100.25.217.246:8081/create/token', profile)
+        Axios.post('http://localhost:8081/create/token', profile)
             .then(response => {
 
 
                 var p = {};
-                Axios.post('http://100.25.217.246:8081/authenticate/token', response.data)
+                Axios.post('http://localhost:8081/authenticate/token', response.data)
                     .then(r => {
 
                         if (r.data.password != "false") {
@@ -193,6 +194,11 @@ class SignIn extends Component {
             updateDialog: false
         })
     }
+    handleForgotClose() {
+        this.setState({
+            updateDialog: false
+        })
+    }
     handleOldPassword(event) {
         this.setState({
             oldPassword: event.target.value
@@ -203,23 +209,46 @@ class SignIn extends Component {
             newPassword: event.target.value
         });
     }
+    handleConfirmNewPassword(event){
+        this.setState({
+            confirmNewPassword: event.target.value
+        });
+    }
+    handleForgotPW(){
+        this.setState({
+            updateDialog: true
+        })
+    }
     updatePassword() {
         var profile = {};
 
         profile.password = this.state.oldPassword;
         profile.username = this.state.email;
         profile.role = this.state.newPassword;
-        Axios.post('http://100.25.217.246:8081/update/password', profile)
+        if(this.state.newPassword == this.state.confirmNewPassword){
+        if(this.state.newPassword != this.state.oldPassword){
+        Axios.post('http://localhost:8081/update/password', profile)
             .then(response => {
                 if (response.data == null) {
                     this.setState({
-                        credWarning: 'Incorrect password'
+                        credWarning: 'Incorrect'
                     });
                 } else {
                     this.props.history.push("/search");
                 }
             });
-
+        }else{
+            this.setState({
+                credWarning:"New password must not match old password"
+            })
+     
+        }
+        }else{
+            this.setState({
+                credWarning: "New password doesn't match confirmed password"
+            })
+           
+        }
     }
     handleKeyPress (event){
         if(event.key === 'Enter'){
@@ -295,24 +324,27 @@ class SignIn extends Component {
                                 </Grid><br />
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
                                     <Button variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
+                                </Grid><br />
+                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
+                                    <Button variant="contained" onClick={this.handleForgotPW.bind(this)}>Forgot Password</Button>
                                 </Grid>
                             </Grid>
                         </CardContent>
 
                     </Card>
                 </Grid>
-                <Dialog onClose={() => this.handleClose()}
+                {/* <Dialog onClose={() => this.handleClose()}
                     aria-labelledby="customized-dialog-title" open={this.state.updateDialog}>
                     <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
                         Update Password
                     </DialogTitle>
                     <DialogContent className="textCenter">
+                    {this.state.credWarning}
                         <Grid container>
                             <Grid item xs={5}>
                                 <Typography verticalAlign="bottom"> Old Password:</Typography>
-
                             </Grid>
-                            {this.state.credWarning}
+                           
                             <Grid item xs={7}>
                                 <TextField
                                     id="standard-name"
@@ -340,6 +372,82 @@ class SignIn extends Component {
 
 
                         <Button style={{ fontSize: '13px', height: '32px' }} onClick={() => { this.updatePassword() }} variant="contained" color="primary">Update Password</Button>
+                    </DialogContent>
+                </Dialog> */}
+
+
+
+                <Dialog onClose={() => this.handleClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.updateDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
+                        Forgot Password
+                    </DialogTitle>
+                    <DialogContent className="textCenter"><label style={{color:'red'}}>{this.state.credWarning}</label>
+                    <Grid container >
+                            <Grid item style={{paddingTop:'4%'}} xs={5}>
+                                <Typography verticalAlign="bottom"> Email:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField
+                                    variant="outlined"
+                                    id="standard-name"
+                                  
+                                    value={this.state.email}
+                                    onChange={this.handleEmailChange.bind(this)}
+                                    margin="dense"
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item style={{paddingTop:'4%'}} xs={5}>
+                                <Typography verticalAlign="bottom"> Old Password:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField
+                                    variant="outlined"
+                                    id="standard-name"
+                                    type="password"
+                                    value={this.state.oldPassword}
+                                    onChange={this.handleOldPassword.bind(this)}
+                                    margin="dense"
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item style={{paddingTop:'4%'}} xs={5}>
+                                <Typography verticalAlign="bottom">New Password:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField
+                                    
+                                    id="standard-name"
+                                    type="password"
+                                    value={this.state.newPassword}
+                                    onChange={this.handleNewPassword.bind(this)}
+                                    margin="dense"
+                                    variant="outlined"
+                                    // hiddenLabel
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item style={{paddingTop:'4%'}} xs={5}>
+                                <Typography verticalAlign="bottom">Confirm New Password:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField
+                                    id="standard-name"
+                                    type="password"
+                                    value={this.state.confirmNewPassword}
+                                    onChange={this.handleConfirmNewPassword.bind(this)}
+                                    margin="dense"
+                                    variant="outlined"
+                                    // hiddenLabel
+                                />
+                            </Grid>
+                        </Grid>
+
+                        <Button style={{ fontSize: '13px', height: '32px', margin:'5%' }} onClick={() => { this.updatePassword() }} variant="contained" color="primary">Update Password</Button>
                     </DialogContent>
                 </Dialog>
             </div>
