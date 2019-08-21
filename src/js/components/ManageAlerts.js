@@ -440,7 +440,7 @@ class ManageAlerts extends Component {
                         </Grid>
 
                         <br />
-                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.sendAlert.bind(this)} variant="contained" color="primary">Send Alert</Button>
+                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.sendAlert.bind(this)} variant="contained" color="primary">Setup Alert</Button>
 
                     </DialogContent>
                 </Dialog>
