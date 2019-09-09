@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {actions} from "../actions/dashBoardActions";
 import SignIn from "../components/SignIn";
 import gxWave from "../../assests/images/GxWave-Logo-White.png";
+import { inherits } from "util";
 
 
 class SignInContainer extends Component {
@@ -15,7 +16,7 @@ class SignInContainer extends Component {
 
     render() {
         return (
-            <div style={{height:'100%', backgroundColor:'#0F0034'}}>
+            <div style={{height:'inherit', backgroundColor:'#0F0034'}}>
                 <SignIn
                     actions = {this.props.actions}
                     dashBoardDrugsData = {this.props.dashBoardDrugsData}

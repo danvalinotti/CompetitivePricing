@@ -15,12 +15,10 @@ class SignUpContainer extends Component {
 
     render() {
         return (
-            <div  style={{height:'100%', backgroundColor:'#0F0034'}}>
+            <div  style={{ backgroundColor:'#0F0034'}}>
                 <SignUp
                     actions = {this.props.actions}
                     dashBoardDrugsData = {this.props.dashBoardDrugsData}
-
-
                 /><br/><br/>
                 <div xs={4} justify="center" style={{
                          left: '0', bottom: '0', width: '100%', textAlign: 'center',}}>
@@ -28,7 +26,6 @@ class SignUpContainer extends Component {
                          <img  className="gxWave" src={gxWave} style={{paddingLeft:'10px'}} width="75px" height="25px"/>
                     </div>
                     <br/>
-
             </div>
         );
     }

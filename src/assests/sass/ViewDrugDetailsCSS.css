@@ -60,6 +60,9 @@ table {
   margin-top: 0px;
   padding-left: 0px;
 }
+.MuiGrid-grid-xs-12{
+  height: 100%
+}
 .filter-select-list {
   cursor: pointer;
   padding: 5px 10px;
