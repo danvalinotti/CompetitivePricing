@@ -37,6 +37,7 @@ class AutoSuggestComponent2 extends React.Component {
 
     getSuggestions(value) {
         const providerPrices = this.state.providerPrices;
+        console.log(this.state.providerPrices);
         return providerPrices;
     }
     onClickDrug(drug) {

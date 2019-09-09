@@ -395,6 +395,9 @@ th{
   margin: 0px;
   margin-top:0px;
 }
+.nextButton{
+  background-color: #0457af
+}
 
 @media (max-width: 576px) {
 

@@ -12,10 +12,12 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import HorizontalLinearStepper from './SignInStepper'
 import TextField from '@material-ui/core/TextField'
-import galaxeLogo from "../../assests/images/galaxeLogo.png";
+import galaxeLogo from "../../assests/images/RxWave Logo.png";
+
 import Divider from '@material-ui/core/Divider';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Link } from "@material-ui/core";
 
 class SignIn extends Component {
     constructor(props) {
@@ -258,16 +260,17 @@ class SignIn extends Component {
     render() {
 
         return (
-            <div><br /><br />
+            <div style={{backgroundColor:'#0F0034'}}><br /><br />
                 <Grid container direction="column" alignItems="center" justify="center">
-                    <Card style={{ maxWidth: '500px',minWidth: '300px', backgroundColor: 'whitesmoke' }} >
+                    <Card style={{ maxWidth: '500px',minWidth: '300px', backgroundColor: 'white' }} >
                         <CardContent>
                             <Grid container spacing={1} direction="column" alignItems="center" justify="center">
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
-                                    <Typography variant="h4">Sign In</Typography><br />
+                                  <br/>
 
                                     {/* <Divider variant="middle" light={true} /> */}
-                                    <img src={galaxeLogo} width="100px" height="100px" />
+                                    <img src={galaxeLogo} width= "200px" height= "71px" /><br/>
+                                    <Typography variant="h6">Log In</Typography>
                                 </Grid>
 
                                 <Grid container item direction="column" spacing={3}>
@@ -290,6 +293,7 @@ class SignIn extends Component {
                                             <TextField
                                                 width="auto"
                                                 required
+                                                variant="outlined"
                                                 error={this.state.emailErrorText.length === 0 ? false : true}
                                                 helperText={this.state.emailErrorText}
                                                 id="standard-name"
@@ -309,6 +313,7 @@ class SignIn extends Component {
                                                 helperText={this.state.passwordErrorText}
                                                 id="standard-name"
                                                 label="Password"
+                                                variant="outlined"
                                                 type="password"
                                                 value={this.state.password}
                                                 onChange={this.handlePasswordChange.bind(this)}
@@ -320,13 +325,13 @@ class SignIn extends Component {
 
                                 </Grid><br />
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button variant="contained" onClick={this.handleSubmit.bind(this)}>Sign In</Button>
+                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}} variant="contained" onClick={this.handleSubmit.bind(this)}>Sign In</Button>
                                 </Grid><br />
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
+                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button variant="contained" onClick={this.handleForgotPW.bind(this)}>Forgot Password</Button>
+                                <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
+                                    <Link  onClick={this.handleForgotPW.bind(this)}><label style={{cursor:'pointer' ,color:'rgb(28,173,220)'}}><strong>Forgot Password</strong></label></Link>
                                 </Grid>
                             </Grid>
                         </CardContent>

@@ -2,10 +2,12 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import image from "../../assests/images/InsideLogo_1.svg";
-import IconButton from '@material-ui/core/IconButton'; 
+import image from "../../assests/images/RxWave Logo White.png";
+import Button from '@material-ui/core/Button'; 
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
+
+import brandImage from "../../assests/images/InsideLogo_1.svg";
 import Menu from '@material-ui/core/Menu';
 import SignInDialog from './SignInDialog';
 import SignUpDialog from './SignUpDialog';
@@ -78,7 +80,7 @@ class TabBar extends React.Component {
   loadMenuItems(){
       if(this.props.profile.role == "admin"){
         if(this.props.page){
-          return(<div>
+          return(<div >
             <MenuItem >My Account</MenuItem>
             <MenuItem onClick={this.goToAdmin.bind(this)} >Go To User View</MenuItem>
             <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);  
@@ -90,7 +92,7 @@ class TabBar extends React.Component {
       }else{
         return(<div>
           <MenuItem >My Account</MenuItem>
-          <MenuItem  onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
+          <MenuItem onClick={this.logout.bind(this)}>Logout</MenuItem></div>);
       }
      
   }
@@ -145,9 +147,9 @@ class TabBar extends React.Component {
           <Toolbar>
            
             <span onClick={()=>this.props.clickHome()} className="headerHelp pointer">
-              <span ><svg style={{ marginLeft: '30%', width: '70px', paddingTop: '5px' ,height:'25px' }}
+              {/* <span ><svg style={{ marginLeft: '30%', width: '70px', paddingTop: '5px' ,height:'25px', color:'white' }}
                 xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></span>
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></span> */}
               <span><img src={image} style={{paddingRight:'20px' , float: 'right', width: '130px', height: '30px' }} /> </span></span>
             <Tabs
               value={this.state.value}
@@ -160,17 +162,19 @@ class TabBar extends React.Component {
               {this.props.tab5 ? <Tab style={{color:'white'}} onClick={() => this.props.clickTab5()} label={this.props.tab5} />: ''}
             </Tabs>
             <div style={{ marginLeft: "auto", marginRight: -12}}>
-              <IconButton
+            <Button
                 aria-label="Account of current user"
                 aria-controls="menu-appbar"
-               
                 aria-haspopup="true"
+                onClick={this.openProfileMenu.bind(this)}
                 color="white"
-                onClick={this.openProfileMenu.bind(this)}>
-                
-                <AccountCircle  style={{color:'white'}} />
-              </IconButton>
-              <Menu
+                style={{backgroundColor:'white'}}
+              >
+               <span><img src={brandImage} style={{ paddingRight: '20px', float: 'right', width: '100px', height: '23px' }} /> </span>
+                <AccountCircle style={{ color: this.props.color }} />
+              </Button>
+              <Menu 
+              // marginTop="10px"
                 id="menu-appbar"
                open={this.state.profileMenuOpen}
                onChange= {()=>{this.navigateProfile}}

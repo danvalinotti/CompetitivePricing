@@ -15,7 +15,7 @@ import DrugQuantityDropDown2 from "./DrugQuantityDropDown.1";
 import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
 import { Select, MenuItem } from "@material-ui/core";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 class ManageDrugs extends Component {
     constructor(props) {
         super(props);
@@ -167,7 +167,11 @@ class ManageDrugs extends Component {
 
     }
     createDrug() {
+        this.setState({
+            addingDialog: true,
+        })
         var drug = {};
+        console.log(this.state.selectedDrug);
         console.log("HELLO");
         console.log(this.state.dosageStrength);
         drug.zipcode = "08873";
@@ -176,12 +180,14 @@ class ManageDrugs extends Component {
         drug.quantity = this.state.quantity;
         drug.drugNDC = this.state.dosageStrength.value;
         drug.reportFlag = this.state.reportFlag;
-        Axios.post('http://localhost:8081/report/add/drug/last', drug)
+        
+        Axios.post('http://localhost:8081/add/drug', drug)
             .then(response => {
-                this.populateDrugs();
+               this.populateDrugs();
                 this.setState({
-                    newDrugDialog: false,
+                    addingDialog: false,
                 })
+                console.log("ADDED DRUG");
             })
     }
 
@@ -244,6 +250,12 @@ class ManageDrugs extends Component {
             editDrugQuantity: strength.quantity[0].value,
         })
     }
+    closeAddingDialog(){
+        this.setState({
+            
+            addingDialog:false
+        })
+    }
     handleReportFlagChange(event) {
         this.setState({
             reportFlag: event.target.value
@@ -295,12 +307,13 @@ class ManageDrugs extends Component {
             drug.drugNDC = this.state.drugStrengthArray[this.state.editDrugStrength].value;
             drug.reportFlag = this.state.reportFlag;
             
-            Axios.post('http://localhost:8081/report/add/drug/last', drug)
+            Axios.post('http://localhost:8081/edit/drug', drug)
                 .then(response => {
                     this.populateDrugs();
                     this.setState({
                         editDrugDialog: false,
                     })
+                    // console.log("FINISHED ADDING");
                 })
             
     
@@ -478,6 +491,15 @@ class ManageDrugs extends Component {
                         <br />
                         <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitEditDrug.bind(this)} variant="contained" color="primary">Edit Drug</Button>
 
+                    </DialogContent>
+                </Dialog>
+                <Dialog onClose={() => this.closeAddingDialog.bind(this)}
+                    aria-labelledby="customized-dialog-title" open={this.state.addingDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.closeAddingDialog.bind(this)}>
+                        Adding Drug
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                        <CircularProgress />
                     </DialogContent>
                 </Dialog>
             </div>

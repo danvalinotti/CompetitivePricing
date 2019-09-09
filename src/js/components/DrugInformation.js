@@ -24,12 +24,12 @@ class DrugInformation extends React.Component {
             selectedDrug: null,
             dosageForm:"",
             pastDrugName: this.props.drugRequest.drugName,
-            drugDescription:''
+            drugDescription:this.props.selectedDrug.description,
         }
        this.getDosageForm = this.getDosageForm.bind(this);
        this.getDrugDescription = this.getDrugDescription.bind(this);
         this.getDosageForm();
-        this.getDrugDescription();
+        // this.getDrugDescription();
     }
     getDosageForm(){
       
@@ -43,14 +43,26 @@ class DrugInformation extends React.Component {
         });
     }
     getDrugDescription(){
-        axios.get('https://api.uspharmacycard.com/drug/price/147/none/07001/'+this.props.selectedDrug.defaultDose+'/'+this.props.selectedDrug.slug+'/'+this.props.response.drugType+'/'+this.props.selectedDrug.dose[0].defaultQuantity+'/8')
-        .then(response => {
-        //    console.log(response.data);
-            this.setState({
-                drugDescription: response.data.drugInfo,
-            });
+        console.log(this.props.selectedDrug);
+        this.setState({
+            drugDescription: this.props.selectedDrug.description,
         });
-      
+
+        // axios.get('https://api.uspharmacycard.com/drug/price/147/none/07001/'+this.props.selectedDrug.defaultDose+'/'+this.props.selectedDrug.slug+'/'+this.props.response.drugType+'/'+this.props.selectedDrug.dose[0].defaultQuantity+'/8')
+        // .then(response => {
+        // //    console.log(response.data);
+        //     this.setState({
+        //         drugDescription: response.data.drugInfo,
+        //     });
+        // });
+        // axios.get('https://www.blinkhealth.com/api/directory/'+this.props.selectedDrug.name+'?c_app=rx&c_platform=web&c_timestamp=1566565631578')
+        // .then(response => {
+        // //    console.log(response.data);
+        //     this.setState({
+        //         drugDescription: response.data.results[0].monograph.uses,
+        //     });
+        // });
+        
     }
  
     // 

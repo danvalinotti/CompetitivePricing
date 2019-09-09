@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import HorizontalLinearStepper from './SignInStepper'
 import TextField from '@material-ui/core/TextField'
-import galaxeLogo from "../../assests/images/galaxeLogo.png";
+import galaxeLogo from "../../assests/images/RxWave Logo.png";
 import Divider from '@material-ui/core/Divider';
 
 class SignUp extends Component {
@@ -87,6 +87,7 @@ class SignUp extends Component {
         return (<div>{this.state.warning}
             <Grid container direction="column" alignItems="center" justify="center">
                 <TextField
+                    variant="outlined"
                     required
                     error={this.state.emailErrorText.length === 0 ? false : true}
                     helperText={this.state.emailErrorText}
@@ -98,6 +99,7 @@ class SignUp extends Component {
                 />
                 <TextField
                     required
+                    variant="outlined"
                     autoComplete="off"
                     error={this.state.passwordErrorText.length === 0 ? false : true}
                     helperText={this.state.passwordErrorText}
@@ -116,6 +118,7 @@ class SignUp extends Component {
             <Grid container direction="column" alignItems="center" justify="center">
                 <TextField
                     id="standard-name"
+                    variant="outlined"
                     label="Name"
                     value={this.state.name}
                     onChange={this.handleNameChange.bind(this)}
@@ -185,16 +188,17 @@ class SignUp extends Component {
     render() {
 
         return (
-            <div><br />
+            <div  style={{backgroundColor:'#0F0034'}}><br />
                 <Grid container direction="column" alignItems="center" justify="center">
-                    <Card style={{ maxWidth: '500px', backgroundColor: 'whitesmoke' }}>
+                    <Card style={{ maxWidth: '500px', backgroundColor: 'white' }}>
 
                         <CardContent>
                             <Grid container spacing={1} direction="column" alignItems="center" justify="center">
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
-                                    <Typography variant="h4">Sign Up</Typography><br />
-
-                                    <img src={galaxeLogo} width="100px" height="100px" />
+                                   
+                                    <br/>
+                                     <img src={galaxeLogo} width= "200px" height= "71px" /><br/>
+                                     <Typography variant="h4">Sign Up</Typography>
                                 </Grid>
 
                                 <Grid container item xs={12} spacing={3}>
@@ -211,7 +215,7 @@ class SignUp extends Component {
                                     </HorizontalLinearStepper>
                                 </Grid><br />
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button variant="contained" onClick={this.signInNav.bind(this)}>Sign In</Button>
+                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}  variant="contained" onClick={this.signInNav.bind(this)}>Sign In</Button>
                                 </Grid>
                             </Grid>
                         </CardContent>

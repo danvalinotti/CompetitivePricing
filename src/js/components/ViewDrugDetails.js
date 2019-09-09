@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import '../../assests/sass/ViewDrugDetailsCSS.css'
 
+import HeaderComponent from "./HeaderComponent";
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import USProviderImg from "../../assests/images/usPharmCard2.png";
@@ -14,6 +15,7 @@ import HeaderWithSearch from "../components/HeaderWithSearch";
 import Arrow from "../components/Arrow";
 import DrugInformation from "../components/DrugInformation";
 import Axios from "axios";
+import TabBar from './TabBar';
 class ViewDrugDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -27,6 +29,13 @@ class ViewDrugDetails extends React.Component {
       var response = this.props.state.location.state.response;
     var request = this.props.state.location.state.request;
     request.token = window.sessionStorage.getItem("token");
+      console.log(response);
+    if(response.average == "0" || response.average == "N/A"|| response.average == "0.0"){
+      response.average = this.responseAverage(response);
+    }
+    if(response.recommendedPrice == "0" || response.recommendedPrice == "N/A"|| response.recommendedPrice == "0.0"){
+      response.recommendedPrice = this.responseLowest(response);
+    }
 
     var info = this.props.state.location.state.info;
       this.props.state.location.state.info.dose.map((dose) => {
@@ -34,10 +43,8 @@ class ViewDrugDetails extends React.Component {
           quantityList = dose.quantity;
         }
       });
+      info.description= response.description;
       this.state = {
-    
-      
-        
         strengthList: info.dose,
         quantityList: quantityList,
         drugStrength: this.getIndexByLabel(request.dosageStrength, info.dose),
@@ -56,6 +63,44 @@ class ViewDrugDetails extends React.Component {
     this.clickDashboard = this.clickDashboard.bind(this);
     this.clickReports = this.clickReports.bind(this);
 
+  }
+  responseAverage(response){
+   
+    var count = 0;
+    var sum = 0;
+   
+    response.programs.forEach(program => {
+      // console.log(program.price);
+      // console.log(count);
+      // console.log(sum);
+      if(program.price != "N/A"){
+        count++
+        sum = sum+Number(program.price) 
+      }
+      
+    });
+
+    return sum/count;
+  }
+  responseLowest(response){
+    
+    var lowest = "N/A";
+    
+   
+    response.programs.forEach(program => {
+      console.log(program.price);
+      console.log(lowest);
+      if(program.price != "N/A"){
+        if(lowest == "N/A"){
+         lowest =  Number(program.price)
+        }else if(Number(program.price)<= Number(lowest)){
+          lowest =  Number(program.price)
+        }
+      }
+      
+    });
+
+    return lowest;
   }
   authenticateUser(){
     var userToken = {};
@@ -197,7 +242,7 @@ clickReports(){
       return (
 
         <div>
-          <HeaderWithSearch
+          {/* <HeaderWithSearch
           
             updateProperties={this.updateProperties.bind(this)}
             toggleDialog={this.toggleDialog.bind(this)}
@@ -205,7 +250,9 @@ clickReports(){
             value={0}
             profile={this.state.loggedInProfile}
             clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}
-          ></HeaderWithSearch>
+          ></HeaderWithSearch> */}
+          <HeaderComponent profile={this.state.loggedInProfile} value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
+
       
           <DrugInformation
             drugRequest={this.state.drugRequest}

@@ -26,7 +26,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { RuleList } from "jss";
-
+import IntegrationReactSelect2 from './SelectDrugDropdown.1' 
 
 class ManageRequests extends Component {
     constructor(props) {
@@ -49,16 +49,48 @@ class ManageRequests extends Component {
             newGSN:'',
             newLatitude:'',
             newLongitude:'',
+            newGoodRxId: '',
             selectedRequest:{},
-
+            newRequestDialog:false,
+            selectedOption:{},
+            options:[],
+            drugList:[],
+            newProgram:0,
         }
+        this.getAllDrugs = this.getAllDrugs.bind(this)
+        
         this.authenticateUser.bind(this);
         
         this.populateRequests = this.populateRequests.bind(this);
-        
+        this.getAllDrugs();
         this.populateRequests(); 
+        
     }
     
+    getAllDrugs() {
+     console.log("getting alldrugs")
+        Axios.get('http://localhost:8081/drugmaster/get/all')
+            .then(response => {
+                console.log("got ")
+                console.log(response.data)
+                this.setState({
+                    drugList: response.data,
+                });
+                this.mapOptions(response.data);
+            });
+    }
+
+    mapOptions(drugList) {
+        var newOptions = [];
+        drugList.map((drug) => {
+            newOptions.push({ value: drug, label: drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")" })
+        })
+        this.setState({
+            options: newOptions
+        })
+        console.log("SETOPTIONS");
+    }
+
     authenticateUser() {
         var userToken = {};
         userToken.name = window.sessionStorage.getItem("token");
@@ -84,9 +116,9 @@ class ManageRequests extends Component {
             })
     }
     populateRequests() {
-        Axios.get('http://localhost:8081/get/requests/all')
+        Axios.get('http://localhost:8081/get/requests')
             .then(response => {
-                // console.log(response.data);
+                console.log(response.data);
                 this.setState({
                     requests: response.data,
                 })
@@ -122,6 +154,11 @@ class ManageRequests extends Component {
     handleClose() {
         this.setState({
             editRequestDialog: false
+        })
+    }
+    handleAddClose() {
+        this.setState({
+            newRequestDialog: false
         })
     }
     handleNDCChange(event) {
@@ -164,28 +201,75 @@ class ManageRequests extends Component {
             newLongitude: event.target.value,
         });
     }
+    handleGoodRxIdChange(event) {
+        this.setState({
+            newGoodRxId: event.target.value,
+        });
+    }
+    handleDrugChange(selectedOption) {
 
+        this.setState({ selectedOption: selectedOption });
+    };
 
     editRequest(event, request){
         // console.log(request);
-        
+        console.log(request);
+        Axios.get('http://localhost:8081/drugmaster/get/id/'+request.drugId)
+        .then(r => {
         this.setState({
             selectedRequest:request,
             newDrugName:request.drugName,
             newNDC:request.ndc,
             newQuantity : request.quantity,
             newZipCode: request.zipcode,
-            newBrandIndicator: request.newBrandIndicator,
+            newBrandIndicator: request.brandIndicator,
             newGSN:request.gsn,
             newLatitude:request.latitude,
             newLongitude:request.longitude,
+            
             editRequestDialog: true,
-        });
+        });}
+        );
+    }
+    getProgram(programId){
+        if(programId == 0){
+            return "Inside Rx"
+        }
+        if(programId == 1){
+            return "U.S Pharmacy Card"
+        }
+        else if(programId == 2){
+            return "Well Rx"
+        }
+        else if(programId == 3){
+            return "MedImpact"
+        }
+        else if(programId == 4){
+            return "Singlecare"
+        }
+        else if(programId == 5){
+            return "Blink Health"
+        }
+        else if(programId == 6){
+            return "GoodRx"
+        }
+
+    }
+    addRequest() {
+
+        this.setState({
+            newRequestDialog: true
+        })
+    }
+    handleNewProviderChange(event){
+        this.setState({
+            newProgram: event.target.value
+        })
     }
     submitEditRequest(){
-        
+        console.log(this.state.selectedRequest);
         var drugRequest = {};
-        drugRequest.id = this.state.selectedRequest.requestId;
+        drugRequest.id = this.state.selectedRequest.id;
         drugRequest.drugName = this.state.newDrugName;
         drugRequest.ndc = this.state.newNDC;
         drugRequest.quantity = this.state.newQuantity;
@@ -204,6 +288,30 @@ class ManageRequests extends Component {
                 })
             })
     }
+    submitAddRequest(){
+        
+        var drugRequest = {};
+        console.log(this.state.selectedOption)
+        drugRequest.drugId = this.state.selectedOption.value.id;
+        drugRequest.drugName = this.state.newDrugName;
+        drugRequest.ndc = this.state.newNDC;
+        drugRequest.quantity = this.state.newQuantity;
+        drugRequest.zipcode = this.state.newZipCode;
+        drugRequest.brandIndicator = this.state.newBrandIndicator;
+        drugRequest.gsn = this.state.newGSN;
+        drugRequest.latitude = this.state.newLatitude;
+        drugRequest.longitude = this.state.newLongitude;
+        drugRequest.good_rx_id = this.state.newGoodRxId;
+        drugRequest.programId = this.state.newProgram;
+        console.log(drugRequest);
+        Axios.post('http://localhost:8081/request/create', drugRequest)
+            .then(response => {
+                this.populateRequests();
+                this.setState({
+                    newRequestDialog: false,
+                })
+            })
+    }
     render() {
 
         return (
@@ -218,7 +326,7 @@ class ManageRequests extends Component {
                                 title="Manage Requests"
                                 style={{ boxShadow: 0 }}
                                 columns={[{ title: 'Drug Name', field: 'drugName' },
-                                { title: 'Program', field: 'program' },
+                                { title: 'Program', field: 'programId',  render: (rowData) => this.getProgram(rowData.programId) },
                                 { title: 'Quantity', field: 'quantity'},
                                 { title: 'NDC', field: 'ndc'},
                                 { title: 'GSN', field: 'gsn'},
@@ -229,7 +337,11 @@ class ManageRequests extends Component {
                                     //     new Promise((resolve, reject) => {
                                     //         console.log("add")
                                     //     }),
-                                    // addFunction: () => this.addDrug.bind(this),
+                                    onRowAdd: newData =>
+                                    new Promise((resolve, reject) => {
+                                        console.log("add")
+                                    }),
+                                    addFunction: () => this.addRequest.bind(this),
                                     onRowUpdate: (newData, oldData) =>
                                     new Promise((resolve, reject) => {
                                         // console.log("update")
@@ -335,6 +447,134 @@ class ManageRequests extends Component {
 
                         <br />
                         <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitEditRequest.bind(this)} variant="contained" color="primary">Edit Request</Button>
+
+                    </DialogContent>
+                </Dialog>
+                <Dialog fullWidth onClose={()=>this.handleAddClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.newRequestDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleAddClose.bind(this)}>
+                    Add Request
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                    <Grid container >
+                        <Grid item xs={5}>
+                                <Typography  verticalAlign="bottom"> Select Drug:</Typography>
+                        </Grid>
+                                <Grid item xs={7}>
+                                    <IntegrationReactSelect2 drugValue={this.state.selectedOption}
+                                        drugOnChange={this.handleDrugChange.bind(this)} listOfDrugs={this.state.options}></IntegrationReactSelect2>
+                                </Grid>
+                                </Grid>
+                                <br/>
+                                <Grid container >
+                        <Grid item xs={5}>
+                                <Typography  verticalAlign="bottom"> Select Provider:</Typography>
+                        </Grid>
+                                <Grid item xs={7}>
+                                <FormControl variant="outlined" style={{width:'66%'}}>        
+                                     
+                                  <Select value={this.state.newProgram}  onChange={this.handleNewProviderChange.bind(this)} >          
+                                        
+                                     <MenuItem value={0}>InsideRx</MenuItem>           
+                                     <MenuItem value={1}>U.S Pharmacy Card</MenuItem>           
+                                     <MenuItem value={2}>WellRx</MenuItem> 
+                                     <MenuItem value={3}>MedImpact</MenuItem> 
+                                     <MenuItem value={4}>SingleCare</MenuItem> 
+                                     <MenuItem value={5}>Blink Health</MenuItem> 
+                                     <MenuItem value={6}>GoodRx</MenuItem>    
+                                          </Select>       
+                                          </FormControl>
+                                </Grid>
+                                </Grid>
+                                <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Drug Name:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newDrugName} variant="outlined"
+                                    onChange={this.handleDrugNameChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Brand Indicator:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newBrandIndicator} variant="outlined"
+                                    onChange={this.handleBrandChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> NDC:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField required variant="outlined" value={this.state.newNDC} onChange={this.handleNDCChange.bind(this)} /><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GSN:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newGSN} variant="outlined"
+                                    onChange={this.handleGSNChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Quantity:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newQuantity} variant="outlined"
+                                    onChange={this.handleQuantityChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                       
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Zip Code:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newZipCode} variant="outlined"
+                                    onChange={this.handleZipCodeChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Latitude:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newLatitude} variant="outlined"
+                                    onChange={this.handleLatitudeChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Longitude:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newLongitude} variant="outlined"
+                                    onChange={this.handleLongitudeChange.bind(this)} />
+                            </Grid>
+                        </Grid>    
+                         <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GoodRxId:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newGoodRxId} variant="outlined"
+                                    onChange={this.handleGoodRxIdChange.bind(this)} />
+                            </Grid>
+                        </Grid>                 
+
+                        <br />
+                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitAddRequest.bind(this)} variant="contained" color="primary">Add Request</Button>
 
                     </DialogContent>
                 </Dialog>

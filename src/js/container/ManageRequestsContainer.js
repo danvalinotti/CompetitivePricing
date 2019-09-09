@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {actions} from "../actions/dashBoardActions";
 import ManageRequests from "../components/ManageRequests";
 import TabBar from "../components/TabBar";
-
+import gxWave from "../../assests/images/GxWave-Logo.png";
 class ManageRequestsContainer extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +17,12 @@ class ManageRequestsContainer extends Component {
                 <ManageRequests
                     actions = {this.props.actions}
                     dashBoardDrugsData = {this.props.dashBoardDrugsData}
-                />
+                />   <br/><br/> 
+                 <div xs={4} justify="center" style={{
+                       left: '0', bottom: '0', width: '100%', textAlign: 'center',}}>
+                         <label  fontSize="9"> <strong style={{color:"darkgrey"}}>Powered By</strong>  </label>  
+                         <img  className="gxWave" src={gxWave} style={{paddingLeft:'10px'}} width="75px" height="25px"/>
+                    </div>
 
             </div>
         );

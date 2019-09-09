@@ -77,7 +77,7 @@ export default function HorizontalLinearStepper(props) {
     <div className={classes.root}>
     <Grid container direction="column" alignItems="center" justify="center" >
     <br/>
-      <Stepper activeStep={props.activeStep} style={{backgroundColor:'whitesmoke'}}>
+      <Stepper activeStep={props.activeStep} style={{backgroundColor:'white'}}>
         {steps.map((label, index) => {
           const stepProps = {};
           const labelProps = {};
@@ -103,7 +103,8 @@ export default function HorizontalLinearStepper(props) {
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
             </Typography>
-            <Button onClick={handleReset(props)} className={classes.button}>
+            <Button onClick={handleReset(props)} className={classes.button}
+            style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}>
               Reset
             </Button>
           </div>
@@ -118,15 +119,19 @@ export default function HorizontalLinearStepper(props) {
                 disabled={props.activeStep === 0}
                 onClick={()=>handleBack(props)}
                 className={classes.button}
+                // style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}
               >
                 Back
               </Button>
 
               <Button
                 variant="contained"
-                color="primary"
+               
                 onClick={()=>{handleNext(props)}}
-                className={classes.button}
+                // className={classes.button}
+                style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}
+                color="blue"
+                
               >
                 {props.activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>

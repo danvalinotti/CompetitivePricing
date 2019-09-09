@@ -6,6 +6,7 @@ import DrugQuantityDropDown from "./DrugQuantityDropDown";
 import "../../assests/sass/searchPage.css"
 import HeaderComponent from "./HeaderComponent";
 import gxImage from "../../assests/images/gxImage.png";
+import gxWave from "../../assests/images/GxWave-Logo.png";
 import { Field, reduxForm } from 'redux-form';
 import AutoSuggestComponent from "./AutoSuggestComponent";
 import { withRouter } from "react-router-dom";
@@ -13,7 +14,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+import Grid from '@material-ui/core/Grid';
 
 class DashBoard extends React.Component {
 
@@ -80,7 +81,7 @@ class DashBoard extends React.Component {
         });
     }
     handleSubmit(data) {
-      
+        
         var drugName = this.state.drugName;
         var dosageStrength = this.state.dosageStrength;
         var quantity = this.state.quantity;
@@ -218,7 +219,7 @@ class DashBoard extends React.Component {
                     <HeaderComponent profile={this.state.loggedInProfile} value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
                     <div className="title ">
                         <div style={{ float: 'right', paddingTop:'10px'}}>
-                            <img className="gxImage" src={gxImage} />
+                            {/* <img className="gxImage" src={gxImage} /> */}
                         </div>
                         <h1 className="search-for-a-prescri" style={searchPrescri}>Search for a medication to compare
                         prices.</h1>
@@ -302,6 +303,13 @@ class DashBoard extends React.Component {
                         </div>
                     </div>
                 </form>
+                {/* <br/><br/><br/><br/>
+              */}
+                    {/* <div xs={4} justify="center" style={{
+   position: 'fixed', left: '0', bottom: '0', width: '100%', textAlign: 'center',}}>
+                         <label  fontSize="9"> <strong style={{color:"darkgrey"}}>Powered By</strong></label>  <img  className="gxWave" src={gxWave} width="75px" height="25px"/>
+                    </div> */}
+                
                 <Dialog onClose={() => this.toggleDialog.bind(this)}
                     aria-labelledby="customized-dialog-title" open={this.state.showDialog}>
                     <DialogTitle id="customized-dialog-title" onClose={this.toggleDialog.bind(this)}>

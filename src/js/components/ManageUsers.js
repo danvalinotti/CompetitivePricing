@@ -235,19 +235,20 @@ class ManageUsers extends Component {
                     </div>
                 </div>
                 <Dialog onClose={() => this.handleClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.newProfileDialog}>
+                    aria-labelledby="customized-dialog-title" open={this.state.newProfileDialog}
+                   >
                     <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
                         Add User
                     </DialogTitle>
-                    <DialogContent className="textCenter">
+                    <DialogContent className="textCenter"  style={{width:'500px', height:'200px'}}>
                         <Grid container   >
-                            <Grid item xs={5}>
+                            <Grid item xs={4}>
                             <Typography verticalAlign="bottom"> Email:</Typography> 
                              </Grid>
-                            <Grid item xs={7}>
+                            <Grid item xs={8} style={{width:'250px'}}>
                                 <TextField
                                     id="standard-name"
-                                
+                                    style={{width:'250px'}}
                                     value={this.state.email}
                                     onChange={this.handleEmailChange.bind(this)}
                                     margin="none"
@@ -255,13 +256,13 @@ class ManageUsers extends Component {
                             </Grid>
                         </Grid>
                         <Grid container >
-                            <Grid item xs={5}>
+                            <Grid item xs={4}>
                             <Typography verticalAlign="bottom"> Name:</Typography> 
                              </Grid>
-                            <Grid item xs={7}>
+                            <Grid item xs={8} style={{width:'250px'}}>
                                 <TextField
                                     id="standard-name"
-                                    
+                                    style={{width:'250px'}}
                                     value={this.state.name}
                                     onChange={this.handleNameChange.bind(this)}
                                     margin="none"
@@ -269,16 +270,16 @@ class ManageUsers extends Component {
                             </Grid>
                         </Grid>
                         <Grid container  >
-                            <Grid item xs={5}>
+                            <Grid item xs={4}>
                               <Typography verticalAlign="bottom"> Role:</Typography> 
                              </Grid>
-                            <Grid item xs={7}>
+                            <Grid item xs={8} style={{width:'250px'}}>
                                 <Checkbox checked={this.state.isAdmin} onClick={() => {
                                     this.setState({ isAdmin: !this.state.isAdmin });
                                 }} />
                             </Grid>
                         </Grid>
-
+<br/>
                         <Button style={{ fontSize: '13px', height: '32px' }} onClick={() => { this.createProfile() }} variant="contained" color="primary">Create Profile</Button>
                     </DialogContent>
                 </Dialog>

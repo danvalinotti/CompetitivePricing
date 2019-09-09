@@ -1,5 +1,0 @@
-application:
-  name: DrugPricingUIApp
-  memory: 800M
-  instances: 1
-  buildpack: staticfile_buildpack

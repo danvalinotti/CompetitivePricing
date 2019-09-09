@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from 'redux';
 import {actions} from "../actions/dashBoardActions";
 import SignUp from "../components/SignUp";
+import gxWave from "../../assests/images/GxWave-Logo-White.png";
 
 
 class SignUpContainer extends Component {
@@ -14,13 +15,19 @@ class SignUpContainer extends Component {
 
     render() {
         return (
-            <div>
+            <div  style={{height:'100%', backgroundColor:'#0F0034'}}>
                 <SignUp
                     actions = {this.props.actions}
                     dashBoardDrugsData = {this.props.dashBoardDrugsData}
 
 
-                />
+                /><br/><br/>
+                <div xs={4} justify="center" style={{
+                         left: '0', bottom: '0', width: '100%', textAlign: 'center',}}>
+                         <label  fontSize="9"> <strong style={{color:"white"}}>Powered By</strong>  </label>  
+                         <img  className="gxWave" src={gxWave} style={{paddingLeft:'10px'}} width="75px" height="25px"/>
+                    </div>
+                    <br/>
 
             </div>
         );

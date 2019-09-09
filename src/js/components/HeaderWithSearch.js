@@ -6,13 +6,15 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import '../../assests/sass/ViewDrugDetailsCSS.css'
 import axios from 'axios';
-import image from "../../assests/images/InsideLogo_1.svg";
+
+import image from "../../assests/images/RxWave Logo White.png";
+import brandImage from "../../assests/images/InsideLogo_1.svg";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import Menu from '@material-ui/core/Menu';
@@ -192,11 +194,11 @@ class HeaderWithSearch extends React.Component {
     const { classes } = this.props;
     return (
 
-      <AppBar position="static" style={{ background: "orange" }}>
+      <AppBar position="static" style={{ background: "#0F0034" }}>
         <Toolbar>
 
           <Grid container sm={12} direction="row">
-          <Grid container sm={5}direction="row">
+          <Grid container sm={8}direction="row">
             <span onClick={() => this.props.clickHome()} className="headerHelp pointer" style={{ marginTop: '1.5%' }}>
               {/* <span ><svg style={{ width: '70px', paddingTop: '5px', height: '25px' }}
                 xmlns="http://www.w3.org/2000/svg">
@@ -204,14 +206,14 @@ class HeaderWithSearch extends React.Component {
               <span><img src={image} style={{ paddingRight: '20px', float: 'right', width: '130px', height: '30px' }} /> </span></span>
             <Tabs  value={this.state.value} onChange={(event, value) => this.handleChange(event, value)}
             >
-              <Tab style={{ minWidth: 50 }} onClick={() => this.props.clickHome()} label={<span style={{ color: 'white' }}> Home</span>}/>
-              <Tab style={{ minWidth: 50 }} onClick={() => this.props.clickDashboard()} label={<span style={{ color: 'white' }}>Dashboard</span>} />
-              <Tab style={{ minWidth: 50 }} onClick={() => this.props.clickReports()} label={<span style={{ color: 'white' }}>Reports</span>}/>
+              <Tab  onClick={() => this.props.clickHome()} label={<span style={{ color: 'white' }}> Home</span>}/>
+              <Tab  onClick={() => this.props.clickDashboard()} label={<span style={{ color: 'white' }}>Dashboard</span>} />
+              <Tab onClick={() => this.props.clickReports()} label={<span style={{ color: 'white' }}>Reports</span>}/>
             </Tabs>
 
             </Grid>
-            <Grid container sm={7} direction="row">
-            <div className="headerButton" style={{width:'350px', padding: '0px' }}>
+            <Grid container sm={4} direction="row">
+            {/* <div className="headerButton" style={{width:'350px', padding: '0px' }}>
             
                 <AutoSuggestComponent2 name="autoSuggestValue"
                   AutoSuggestComponent={this.props.drugStrengthArray}
@@ -224,27 +226,29 @@ class HeaderWithSearch extends React.Component {
 
                 > </AutoSuggestComponent2>
             
-            </div>
+            </div> */}
           
-            <div className=" headerZip" style={{width:'100px', padding: '0px', paddingRight: '5px' }}>
+            {/* <div className=" headerZip" style={{width:'100px', padding: '0px', paddingRight: '5px' }}>
               <input className="form-control " style={{height:'50px'}} onChange={this.onChangeZipCode.bind(this)} type="text" id="myZipCode" placeholder="Zip Code" />
             </div>
             <div className="headerButton" style={{ padding: '0px', paddingRight: '5px' }}>
               <button className="searchButton1 search-bar-copy-4" onClick={this.onClickSearch.bind(this)}>
                 Search
                 </button>
-            </div>
+            </div> */}
 
             <div style={{ marginLeft: "auto", marginRight: -12 }}>
-              <IconButton
+              <Button
                 aria-label="Account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={this.openProfileMenu.bind(this)}
                 color="white"
+                style={{backgroundColor:'white'}}
               >
+               <span><img src={brandImage} style={{ paddingRight: '20px', float: 'right', width: '130px', height: '30px' }} /> </span>
                 <AccountCircle style={{ color: 'white' }} />
-              </IconButton>
+              </Button>
               <Menu
                 id="menu-appbar"
                 open={this.state.profileMenuOpen}
