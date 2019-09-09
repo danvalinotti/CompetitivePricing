@@ -385,7 +385,7 @@ clickReports(){
               </div >
               <div name="GoodRxRow" className="row competitorRow">
                 <div className="col-xs-12 col-sm competitors firstCol " >  <img src={GoodRxImg} alt="GoodRx" style={{ height: '60px', width: '150px' }} /></div>
-                <div className=" col-xs-12 col-sm competitors pharmacy rest">{this.state.drugDetails && this.state.drugDetails != "N/A" ? this.state.drugDetails.programs[5].pharmacy : "N/A"}</div>
+                <div className=" col-xs-12 col-sm competitors pharmacy rest">{this.state.drugDetails && this.state.drugDetails != "N/A" ? this.state.drugDetails.programs[6].pharmacy : "N/A"}</div>
                 <div className=" col-xs-12 col-sm competitors price rest " style={singleCarePriceColor}>
                   <span className="compPrice">
                     <span ></span>
