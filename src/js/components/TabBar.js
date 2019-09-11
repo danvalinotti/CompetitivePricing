@@ -59,15 +59,22 @@ class TabBar extends React.Component {
     })
   }
   logout(){
-    this.setState({
-      loggedIn: false,
+    var userToken = {};
+    userToken.name = window.sessionStorage.getItem("token");
+    Axios.post('http://localhost:8081/profile/logout' , userToken)
+    .then(r => {
+      
+      this.setState({
+        loggedIn: false,
+      });
+
+      window.sessionStorage.setItem("loggedIn",false);
+      window.sessionStorage.setItem("token","");
+      this.props.history.push({ pathname: '/signin' });
     });
 
-    window.sessionStorage.setItem("loggedIn",false);
-    window.sessionStorage.setItem("token","");
-    this.props.history.push({ pathname: '/signin' });
-
   }
+ 
  
   goToAdmin(){
     if(this.props.page){
