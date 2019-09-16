@@ -4,6 +4,6 @@
 # dependencies
 /node_modules/*
 !node_modules/material-table/
-
+/dist/*
 /.idea/
 .idea/workspace.xml
