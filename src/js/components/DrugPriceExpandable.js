@@ -5,8 +5,12 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import SingleCareImg from "../../assests/images/singleCare2.png";
 import Arrow from "../components/Arrow";
+import USProviderImg from "../../assests/images/usPharmCard2.png";
+import WellRxImg from "../../assests/images/wellRx2.png";
+import SingleCareImg from "../../assests/images/singleCare2.png";
+import MedImpactImg from "../../assests/images/medImpact2.png";
+import GoodRxImg from "../../assests/images/goodRx2.png";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -57,7 +61,7 @@ export default function DrugPriceExpandable({prices}) {
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography className={classes.heading}>{prices.programs[0].prices[0].program}</Typography>
+          <Typography className={classes.heading}><img src={SingleCareImg} alt="SingleCare" style={{ height: '60px', width: '150px' }} /></Typography>
           <Typography className={classes.secondaryHeading} inline align="left">
            {prices.programs[0].prices[0].pharmacy}
           </Typography>
