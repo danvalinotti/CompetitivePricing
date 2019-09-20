@@ -4,22 +4,17 @@ class DrugQuantityDropDown extends Component {
     constructor(props){
         super(props);
         this.state = {
-            tech: this.props.drugQuantity,
+          
         };
         
     }
 
     handleChange(e){
-        this.setState({
-            tech: e.target.value
-        })
       
         this.props.updateQuantity(e.target.value);
     }
    
-    componentWillMount(){
-      
-    }
+  
     render(){
         let drugDosageArray = this.props.drugQuantityArray;
         const { input, label } = this.props;

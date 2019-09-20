@@ -60,6 +60,9 @@ table {
   margin-top: 0px;
   padding-left: 0px;
 }
+.MuiGrid-grid-xs-12{
+  height: 100%
+}
 .filter-select-list {
   cursor: pointer;
   padding: 5px 10px;
@@ -363,8 +366,41 @@ th{
   color:#0457af;
   border-color :#0457af;
 }
-
-
+.column1Width{
+  width:50px
+}
+.reportCell{
+  text-align: center;
+  font-size: 12px;
+}
+.reportDate{
+  padding:20px;
+}
+.makeStyles-valueContainer-414{
+  max-height: 100px ;
+  overflow-y: auto !important;
+}
+.pointer{
+  cursor: pointer;
+}
+.makeStyles-valueContainer-382{
+  max-height: 100px ;
+  overflow-y: auto !important;
+}
+.MuiDialog-paperWidthSm{
+  overflow-y: inherit !important;
+}
+.css-1pcexqc-container{
+  width:200px;
+  margin: auto;
+}
+.MuiFormControl-marginNormal{
+  margin: 0px;
+  margin-top:0px;
+}
+.nextButton{
+  background-color: #0457af
+}
 
 @media (max-width: 576px) {
 

@@ -15,41 +15,57 @@ class DrugInformation extends React.Component {
        
         var drugQuantity;
         var drugStrength;
-        console.log("drugQuantity");
-        console.log(this.props.drugQuantity);
-        console.log("drugStrength");
-        console.log(this.props.strengthList);
+      
         drugQuantity = this.getIndexWithValue(this.props.drugQuantity,this.props.quantityList);
         drugStrength = this.getIndexWithLabel(this.props.drugStrength,this.props.strengthList);
-        console.log(drugStrength);
-        
+       
         this.state = {
             drugRequest: '',
             selectedDrug: null,
-            strengthList: this.props.strengthList,
-            quantityList: this.props.quantityList,
-            drugQuantity:drugQuantity,
-            drugStrength: drugStrength,
-            open: false,
             dosageForm:"",
             pastDrugName: this.props.drugRequest.drugName,
+            drugDescription:this.props.selectedDrug.description,
         }
        this.getDosageForm = this.getDosageForm.bind(this);
+       this.getDrugDescription = this.getDrugDescription.bind(this);
         this.getDosageForm();
+        // this.getDrugDescription();
     }
     getDosageForm(){
-        console.log("getDosageForm")
+      
         fetch( "https://api.fda.gov/drug/ndc.json?search=brand_name:"+ this.props.response.name)
         .then(res => res.json())
         .then(json => {
-            console.log("json.routes[0]");
-            console.log(json.results[0].route[0]);
             this.setState({
                 dosageForm: json.results[0].route[0]
             })
          
         });
     }
+    getDrugDescription(){
+        console.log(this.props.selectedDrug);
+        this.setState({
+            drugDescription: this.props.selectedDrug.description,
+        });
+
+        // axios.get('https://api.uspharmacycard.com/drug/price/147/none/07001/'+this.props.selectedDrug.defaultDose+'/'+this.props.selectedDrug.slug+'/'+this.props.response.drugType+'/'+this.props.selectedDrug.dose[0].defaultQuantity+'/8')
+        // .then(response => {
+        // //    console.log(response.data);
+        //     this.setState({
+        //         drugDescription: response.data.drugInfo,
+        //     });
+        // });
+        // axios.get('https://www.blinkhealth.com/api/directory/'+this.props.selectedDrug.name+'?c_app=rx&c_platform=web&c_timestamp=1566565631578')
+        // .then(response => {
+        // //    console.log(response.data);
+        //     this.setState({
+        //         drugDescription: response.data.results[0].monograph.uses,
+        //     });
+        // });
+        
+    }
+ 
+    // 
     getIndexWithValue(value,list){
         var index = 0;
         list.map((v,i)=>{
@@ -72,7 +88,7 @@ class DrugInformation extends React.Component {
 
     getDrugDetails(drugRequest) {
 
-        axios.post('https://drug-pricing-backend.cfapps.io/getPharmacyPrice', drugRequest)
+        axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
             .then(response => {
                 this.props.toggleDialog();
                 this.setState({
@@ -84,21 +100,11 @@ class DrugInformation extends React.Component {
                
             })
     };
-    onStrengthChange(event) {
-
-        if (event) {
-            this.setState({
-                drugStrength: this.getDose(event.target.value),
-                quantityList: this.getDose(event.target.value).quantity,
-
-            });
-        }
-
-    }
+  
 
     onClickFilterSearch() {
         this.props.toggleDialog();
-        console.log(this.props.drugRequest);
+       
         const zipCode = this.props.drugRequest.zipcode;
         const drugType = "BRAND_WITH_GENERIC";
         const drugStrength =this.props.strengthList[this.props.drugStrength].label;
@@ -112,14 +118,12 @@ class DrugInformation extends React.Component {
         });
         this.getDrugDetails(drugRequest);
     }
-    getDose(index) {
-        return this.state.strengthList[index];
-    }
+  
    
     addDrug() {
 
         this.props.toggleDialog();
-        axios.post('https://drug-pricing-backend.cfapps.io/addDrugToDashBoard', this.props.drugRequest)
+        axios.post('http://localhost:8081/dashboard/drugs/add', this.props.drugRequest)
             .then(response => {
                 
                 this.props.toggleDialog();
@@ -128,10 +132,7 @@ class DrugInformation extends React.Component {
 
     }
     getNDC(strength, response){
-        console.log("strength");
-        console.log(strength);
-        console.log("response");
-        console.log(response);
+       
 
         var drugNDC = "";
         response.dose.forEach(dose => {
@@ -140,43 +141,13 @@ class DrugInformation extends React.Component {
                 drugNDC = dose.value;
             }
         });
-        console.log(drugNDC);
+       
         return drugNDC;
     }
 
-    updateProperties(request, info, response, drugStrengthList, drugQuantityList, drugStrength, drugQuantity) {
-        this.setState({
-            selectedDrug: info,
-            drugRequest: request,
-            drugDetails: response,
-            strengthList: drugStrengthList,
-            quantityList: drugQuantityList,
-            zipCode: request.zipcode,
-            drugStrength: drugStrength,
-            drugQuantity: drugQuantity,
-        })
-
-    }
-    onStrengthChange(event){
-        this.props.onStrengthChange(event);
-        console.log(event.target.value);
-        this.setState({
-            drugStrength:event.target.value,
-            quantityList:this.state.strengthList[event.target.value].quantity
-        });
-    }
-    updateQuantity(event){
-        this.props.updateQuantity(event);
-        console.log(event.target.value);
-        this.setState({
-            drugQuantity:event.target.value,
-        });
-    }
-    onClickToDashboard(){
-        console.log("this.onClickToDashboard")
-        this.props.history.push("/viewDashBoard");
-
-    }
+   
+   
+    
     format(str){
         var text = str;
         text = text.toLowerCase();
@@ -195,21 +166,22 @@ class DrugInformation extends React.Component {
         }
         return (
             <div style={{backgroundColor:'#F8F8F8',borderBottomStyle:'solid' , borderBottomColor:'#B3B3B3'}}>
+                <br/>
         <div className="page description">
-            <div className="returnToDashboard" onClick={()=>{this.onClickToDashboard()}}><a> &lt; Return To Dashboard</a></div>
+           
             <h2 className="drugName row">
                 <div className="col-sm-6 " onClick={()=>{console.log(this.props)}}>
                     {this.props && this.props.drugRequest ? this.props.drugRequest.drugName : "Drug Name"}
                 </div>
                 <div className="col-sm-6 ">
-                    <button type="button" style={{backgroundColor:'white'}} onClick={() => { this.addDrug() }} className="btn btn-outline-primary float-sm-right trackListing">Track Pricing</button>
+                    <button type="button" style={{backgroundColor:'white'}} onClick={() => { this.addDrug() }} className="btn btn-outline-primary float-sm-right trackListing pointer">Track Pricing</button>
                 </div>
             </h2>
             <h3 className="formalName">
                 <i> {this.props.selectedDrug ? this.props.selectedDrug.formalName : "Formal Name"}</i>
             </h3>
             <div className="drugDescription">
-                {this.props.selectedDrug ? this.props.selectedDrug.description : "Drug Description"}
+                {this.props.selectedDrug ? this.state.drugDescription : "Drug Description"}
             </div>
             <div>
                 <div className="row" style={{paddingBottom:'10px', paddingTop:'10px'}}>

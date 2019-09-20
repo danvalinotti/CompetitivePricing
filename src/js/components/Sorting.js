@@ -1,5 +1,6 @@
 
 export function sortByName(list, sort) {
+
     var newlist = list.sort(function (a, b) {
         if (sort != "down") {
             if (a.name > b.name) {
