@@ -14,7 +14,7 @@ class Arrow extends React.Component {
         
         return (<div>
             {
-               this.props && this.props.diff < 0 ? <div>&darr;</div> : <div>&uarr;</div>
+               this.props && this.props.diff < 0 ? <div style={{marginBottom: 3}}>&darr;</div> : <div style={{marginBottom: 3}}>&uarr;</div>
             }
             <div>
                 
