@@ -43,7 +43,7 @@ class DrugInformation extends React.Component {
         });
     }
     getDrugDescription(){
-        console.log(this.props.selectedDrug);
+        // console.log(this.props.selectedDrug);
         this.setState({
             drugDescription: this.props.selectedDrug.description,
         });
@@ -170,7 +170,7 @@ class DrugInformation extends React.Component {
         <div className="page description">
            
             <h2 className="drugName row">
-                <div className="col-sm-6 " onClick={()=>{console.log(this.props)}}>
+                <div className="col-sm-6 ">
                     {this.props && this.props.drugRequest ? this.props.drugRequest.drugName : "Drug Name"}
                 </div>
                 <div className="col-sm-6 ">

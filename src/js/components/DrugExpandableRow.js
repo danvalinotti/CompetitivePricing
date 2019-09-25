@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
@@ -139,22 +139,22 @@ export default function DrugExpandableRow({ program, image }) {
             >
                 <div className={classes.summaryContent}>
                     <img src={image} alt="InsideRx" style={{ height: '60px', width: '150px' }} />
-                    <Typography className={classes.secondaryHeading} inline align="left">
+                    <Typography className={classes.secondaryHeading} align="left">
                         {program.prices.length > 0 ? program.prices[0].pharmacy : "N/A"}
                     </Typography>
                     <div className={classes.thirdHeading}>
                         {program.prices.length > 0 ? (
-                            <Typography inline align="right" className={classes.priceText}>
+                            <Typography align="right" className={classes.priceText}>
                                 {(program.prices[0].price === "N/A") ? "N/A" : "$" + round(program.prices[0].price)}
                             </Typography>
                         ) : (
-                                <Typography inline align="right" className={classes.priceText}>
+                                <Typography align="right" className={classes.priceText}>
                                     N/A
                             </Typography>
                             )}
                         <br />
                         {program.prices.length > 0 ? (
-                            <Typography inline align="right" className={classes.diffText}>
+                            <Typography align="right" className={classes.diffText}>
                                 <Arrow diff={program.prices[0].diff} />${round(program.prices[0].diff)}
                             </Typography>
                         ) : <div></div>}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import '../../assests/sass/ViewDrugDetailsCSS.css'
 
@@ -12,14 +12,11 @@ class Arrow extends React.Component {
     
     render() {
         
-        return (<div>
+        return (<Fragment>
             {
-               this.props && this.props.diff < 0 ? <div style={{marginBottom: 3}}>&darr;</div> : <div style={{marginBottom: 3}}>&uarr;</div>
+               this.props && this.props.diff < 0 ? <p style={{marginBottom: 3}}>&darr;</p> : <p style={{marginBottom: 3}}>&uarr;</p>
             }
-            <div>
-                
-            </div>
-        </div>);
+        </Fragment>);
     }
 }
 
@@ -49,7 +46,7 @@ const styles = theme => ({
         width: 'auto',
         flexGrow: 1,
     },
-    divider: {
+    pider: {
         height: theme.spacing.unit * 2,
     },
 });

@@ -30,7 +30,7 @@ class ViewDrugDetails extends React.Component {
       var response = this.props.state.location.state.response;
     var request = this.props.state.location.state.request;
     request.token = window.sessionStorage.getItem("token");
-      console.log(response);
+      // console.log(response);
     if(response.average == "0" || response.average == "N/A"|| response.average == "0.0"){
       response.average = this.responseAverage(response);
     }
@@ -89,8 +89,8 @@ class ViewDrugDetails extends React.Component {
     
    
     response.programs.forEach(program => {
-      console.log(program.price);
-      console.log(lowest);
+      // console.log(program.price);
+      // console.log(lowest);
       if(program.price != "N/A"){
         if(lowest == "N/A"){
          lowest =  Number(program.price)

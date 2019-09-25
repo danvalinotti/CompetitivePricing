@@ -242,9 +242,6 @@ class DashBoard extends React.Component {
                                 updateDrug={this.updateDrug.bind(this)}
 
                             />
-
-
-
                             <div className="col-sm-3">
                                 <Field required component='input' className="form-control search-bar-copy" style={searchBarCopy}
                                     name="myZipCode" id="myZipCode" placeholder="Enter Zip Code" />
@@ -261,7 +258,7 @@ class DashBoard extends React.Component {
                                     boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08)'
 
                                 }} name="drugType">
-                                    <option value="Brand" selected>Brand</option>
+                                    <option value="Brand" >Brand</option>
                                     <option value="Generic">Generic</option>
                                 </Field>
                             </div>
@@ -276,7 +273,7 @@ class DashBoard extends React.Component {
 
                                 }} name="dosageForm">
                                     <option value="" disabled>Dosage Form</option>
-                                    <option selected={true}>Oral</option>
+                                    <option>Oral</option>
                                 </Field>
                             </div>
                             <div className='col-sm-3'>
