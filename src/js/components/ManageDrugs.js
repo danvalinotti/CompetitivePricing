@@ -72,8 +72,8 @@ class ManageDrugs extends Component {
 
         Axios.get('http://localhost:8081/drugmaster/get/all')
             .then(response => {
-                console.log("POPULATE DURGS");
-                console.log(response);
+                // console.log("POPULATE DURGS");
+                // console.log(response);
                 this.setState({
                     drugs: response.data,
                     selectedDrugs: new Array(response.data.length).fill(false),
@@ -112,12 +112,12 @@ class ManageDrugs extends Component {
         // value={this.state.editDrugStrength} /><br /><br />
         Axios.get('http://localhost:8081/getDrugInfo/' + drug.name)
             .then(response => {
-                console.log(response.data[0]);
+                // console.log(response.data[0]);
                 var drugDetails = response.data[0];
                 var dosageIndex = this.getDosageIndex(drug.dosageStrength, drugDetails.dose);
-                console.log("dosageIndex");
-                console.log(dosageIndex);
-                console.log(drug.quantity);
+                // console.log("dosageIndex");
+                // console.log(dosageIndex);
+                // console.log(drug.quantity);
                 this.setState({
                     editDrug: drug,
                     editDrugName: drug.name,
@@ -129,20 +129,20 @@ class ManageDrugs extends Component {
                 this.setState({
                     editDrugDialog: true,
                 });
-                console.log(this.state.editDrugName);
+                // console.log(this.state.editDrugName);
 
             });
 
     }
     getDosageIndex(dosageStrength, strengthArr) {
-        console.log(dosageStrength);
-        console.log(strengthArr);
+        // console.log(dosageStrength);
+        // console.log(strengthArr);
         var firstIndex = -1;
         strengthArr.forEach((strength, index) => {
             if (strength.label.includes(dosageStrength)) {
-                console.log("HERE");
+                // console.log("HERE");
                 if(firstIndex == -1){
-                    console.log("HERE");
+                    // console.log("HERE");
                     firstIndex = index;
                 }
                 
@@ -159,7 +159,7 @@ class ManageDrugs extends Component {
             });
         }
         if(firstIndex == -1){
-            console.log("NOT FOUND");
+            // console.log("NOT FOUND");
             firstIndex = 0
         }
         return firstIndex;
@@ -171,9 +171,9 @@ class ManageDrugs extends Component {
             addingDialog: true,
         })
         var drug = {};
-        console.log(this.state.selectedDrug);
-        console.log("HELLO");
-        console.log(this.state.dosageStrength);
+        // console.log(this.state.selectedDrug);
+        // console.log("HELLO");
+        // console.log(this.state.dosageStrength);
         drug.zipcode = "08873";
         drug.drugName = this.state.drugName;
         drug.dosageStrength = this.state.dosageStrength.label;
@@ -187,7 +187,7 @@ class ManageDrugs extends Component {
                 this.setState({
                     addingDialog: false,
                 })
-                console.log("ADDED DRUG");
+                // console.log("ADDED DRUG");
             })
     }
 
@@ -204,7 +204,7 @@ class ManageDrugs extends Component {
     }
 
     setFirstChoice() {
-        console.log("setfirstchoice")
+        // console.log("setfirstchoice")
     }
     updateDrug(drug) {
 
@@ -260,7 +260,7 @@ class ManageDrugs extends Component {
         this.setState({
             reportFlag: event.target.value
         })
-        console.log(event);
+        // console.log(event);
     }
     renderReportFlag(reportFlag) {
         if (reportFlag == true) {
@@ -271,7 +271,7 @@ class ManageDrugs extends Component {
 
     }
     drugChange(drugs) {
-        console.log(drugs);
+        // console.log(drugs);
     }
     clickRequests() {
         this.props.history.push("/admin/manage/requests");
@@ -292,7 +292,7 @@ class ManageDrugs extends Component {
     getDrugDetails(drugName) {
         Axios.get('http://localhost:8081/getDrugInfo/' + drugName)
             .then(response => {
-                console.log(response.data[0]);
+                // console.log(response.data[0]);
                 return response.data[0];
             });
     }
@@ -342,12 +342,12 @@ class ManageDrugs extends Component {
                                 editable={{
                                     onRowAdd: newData =>
                                         new Promise((resolve, reject) => {
-                                            console.log("add")
+                                            // console.log("add")
                                         }),
                                     addFunction: () => this.addDrug.bind(this),
                                     onRowUpdate: (newData, oldData) =>
                                         new Promise((resolve, reject) => {
-                                            console.log("update")
+                                            // console.log("update")
                                         }),
                                     editFunction: () => this.editDrug.bind(this)
                                 }}

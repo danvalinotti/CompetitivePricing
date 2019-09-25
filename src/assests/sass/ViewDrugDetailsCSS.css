@@ -1,3 +1,6 @@
+.MuiExpansionPanel-root.Mui-expanded {
+  margin-bottom: 0 !important;
+}
 
 table {
     width: 100%;
@@ -109,18 +112,19 @@ table {
   font-size: x-small;
   text-align: center;
   color: #1E2022;	
-  font-family: "TradeGothic LT";	
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 12px;
   line-height: 26px;	
   margin-bottom : 5%;
 }
 .overallPrice{
-  border-right: 1px solid #B3B3B3;
-  font-family: "TradeGothic LT";	
-  font-size: 48px;	
+  font-size: 48px;
   font-weight: bold;	
   line-height: initial;	
   text-align: center;
+}
+.overallPriceContainer {
+  border-right: 1px solid #B3B3B3;
 }
 .last{
   border-right: 0px solid #B3B3B3;
@@ -135,7 +139,7 @@ table {
 }
 .diff{
   
-  font-family: "TradeGothic LT";	
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 14px;	
   line-height: 26px;
   text-align: center;
@@ -149,20 +153,23 @@ table {
 } 
 .drugDescription{
   color: #1E2022;	
-  font-family: "TradeGothic LT";	
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 14px;	
   line-height: 26px;
 }
+.drugSearchOptions {
+  margin: 20px 0;
+}
 .formalName{
   color: #1E2022;	
-  font-family: "TradeGothic LT";	
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 18px;	
   font-style: italic;	
   line-height: 21px;
 }
 .drugName{
   color: #1E2022;	
-  font-family: "TradeGothic LT";	
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 36px;	
   font-weight: bold;	
   line-height: 43px;
@@ -175,12 +182,15 @@ table {
   line-height: 26px;
 }
 .competitorTitle{
-  color: #1E2022;	
-  font-family: "TradeGothic LT";	
+  color: rgba(0,0,0,.75);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 24px;	
-  font-weight: bold;	
+  font-weight: normal;
   line-height: 28px;
   padding-top: 5%;
+  margin-bottom: 20px;
+  margin-left: 10px;
+
 }
 
 .addDrug{
@@ -288,6 +298,8 @@ table {
 	 background-color: #1B8DCA;
 	box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.15);
 }
+
+
 .searchHeader{
   display:inline-flex;
   padding:1%;
@@ -300,6 +312,7 @@ table {
 }
 .headerhelp{
   display: inline-flex;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 .errorZipCode{
   border-color: red;
