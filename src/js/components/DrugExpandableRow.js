@@ -1,5 +1,5 @@
 import React from 'react';
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Arrow from "../components/Arrow";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-import {Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -114,10 +114,9 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function DrugExpandableRow({program, image}) {
+export default function DrugExpandableRow({ program, image }) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
-    console.log(program);
 
     const handleChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -136,66 +135,64 @@ export default function DrugExpandableRow({program, image}) {
             <ExpansionPanelSummary
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
-                style={expanded ? {boxShadow: '-1px 3px 7px -4px rgba(0, 0, 0, 0.4)'} : {}}
+                style={expanded ? { boxShadow: '-1px 3px 7px -4px rgba(0, 0, 0, 0.4)' } : {}}
             >
                 <div className={classes.summaryContent}>
-                    <img src={image} alt="InsideRx" style={{height: '60px', width: '150px'}}/>
+                    <img src={image} alt="InsideRx" style={{ height: '60px', width: '150px' }} />
                     <Typography className={classes.secondaryHeading} inline align="left">
-                        {program.prices[0].pharmacy}
+                        {program.prices.length > 0 ? program.prices[0].pharmacy : "N/A"}
                     </Typography>
                     <div className={classes.thirdHeading}>
-                        <Typography inline align="right" className={classes.priceText}>
-                            {program.prices[0].price === "N/A" ? "N/A" : "$" + round(program.prices[0].price)}
-                        </Typography>
-                        <br/>
-                        <Typography inline align="right" className={classes.diffText}>
-                            <Arrow diff={program.prices[0].diff} />${round(program.prices[0].diff)}
-                        </Typography>
+                        {program.prices.length > 0 ? (
+                            <Typography inline align="right" className={classes.priceText}>
+                                {(program.prices[0].price === "N/A") ? "N/A" : "$" + round(program.prices[0].price)}
+                            </Typography>
+                        ) : (
+                                <Typography inline align="right" className={classes.priceText}>
+                                    N/A
+                            </Typography>
+                            )}
+                        <br />
+                        {program.prices.length > 0 ? (
+                            <Typography inline align="right" className={classes.diffText}>
+                                <Arrow diff={program.prices[0].diff} />${round(program.prices[0].diff)}
+                            </Typography>
+                        ) : <div></div>}
                         <Button variant={"text"} color={"default"} className={classes.button} onClick={handleChange("panel1")}>
                             <span className={classes.buttonText}>Show {expanded ? "less" : "more"}</span>
-                            {expanded ? <ExpandLessIcon style={{fill: 'rgba(0,0,0,0.4)'}}/> : <ExpandMoreIcon style={{fill: 'rgba(0,0,0,0.4)'}}/>}
+                            {expanded ? <ExpandLessIcon style={{ fill: 'rgba(0,0,0,0.4)' }} /> : <ExpandMoreIcon style={{ fill: 'rgba(0,0,0,0.4)' }} />}
                         </Button>
                     </div>
                 </div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.topFourContainer}>
-                <div name="CVSrow" className={classes.topFourRow}>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{display: 'flex', justifyContent:'flex-start'}}><span className={classes.topFourNumber}>#1</span> </div>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{display: 'flex'}}><span>CVS Pharmacy</span></div>
-                    <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
-                  <span>
-                    {program && program.prices[0].price != "N/A" ? "$" + round(program.prices[0].price) : "N/A"}
-                    </span>
+                {program.prices.length > 0 ? (
+                    <div>
+                        {program.prices.slice(1, 5).map((price, key) => {
+                            if (price.price !== "null") {
+                                return (
+                                    <div className={classes.topFourRow} key={key}>
+                                        <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{ display: 'flex', justifyContent: 'flex-start' }}><span className={classes.topFourNumber}>#{key + 1}</span> </div>
+                                        <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{ display: 'flex' }}><span>{price.pharmacy}</span></div>
+                                        <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
+                                            <span>
+                                                {price.price != "N/A" ? "$" + round(price.price) : "N/A"}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        })}
                     </div>
-                </div>
-                <div name="WalgreensRow" className={classes.topFourRow}>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{display: 'flex', justifyContent:'flex-start'}}><span className={classes.topFourNumber}>#2</span> </div>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{display: 'flex'}}><span>Walgreens Pharmacy</span></div>
-                    <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
-                  <span>
-                    {program && program.prices[0].price != "N/A" ? "$" + round(program.prices[0].price) : "N/A"}
-                    </span>
-                    </div>
-                </div>
-                <div name="KrogerRow" className={classes.topFourRow}>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{display: 'flex', justifyContent:'flex-start'}}><span className={classes.topFourNumber}>#3</span> </div>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{display: 'flex'}}><span>Kroger</span></div>
-                    <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
-                  <span>
-                    {program && program.prices[0].price != "N/A" ? "$" + round(program.prices[0].price) : "N/A"}
-                    </span>
-                    </div>
-                </div>
-                <div name="WalmartRow" className={classes.topFourRowLAST}>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{display: 'flex', justifyContent:'flex-start'}}><span className={classes.topFourNumber}>#4</span> </div>
-                    <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{display: 'flex'}}><span>Walmart Pharmacy</span></div>
-                    <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
-                  <span>
-                    {program && program.prices[0].price != "N/A" ? "$" + round(program.prices[0].price) : "N/A"}
-                    </span>
-                    </div>
-                </div>
-
+                ) : (
+                        <div className={classes.topFourRow}>
+                            <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                <span className={classes.topFourNumber}>
+                                    No Pricing Information.
+                            </span>
+                            </div>
+                        </div>
+                    )}
             </ExpansionPanelDetails>
         </ExpansionPanel>
     )

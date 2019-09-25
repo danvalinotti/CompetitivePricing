@@ -212,31 +212,37 @@ clickReports(){
         } else {
           lowestPriceColor = { color: 'red' };
         }
-        if (this.state.drugDetails.programs[0].prices[0].diff >= 0 || this.state.drugDetails.programs[0].prices[0].diff === "N/A") {
-          currentPriceColor = { color: '#08CA00' };
+
+        if (this.state.drugDetails.programs.prices) {
+          if (this.state.drugDetails.programs[0].prices[0].diff >= 0 || this.state.drugDetails.programs[0].prices[0].diff === "N/A") {
+            currentPriceColor = { color: '#08CA00' };
+          } else {
+            currentPriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[1].prices[0].diff >= 0 || this.state.drugDetails.programs[1].prices[0].diff === "N/A") {
+            usPharmCardPriceColor = { color: '#08CA00' };
+          } else {
+            usPharmCardPriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[2].prices[0].diff >= 0 || this.state.drugDetails.programs[2].prices[0].diff === "N/A") {
+            wellRxPriceColor = { color: '#08CA00' };
+          } else {
+            wellRxPriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[3].prices[0].diff >= 0 || this.state.drugDetails.programs[3].prices[0].diff === "N/A") {
+            singleCarePriceColor = { color: '#08CA00' };
+          } else {
+            singleCarePriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[5].prices[0].diff >= 0 || this.state.drugDetails.programs[5].prices[0].diff === "N/A") {
+            blinkPriceColor = { color: '#08CA00' };
+          } else {
+            blinkPriceColor = { color: 'red' };
+          }
         } else {
-          currentPriceColor = { color: 'red' };
+          currentPriceColor = { color: '#08CA00'}
         }
-        if (this.state.drugDetails.programs[1].prices[0].diff >= 0 || this.state.drugDetails.programs[1].prices[0].diff === "N/A") {
-          usPharmCardPriceColor = { color: '#08CA00' };
-        } else {
-          usPharmCardPriceColor = { color: 'red' };
-        }
-        if (this.state.drugDetails.programs[2].prices[0].diff >= 0 || this.state.drugDetails.programs[2].prices[0].diff === "N/A") {
-          wellRxPriceColor = { color: '#08CA00' };
-        } else {
-          wellRxPriceColor = { color: 'red' };
-        }
-        if (this.state.drugDetails.programs[3].prices[0].diff >= 0 || this.state.drugDetails.programs[3].prices[0].diff === "N/A") {
-          singleCarePriceColor = { color: '#08CA00' };
-        } else {
-          singleCarePriceColor = { color: 'red' };
-        }
-        if (this.state.drugDetails.programs[5].prices[0].diff >= 0 || this.state.drugDetails.programs[5].prices[0].diff === "N/A") {
-          blinkPriceColor = { color: '#08CA00' };
-        } else {
-          blinkPriceColor = { color: 'red' };
-        }
+
       }
       return (
 
