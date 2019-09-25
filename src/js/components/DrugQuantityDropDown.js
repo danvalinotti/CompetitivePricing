@@ -19,7 +19,7 @@ class DrugQuantityDropDown extends Component {
         let drugDosageArray = this.props.drugQuantityArray;
         const { input, label } = this.props;
         return (
-                <select {...input} name="drugQuantity" defaultValue="" style={{ height: '60px',
+                <select {...input} name="drugQuantity" style={{ height: '60px',
                     width: '100%',
                     border: '1px solid #B3B3B3',
                     borderRadius: '8px',

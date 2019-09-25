@@ -174,7 +174,6 @@ class TabBar extends React.Component {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={this.openProfileMenu.bind(this)}
-                color="white"
                 style={{backgroundColor:'white'}}
               >
                <span><img src={brandImage} style={{ paddingRight: '20px', float: 'right', width: '100px', height: '23px' }} /> </span>

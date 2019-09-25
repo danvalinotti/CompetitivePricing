@@ -30,7 +30,7 @@ class ViewDrugDetails extends React.Component {
       var response = this.props.state.location.state.response;
     var request = this.props.state.location.state.request;
     request.token = window.sessionStorage.getItem("token");
-      console.log(response);
+      // console.log(response);
     if(response.average == "0" || response.average == "N/A"|| response.average == "0.0"){
       response.average = this.responseAverage(response);
     }
@@ -89,8 +89,8 @@ class ViewDrugDetails extends React.Component {
     
    
     response.programs.forEach(program => {
-      console.log(program.price);
-      console.log(lowest);
+      // console.log(program.price);
+      // console.log(lowest);
       if(program.price != "N/A"){
         if(lowest == "N/A"){
          lowest =  Number(program.price)
@@ -212,31 +212,37 @@ clickReports(){
         } else {
           lowestPriceColor = { color: 'red' };
         }
-        if (this.state.drugDetails.programs[0].prices[0].diff >= 0 || this.state.drugDetails.programs[0].prices[0].diff === "N/A") {
-          currentPriceColor = { color: '#08CA00' };
+
+        if (this.state.drugDetails.programs.prices) {
+          if (this.state.drugDetails.programs[0].prices[0].diff >= 0 || this.state.drugDetails.programs[0].prices[0].diff === "N/A") {
+            currentPriceColor = { color: '#08CA00' };
+          } else {
+            currentPriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[1].prices[0].diff >= 0 || this.state.drugDetails.programs[1].prices[0].diff === "N/A") {
+            usPharmCardPriceColor = { color: '#08CA00' };
+          } else {
+            usPharmCardPriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[2].prices[0].diff >= 0 || this.state.drugDetails.programs[2].prices[0].diff === "N/A") {
+            wellRxPriceColor = { color: '#08CA00' };
+          } else {
+            wellRxPriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[3].prices[0].diff >= 0 || this.state.drugDetails.programs[3].prices[0].diff === "N/A") {
+            singleCarePriceColor = { color: '#08CA00' };
+          } else {
+            singleCarePriceColor = { color: 'red' };
+          }
+          if (this.state.drugDetails.programs[5].prices[0].diff >= 0 || this.state.drugDetails.programs[5].prices[0].diff === "N/A") {
+            blinkPriceColor = { color: '#08CA00' };
+          } else {
+            blinkPriceColor = { color: 'red' };
+          }
         } else {
-          currentPriceColor = { color: 'red' };
+          currentPriceColor = { color: '#08CA00'}
         }
-        if (this.state.drugDetails.programs[1].prices[0].diff >= 0 || this.state.drugDetails.programs[1].prices[0].diff === "N/A") {
-          usPharmCardPriceColor = { color: '#08CA00' };
-        } else {
-          usPharmCardPriceColor = { color: 'red' };
-        }
-        if (this.state.drugDetails.programs[2].prices[0].diff >= 0 || this.state.drugDetails.programs[2].prices[0].diff === "N/A") {
-          wellRxPriceColor = { color: '#08CA00' };
-        } else {
-          wellRxPriceColor = { color: 'red' };
-        }
-        if (this.state.drugDetails.programs[3].prices[0].diff >= 0 || this.state.drugDetails.programs[3].prices[0].diff === "N/A") {
-          singleCarePriceColor = { color: '#08CA00' };
-        } else {
-          singleCarePriceColor = { color: 'red' };
-        }
-        if (this.state.drugDetails.programs[5].prices[0].diff >= 0 || this.state.drugDetails.programs[5].prices[0].diff === "N/A") {
-          blinkPriceColor = { color: '#08CA00' };
-        } else {
-          blinkPriceColor = { color: 'red' };
-        }
+
       }
       return (
 

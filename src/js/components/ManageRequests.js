@@ -68,11 +68,11 @@ class ManageRequests extends Component {
     }
     
     getAllDrugs() {
-     console.log("getting alldrugs")
+    //  console.log("getting alldrugs")
         Axios.get('http://localhost:8081/drugmaster/get/all')
             .then(response => {
-                console.log("got ")
-                console.log(response.data)
+                // console.log("got ")
+                // console.log(response.data)
                 this.setState({
                     drugList: response.data,
                 });
@@ -88,7 +88,7 @@ class ManageRequests extends Component {
         this.setState({
             options: newOptions
         })
-        console.log("SETOPTIONS");
+        // console.log("SETOPTIONS");
     }
 
     authenticateUser() {
@@ -118,7 +118,7 @@ class ManageRequests extends Component {
     populateRequests() {
         Axios.get('http://localhost:8081/get/requests')
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.setState({
                     requests: response.data,
                 })
@@ -213,7 +213,7 @@ class ManageRequests extends Component {
 
     editRequest(event, request){
         // console.log(request);
-        console.log(request);
+        // console.log(request);
         Axios.get('http://localhost:8081/drugmaster/get/id/'+request.drugId)
         .then(r => {
         this.setState({
@@ -267,7 +267,7 @@ class ManageRequests extends Component {
         })
     }
     submitEditRequest(){
-        console.log(this.state.selectedRequest);
+        // console.log(this.state.selectedRequest);
         var drugRequest = {};
         drugRequest.id = this.state.selectedRequest.id;
         drugRequest.drugName = this.state.newDrugName;
@@ -291,7 +291,7 @@ class ManageRequests extends Component {
     submitAddRequest(){
         
         var drugRequest = {};
-        console.log(this.state.selectedOption)
+        // console.log(this.state.selectedOption)
         drugRequest.drugId = this.state.selectedOption.value.id;
         drugRequest.drugName = this.state.newDrugName;
         drugRequest.ndc = this.state.newNDC;
@@ -303,7 +303,7 @@ class ManageRequests extends Component {
         drugRequest.longitude = this.state.newLongitude;
         drugRequest.good_rx_id = this.state.newGoodRxId;
         drugRequest.programId = this.state.newProgram;
-        console.log(drugRequest);
+        // console.log(drugRequest);
         Axios.post('http://localhost:8081/request/create', drugRequest)
             .then(response => {
                 this.populateRequests();
@@ -335,11 +335,11 @@ class ManageRequests extends Component {
                                 editable={{
                                     // onRowAdd: newData =>
                                     //     new Promise((resolve, reject) => {
-                                    //         console.log("add")
+                                            // console.log("add")
                                     //     }),
                                     onRowAdd: newData =>
                                     new Promise((resolve, reject) => {
-                                        console.log("add")
+                                        // console.log("add")
                                     }),
                                     addFunction: () => this.addRequest.bind(this),
                                     onRowUpdate: (newData, oldData) =>
