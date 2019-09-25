@@ -12,43 +12,15 @@ import SingleCareImg from "../../assests/images/singleCare2.png";
 import MedImpactImg from "../../assests/images/medImpact2.png";
 import GoodRxImg from "../../assests/images/goodRx2.png";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: "100%"
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: "33%",
-    alignSelf: "center",
-    flexShrink: 0
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: "33%",
-    // float: "right",
-    alignSelf: "center",
-    color: theme.palette.text.secondary
-  },
-  thirdHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: "33%",
-    float: "right",
-    textAlign: "right",
-    lineHeight: "2%",
-    color: theme.palette.text.secondary
-  }
+const useStyles = makeStyles(() => ({
+    root: {
+        width: "100%"
+    }
 }));
-function round(num) {
-  return Number(num).toFixed(2);
-}
 
 export default function DrugPriceExpandable({prices}) {
-  const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  console.log(prices);
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+    const classes = useStyles();
+    const images = [InsideRxImg, USPImage, WellRxImage, MedImpImage, SingleImage, BlinkImage, GoodRxImage];
 
   return (
     <div className={classes.root}>

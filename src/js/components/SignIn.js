@@ -129,9 +129,9 @@ class SignIn extends Component {
         Axios.post('http://localhost:8081/create/token', profile)
             .then(response => {
 
-
-                var p = {};
-                Axios.post('http://localhost:8081/authenticate/token', response.data)
+                if(response.data.password != "false"){
+                    var p = {};
+                    Axios.post('http://localhost:8081/authenticate/token', response.data)
                     .then(r => {
 
                         if (r.data.password != "false") {
@@ -159,7 +159,9 @@ class SignIn extends Component {
                             this.setActiveStep((data) => { return 0 })
                         }
                     })
-
+                }else{
+                    this.setActiveStep((data) => { return 0 })
+                }
             });
 
     }

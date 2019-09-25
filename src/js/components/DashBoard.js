@@ -193,10 +193,12 @@ class DashBoard extends React.Component {
         }
 
         const searchPrescri = {
+            margin: '30px 0',
             height: '10%',
             width: '70%',
             color: '#1E2022',
-            fontFamily: 'TradeGothic LT',
+            fontFamily: "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
+            letterSpacing: 'normal',
             fontSize: '36px',
             fontWeight: 'bold',
             lineHeight: '43px',
@@ -221,7 +223,7 @@ class DashBoard extends React.Component {
                         <div style={{ float: 'right', paddingTop:'10px'}}>
                             {/* <img className="gxImage" src={gxImage} /> */}
                         </div>
-                        <h1 className="search-for-a-prescri" style={searchPrescri}>Search for a medication to compare
+                        <h1 className="search-for-a-prescri" style={searchPrescri}>Search for a prescription to compare
                         prices.</h1>
                     </div>
                     <div style={{
