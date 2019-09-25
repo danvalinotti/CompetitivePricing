@@ -3,9 +3,11 @@
 
 # dependencies
 node_modules/
-/node_modules/*
+node_modules/*
 !node_modules/material-table/*
-/dist/*
-/.idea/
+!node_modules/material-table
+old dists/
+dist/*
+.idea/
 .idea/workspace.xml
 package-lock.json
