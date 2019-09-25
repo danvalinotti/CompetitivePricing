@@ -193,10 +193,12 @@ class DashBoard extends React.Component {
         }
 
         const searchPrescri = {
+            margin: '30px 0',
             height: '10%',
             width: '70%',
             color: '#1E2022',
-            fontFamily: 'TradeGothic LT',
+            fontFamily: "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
+            letterSpacing: 'normal',
             fontSize: '36px',
             fontWeight: 'bold',
             lineHeight: '43px',
@@ -221,7 +223,7 @@ class DashBoard extends React.Component {
                         <div style={{ float: 'right', paddingTop:'10px'}}>
                             {/* <img className="gxImage" src={gxImage} /> */}
                         </div>
-                        <h1 className="search-for-a-prescri" style={searchPrescri}>Search for a medication to compare
+                        <h1 className="search-for-a-prescri" style={searchPrescri}>Search for a prescription to compare
                         prices.</h1>
                     </div>
                     <div style={{
@@ -240,9 +242,6 @@ class DashBoard extends React.Component {
                                 updateDrug={this.updateDrug.bind(this)}
 
                             />
-
-
-
                             <div className="col-sm-3">
                                 <Field required component='input' className="form-control search-bar-copy" style={searchBarCopy}
                                     name="myZipCode" id="myZipCode" placeholder="Enter Zip Code" />
@@ -259,7 +258,7 @@ class DashBoard extends React.Component {
                                     boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08)'
 
                                 }} name="drugType">
-                                    <option value="Brand" selected>Brand</option>
+                                    <option value="Brand" >Brand</option>
                                     <option value="Generic">Generic</option>
                                 </Field>
                             </div>
@@ -274,7 +273,7 @@ class DashBoard extends React.Component {
 
                                 }} name="dosageForm">
                                     <option value="" disabled>Dosage Form</option>
-                                    <option selected={true}>Oral</option>
+                                    <option>Oral</option>
                                 </Field>
                             </div>
                             <div className='col-sm-3'>

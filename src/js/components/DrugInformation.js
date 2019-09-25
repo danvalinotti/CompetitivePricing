@@ -43,7 +43,7 @@ class DrugInformation extends React.Component {
         });
     }
     getDrugDescription(){
-        console.log(this.props.selectedDrug);
+        // console.log(this.props.selectedDrug);
         this.setState({
             drugDescription: this.props.selectedDrug.description,
         });
@@ -170,11 +170,11 @@ class DrugInformation extends React.Component {
         <div className="page description">
            
             <h2 className="drugName row">
-                <div className="col-sm-6 " onClick={()=>{console.log(this.props)}}>
+                <div className="col-sm-6 ">
                     {this.props && this.props.drugRequest ? this.props.drugRequest.drugName : "Drug Name"}
                 </div>
                 <div className="col-sm-6 ">
-                    <button type="button" style={{backgroundColor:'white'}} onClick={() => { this.addDrug() }} className="btn btn-outline-primary float-sm-right trackListing pointer">Track Pricing</button>
+                    <button type="button" style={{backgroundColor:'white', padding: '.375rem 2.5rem'}} onClick={() => { this.addDrug() }} className="btn btn-outline-primary float-sm-right trackListing pointer">Track Pricing</button>
                 </div>
             </h2>
             <h3 className="formalName">
@@ -183,11 +183,10 @@ class DrugInformation extends React.Component {
             <div className="drugDescription">
                 {this.props.selectedDrug ? this.state.drugDescription : "Drug Description"}
             </div>
-            <div>
+            <div className="drugSearchOptions">
                 <div className="row" style={{paddingBottom:'10px', paddingTop:'10px'}}>
                     <div className="col-sm-6 col-md">
                         <select className="form-control search-bar" id="drugType"  onChange={()=>{}} value={this.props.response.drugType} name="drugType">
-                            <option value="" disabled >Drug Type</option>
                             <option value="GENERIC">
                                 Generic
                 </option >
