@@ -114,7 +114,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function DrugExpandableRow({ program, image }) {
+export default function DrugExpandableRow({ program, image, programId }) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
 
@@ -137,7 +137,7 @@ export default function DrugExpandableRow({ program, image }) {
                 id="panel1bh-header"
                 style={expanded ? { boxShadow: '-1px 3px 7px -4px rgba(0, 0, 0, 0.4)' } : {}}
             >
-                <div className={classes.summaryContent}>
+                <div id={programId} className={classes.summaryContent} >
                     <img src={image} alt="InsideRx" style={{ height: '60px', width: '150px' }} />
                     <Typography className={classes.secondaryHeading} align="left">
                         {program.prices.length > 0 ? program.prices[0].pharmacy : "N/A"}
@@ -167,7 +167,7 @@ export default function DrugExpandableRow({ program, image }) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.topFourContainer}>
                 {program.prices.length > 0 ? (
-                    <div>
+                    <div className={`top4-${programId}`}>
                         {program.prices.slice(1, 5).map((price, key) => {
                             if (price.price !== "null") {
                                 return (
