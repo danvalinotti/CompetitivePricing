@@ -8,6 +8,16 @@
     border-top: 1px solid #B3B3B3;
     border-bottom: 1px solid #B3B3B3;
 }
+
+.dashboardTableHeader {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.dashboardCellHeader {
+    padding: 10px 10px 0px;
+}
+
 .highlightedCell{
     background-color:#EDF6FB;
 }
@@ -20,8 +30,13 @@ table.dashboardPrices td {
     padding:10px;
 }
 
+.tableHeader {
+    background-color: rgba(15, 0, 52,0.8);
+    color: #ececec
+}
+
 .nameColor{
-    color: black;
+    color: rgba(0,0,0,0.6);
 }
 .programPrice{
     font-weight: bold;
