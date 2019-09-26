@@ -9,6 +9,7 @@ import SingleImage from "../../assests/images/singleCare2.png";
 import BlinkImage from "../../assests/images/blinkLogo.png";
 import GoodRxImage from "../../assests/images/goodRx2.png";
 
+
 const useStyles = makeStyles(() => ({
     root: {
         width: "100%"

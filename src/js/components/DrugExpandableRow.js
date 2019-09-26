@@ -1,5 +1,7 @@
+
 import React, {Fragment} from 'react';
 import { makeStyles } from "@material-ui/core/styles";
+
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -7,7 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import Arrow from "../components/Arrow";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+
 import { Button } from "@material-ui/core";
+
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -118,6 +122,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
 
+
     const handleChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -135,6 +140,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
             <ExpansionPanelSummary
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
+
                 style={expanded ? { boxShadow: '-1px 3px 7px -4px rgba(0, 0, 0, 0.4)' } : {}}
             >
                 <div id={programId} className={classes.summaryContent} >
@@ -161,6 +167,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
                         <Button variant={"text"} color={"default"} className={classes.button} onClick={handleChange("panel1")}>
                             <span className={classes.buttonText}>Show {expanded ? "less" : "more"}</span>
                             {expanded ? <ExpandLessIcon style={{ fill: 'rgba(0,0,0,0.4)' }} /> : <ExpandMoreIcon style={{ fill: 'rgba(0,0,0,0.4)' }} />}
+
                         </Button>
                     </div>
                 </div>
