@@ -24,7 +24,7 @@ export default function DrugPriceExpandable({prices}) {
         <div className={classes.root}>
             {prices.programs.map((program, key) => {
                 return (
-                    <DrugExpandableRow program={program} key={key} image={images[key]}/>
+                    <DrugExpandableRow program={program} key={key} image={images[key]} programId={key}/>
                 )
             })}
         </div>
