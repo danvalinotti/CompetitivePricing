@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
         flexBasis: "33%",
         textAlign: "right",
         lineHeight: "2%",
-        color: theme.palette.text.secondary
+        color: theme.palette.text.secondary,
     },
     priceText: {
         color: 'rgb(8, 202, 0)',
@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
         paddingRight: 15
     },
     summaryContent: {
-        height: 120,
+        height: 160,
         padding: '15px 0 15px 15px',
         width: '100%',
         display: 'flex',
@@ -121,7 +121,7 @@ const useStyles = makeStyles(theme => ({
 export default function DrugExpandableRow({ program, image, programId }) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
-
+    const rand = 1 + Math.random() * (99);
 
     const handleChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -148,7 +148,15 @@ export default function DrugExpandableRow({ program, image, programId }) {
                     <Typography className={classes.secondaryHeading} align="left">
                         {program.prices.length > 0 ? program.prices[0].pharmacy : "N/A"}
                     </Typography>
-                    <div className={classes.thirdHeading}>
+                    <div className={classes.thirdHeading} style={rand >= 50 ? {paddingTop: 30} : {paddingTop: 0}}>
+                        {(rand >= 50) ? (
+                            <div className="uncPriceBox">
+                                <span className="uncPriceLabel">UNC Price</span>
+                            </div>
+                        ) : (
+                            <div></div>
+                        ) }
+
                         {program.prices.length > 0 ? (
                             <Typography align="right" className={classes.priceText}>
                                 {(program.prices[0].price === "N/A") ? "N/A" : "$" + round(program.prices[0].price)}
