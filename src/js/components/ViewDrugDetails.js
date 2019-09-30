@@ -301,9 +301,10 @@ clickReports(){
                     <div className=" overallPrice col-sm" style={currentPriceColor}>
                       <div className="headerhelp">
                         <span ></span>
-                        {this.state.drugDetails && this.state.drugDetails != "N/A" ? "$" + this.round(this.state.drugDetails.programs[0].prices[0].price) : "N/A"}</div>
+                        {this.state.drugDetails.programs[0].prices.length > 0 && this.state.drugDetails != "N/A" ? "$" + this.round(this.state.drugDetails.programs[0].prices[0].price) : "N/A"}</div>
                       <div className="diff">
-                        <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails ? this.state.drugDetails.programs[0].prices[0].diff : 0}></Arrow> {this.state.drugDetails && this.state.drugDetails != "N/A" ? this.round(this.state.drugDetails.programs[0].prices[0].diff) : "N/A"}</span>
+                        <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails.programs[0].prices.length > 0 ? this.state.drugDetails.programs[0].prices[0].diff : 0}></Arrow> 
+                        {this.state.drugDetails.programs[0].prices.length > 0 && this.state.drugDetails != "N/A" ? this.round(this.state.drugDetails.programs[0].prices[0].diff) : "N/A"}</span>
                       </div>
                     </div>
                   </div>
