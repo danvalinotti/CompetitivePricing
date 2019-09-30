@@ -595,7 +595,7 @@ class DashBoardViewComponent extends Component {
                                         <tr className='dashboardRows' key={index} style={index % 2 === 0 ? {backgroundColor: '#d3d3d338'} : {}}>
                                             <td >
                                                 <span className='nameColor'>
-                                                    <strong style={{fontSize: '1rem', color: '#000000bf'}}>{drug.name}</strong>
+                                                    <strong style={{fontSize: '0.9rem', color: '#000000bf'}}>{drug.name}</strong>
                                                     <br />
                                                     Type: {drug.drugType}
                                                     <br />

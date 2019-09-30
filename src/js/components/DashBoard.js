@@ -324,7 +324,8 @@ class DashBoard extends React.Component {
 }
 
 DashBoard = reduxForm({
-    form: 'Simple'
+    form: 'Simple',
+    destroyOnUnmount: false
 })(DashBoard);
 export default withRouter(DashBoard);
 
