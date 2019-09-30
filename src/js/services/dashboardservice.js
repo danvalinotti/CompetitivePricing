@@ -2,10 +2,10 @@ import fetch from 'fetch-retry';
 
 const parseJSON = (response) => response.json();
 const executeFetch = (url,
-                      urlMethod,
-                      requestObject,
-                      queryParamObject,
-                      postProcessResponse) => {
+    urlMethod,
+    requestObject,
+    queryParamObject,
+    postProcessResponse) => {
     let okStatus = false;
     let queryParam = '';
     const fetchRequest = {
@@ -23,40 +23,42 @@ const executeFetch = (url,
     };
     if (requestObject) {
         fetchRequest.body = JSON.stringify(requestObject);
-}
-if (queryParamObject) {
-    queryParam = queryParamObject;
-}
-return fetch(`${url}${queryParam}`, fetchRequest)
-    .then((response) => {
-        okStatus = response.ok;
-        return response;
-    })
-    .then(parseJSON)  // may throw exception if response is not in JSON format
-    .then((json) => {
-        if (!okStatus) {
-            return Promise.reject(json);
-        }
-        return json;
-    })
-    .then((json) => (
-        postProcessResponse ? postProcessResponse(json) : json)
-    )
-    .catch((error) => {
-        if (!error.code) {
-            // syntax error e.g. if payload is not in JSON format
-            // pass it on to redux-promise-middleware for _REJECTED action
-            return Promise.reject({ code: '', error });
-        }
-        return Promise.reject(error);
-    });
+    }
+    if (queryParamObject) {
+        queryParam = queryParamObject;
+    }
+    return fetch(`${url}${queryParam}`, fetchRequest)
+        .then((response) => {
+            okStatus = response.ok;
+            return response;
+        })
+        .then(parseJSON) // may throw exception if response is not in JSON format
+        .then((json) => {
+            if (!okStatus) {
+                return Promise.reject(json);
+            }
+            return json;
+        })
+        .then((json) => (
+            postProcessResponse ? postProcessResponse(json) : json))
+        .catch((error) => {
+            if (!error.code) {
+                // syntax error e.g. if payload is not in JSON format
+                // pass it on to redux-promise-middleware for _REJECTED action
+                return Promise.reject({
+                    code: '',
+                    error
+                });
+            }
+            return Promise.reject(error);
+        });
 };
+
 function drugSearchService(name) {
     const url = `http://localhost:8081/getDrugInfo/${name}`;
     // executeFetch(url,'GET')
     return fetch(
-        url,
-        {
+        url, {
             method: 'GET',
             headers: {
                 // 'Authorization': 'Basic ' + btoa(username + ':' + password),
