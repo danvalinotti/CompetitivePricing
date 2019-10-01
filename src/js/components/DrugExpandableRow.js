@@ -148,8 +148,8 @@ export default function DrugExpandableRow({ program, image, programId }) {
                     <Typography className={classes.secondaryHeading} align="left">
                         {program.prices.length > 0 ? program.prices[0].pharmacy : "N/A"}
                     </Typography>
-                    <div className={classes.thirdHeading} style={rand >= 50 ? {paddingTop: 30} : {paddingTop: 0}}>
-                        {(rand >= 50) ? (
+                    <div className={classes.thirdHeading} style={program.prices.length > 0 && program.prices[0].uncPriceFlag ? {paddingTop: 30} : {paddingTop: 0}}>
+                        {(program.prices.length > 0 && program.prices[0].uncPriceFlag) ? (
                             <div className="uncPriceBox">
                                 <span className="uncPriceLabel">UNC Price</span>
                             </div>
@@ -190,6 +190,11 @@ export default function DrugExpandableRow({ program, image, programId }) {
                                         <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{ display: 'flex', justifyContent: 'flex-start' }}><span className={classes.topFourNumber}>#{key + 1}</span> </div>
                                         <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{ display: 'flex' }}><span>{price.pharmacy}</span></div>
                                         <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
+                                        {(price.uncPriceFlag) ? (
+                                            <div className="uncPriceBox--sub">
+                                                <span className="uncPriceLabel">UNC Price</span>
+                                            </div>
+                                        ) : (<div></div>)}
                                             <span>
                                                 {price.price != "N/A" ? "$" + round(price.price) : "N/A"}
                                             </span>

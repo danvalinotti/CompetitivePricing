@@ -15,6 +15,17 @@ body {
     top: 20px;
 }
 
+.uncPriceBox--sub {
+    margin-right: 20px;
+    padding: 5px;
+    background-color: red;
+    height: 25px;
+    width: 75px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .uncPriceLabel {
     font-style: italic;
     color: white;
