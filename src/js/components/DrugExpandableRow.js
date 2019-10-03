@@ -187,7 +187,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
                             if (price.price !== "null") {
                                 return (
                                     <div className={classes.topFourRow} key={key}>
-                                        <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{ display: 'flex', justifyContent: 'flex-start' }}><span className={classes.topFourNumber}>#{key + 1}</span> </div>
+                                        <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{ display: 'flex', justifyContent: 'flex-start' }}><span className={classes.topFourNumber}>#{key + 2}</span> </div>
                                         <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{ display: 'flex' }}><span>{price.pharmacy}</span></div>
                                         <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
                                         {(price.uncPriceFlag) ? (

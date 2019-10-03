@@ -15,6 +15,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from '@material-ui/core/Grid';
+import { Snackbar, SnackbarContent, IconButton } from "@material-ui/core";
+import CloseIcon from '@material-ui/icons/Close';
 
 class DashBoard extends React.Component {
 
@@ -33,7 +35,7 @@ class DashBoard extends React.Component {
             showDialog: false,
             firstChoice:null,
             loggedInProfile:{},
-            
+            invalid: false
         };
 
         this.authenticateUser.bind(this);
@@ -42,8 +44,8 @@ class DashBoard extends React.Component {
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
-
-
+        this.handleClose = this.handleClose.bind(this);
+        this.openDialog = this.openDialog.bind(this);
     }
     authenticateUser(){
       
@@ -81,47 +83,72 @@ class DashBoard extends React.Component {
         });
     }
     handleSubmit(data) {
-        
-        var drugName = this.state.drugName;
-        var dosageStrength = this.state.dosageStrength;
-        var quantity = this.state.quantity;
-        if(this.state.drugName === ""){
-           
-                drugName = this.state.firstChoice.name;
-                dosageStrength =this.state.firstChoice.dose[0];
-                quantity = this.state.firstChoice.dose[0].quantity[0].value;
-                this.state.selectedDrug = this.state.firstChoice;
+        if (data.myZipCode !== undefined && this.state.drugName !== "" && this.state.dosageStrength !== "" && this.state.quantity !== undefined && this.state.selectedDrug !== null) {
 
+            try {
+                let zip = parseFloat(data.myZipCode);
+                if (data.myZipCode.length === 5) {
+                    var drugName = this.state.drugName;
+                    var dosageStrength = this.state.dosageStrength;
+                    var quantity = this.state.quantity;
+                    if(this.state.drugName === ""){
+                            drugName = this.state.firstChoice.name;
+                            dosageStrength =this.state.firstChoice.dose[0];
+                            quantity = this.state.firstChoice.dose[0].quantity[0].value;
+                            this.state.selectedDrug = this.state.firstChoice;
+                    }
+                    this.setState({
+                    
+                        drugType: data.drugType,
+                    });
+                    this.toggleDialog();
+                    
+                    const requestObject = {
+                        "drugNDC": dosageStrength.value,
+                        "drugName": drugName,
+                        "dosageStrength": dosageStrength.label,
+                        "drugType": this.state.drugType,
+                        "quantity": quantity,
+                        "zipcode": data.myZipCode,
+                        "longitude": "longitude",
+                        "latitude": "latitude"
+                    };
+    
+                    axios.post('http://localhost:8081/getPharmacyPrice', requestObject)
+                        .then(response => {
+                            this.toggleDialog();
+                            this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
+    
+                        }).catch(error => {
+                            // handle error
+                            this.toggleDialog();
+                            this.openDialog();
+                        });
+                } else {
+                    this.openDialog();
+                }
+            } catch(err) {
+                console.log(err);
+                if (data.myZipCode.length !== 5) {
+                    this.openDialog();
+                }
+            }
+        } else {
+            this.openDialog();
         }
-        this.setState({
-          
-            drugType: data.drugType,
-        });
-        this.toggleDialog();
-        
-        const requestObject = {
-            "drugNDC": dosageStrength.value,
-            "drugName": drugName,
-            "dosageStrength": dosageStrength.label,
-            "drugType": this.state.drugType,
-            "quantity": quantity,
-            "zipcode": data.myZipCode,
-            "longitude": "longitude",
-            "latitude": "latitude"
-        };
-
-        axios.post('http://localhost:8081/getPharmacyPrice', requestObject)
-            .then(response => {
-                this.toggleDialog();
-                this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
-
-            }).catch(error => {
-                // handle error
-                this.toggleDialog();
-               
-              })
     }
 
+    openDialog() {
+        this.setState({
+            invalid: true
+        });
+    }
+
+    handleClose() {
+        this.setState({
+            invalid: false
+        });
+    }
 
     selectedDrug(drugName) {
         this.setState({
@@ -243,7 +270,7 @@ class DashBoard extends React.Component {
 
                             />
                             <div className="col-sm-3">
-                                <Field required component='input' className="form-control search-bar-copy" style={searchBarCopy}
+                                <Field component='input' className="form-control search-bar-copy" style={searchBarCopy}
                                     name="myZipCode" id="myZipCode" placeholder="Enter Zip Code" />
                             </div>
                         </div>
@@ -317,7 +344,24 @@ class DashBoard extends React.Component {
                     <DialogContent className="textCenter">
                         <CircularProgress />
                     </DialogContent>
-                </Dialog></div>
+                </Dialog>
+                <Snackbar
+                    anchorOrigin={{vertical: "bottom", horizontal: "left"}}
+                    open={this.state.invalid}
+                    autoHideDuration={5000}
+                    onClose={this.handleClose}
+                >
+                    <SnackbarContent 
+                        message={"Drug search terms invalid."}
+                        style={{backgroundColor: "red"}}
+                        action={[
+                            <IconButton key="close" aria-label="close" color="inherit" onClick={this.handleClose}>
+                                <CloseIcon />
+                            </IconButton>
+                        ]}
+                    />
+                </Snackbar>
+            </div>
         );
     }
 
