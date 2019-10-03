@@ -135,6 +135,9 @@ class DashBoard extends React.Component {
             }
         } else {
             this.openDialog();
+            setTimeout(() => {
+                this.handleClose();
+            }, 5000)
         }
     }
 
@@ -353,7 +356,7 @@ class DashBoard extends React.Component {
                 >
                     <SnackbarContent 
                         message={"Drug search terms invalid."}
-                        style={{backgroundColor: "red"}}
+                        style={{backgroundColor: "#e00000", fontWeight: 600}}
                         action={[
                             <IconButton key="close" aria-label="close" color="inherit" onClick={this.handleClose}>
                                 <CloseIcon />
@@ -364,7 +367,6 @@ class DashBoard extends React.Component {
             </div>
         );
     }
-
 }
 
 DashBoard = reduxForm({
