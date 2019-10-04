@@ -300,13 +300,13 @@ class SignIn extends Component {
                                     </div>
 
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}} variant="contained" onClick={this.handleSubmit.bind(this)}>Sign In</Button>
+                                <Grid container item xs={12} direction="column" alignItems="center" justify="center" style={{marginBottom: '-12px'}}>
+                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034', width: '80%'}} variant="contained" onClick={this.handleSubmit.bind(this)}>Sign In</Button>
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
+                                <Grid container item xs={12} direction="column" alignItems="center" justify="center">
+                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034', width: '80%'}}variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
+                                <Grid container item xs={12} direction="column" alignItems="center" justify="center">
                                     <Link  onClick={this.handleForgotPW.bind(this)}><label style={{cursor:'pointer' ,color:'rgb(28,173,220)'}}><strong>Forgot Password</strong></label></Link>
                                 </Grid>
                             </Grid>

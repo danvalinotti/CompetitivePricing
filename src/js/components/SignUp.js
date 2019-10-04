@@ -205,7 +205,7 @@ class SignUp extends Component {
 
                                     </HorizontalLinearStepper>
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
+                                <Grid container item xs={12} spacing={3} direction="column" alignItems="flex-end" justify="flex-end">
                                     <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}  variant="contained" onClick={this.signInNav.bind(this)}>Sign In</Button>
                                 </Grid>
                             </Grid>

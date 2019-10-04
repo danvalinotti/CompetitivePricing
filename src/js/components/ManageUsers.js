@@ -146,7 +146,7 @@ class ManageUsers extends Component {
                         <Container >
                             <Grid container spacing={1}>
 
-                                <Grid item direction="column" alignItems="right" justify="right">
+                                <Grid item direction="column" alignItems="flex-end" justify="flex-end">
                                     <Button style={{ fontSize: '13px', height: '32px' }} onClick={() => { this.addProfile() }} variant="contained" color="primary">Create Profile</Button>
                                 </Grid>
                             </Grid>
