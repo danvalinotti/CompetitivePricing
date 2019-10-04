@@ -1,7 +1,6 @@
 import {executeFetch} from "./drugdeatilsservice";
 
 function getDrugPriceService(drugNDC,data,drugName) {
-    const parseJSON = (response) => response.json();
     const url ="http://localhost:8081/getPharmacyPrice";
     const urlMethod = "POST";
     let  requestObject = {
@@ -14,7 +13,7 @@ function getDrugPriceService(drugNDC,data,drugName) {
         "longitude": "longitude",
         "latitude": "latitude"
 
-    }
+    };
     executeFetch(url,urlMethod,requestObject)
 
 }

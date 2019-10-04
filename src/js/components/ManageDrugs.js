@@ -2,25 +2,15 @@ import React, { Component } from "react";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import { Typography } from "@material-ui/core";
-import AutoSuggestComponent2 from "./AutoSuggestComponent.1";
-import DrugStrengthDropDown2 from "./drugStrengthDropdown.1";
-import DrugQuantityDropDown2 from "./DrugQuantityDropDown.1";
 import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
-import { Select, MenuItem } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import {authenticateUser} from  '../services/authService';
 class ManageDrugs extends Component {
     constructor(props) {
         super(props);
 
-        this.authenticateUser();
+        authenticateUser(this);
 
         this.state = {
             drugs: [],
@@ -39,34 +29,9 @@ class ManageDrugs extends Component {
             editDrug:null,
 
 
-        }
+        };
         this.populateDrugs();
         this.editDrug = this.editDrug.bind(this);
-    }
-    authenticateUser() {
-
-        var userToken = {};
-        userToken.name = window.sessionStorage.getItem("token");
-
-        Axios.post('http://localhost:8081/authenticate/token', userToken)
-            .then(r => {
-                if (r.data.password != "false") {
-                    this.setState({
-                        openSignIn: false,
-                        loggedIn: true,
-                        loggedInProfile: r.data
-                    });
-
-                    window.sessionStorage.setItem("token", r.data.password);
-                    window.sessionStorage.setItem("loggedIn", "true");
-                    if (r.data.role != "admin" && r.data.role != "createdadmin") {
-                        this.props.history.push({ pathname: '/search' });
-                    }
-
-                } else {
-                    this.props.history.push({ pathname: '/signIn' });
-                }
-            })
     }
     populateDrugs() {
 
@@ -125,7 +90,7 @@ class ManageDrugs extends Component {
                     editDrugQuantity: drugDetails.dose[dosageIndex].quantity[0].value,
                     drugStrengthArray: drugDetails.dose,
                     drugQuantityArray: drugDetails.dose[dosageIndex].quantity
-                })
+                });
                 this.setState({
                     editDrugDialog: true,
                 });
@@ -169,7 +134,7 @@ class ManageDrugs extends Component {
     createDrug() {
         this.setState({
             addingDialog: true,
-        })
+        });
         var drug = {};
         // console.log(this.state.selectedDrug);
         // console.log("HELLO");
@@ -361,147 +326,9 @@ class ManageDrugs extends Component {
                                 onSelectionChange={(rows) => { this.drugChange(rows) }}
 
                             />
-
-
                         </Container><br /> <br />
                     </div>
                 </div>
-                <Dialog fullWidth onClose={() => this.handleClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.newDrugDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
-                        Add Drug
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                        <Grid container   >
-                            <Grid item xs={5}>
-                                <Typography verticalAlign="bottom"> Drug Name:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <AutoSuggestComponent2 name="autoSuggestValue"
-                                    AutoSuggestComponent={this.props.drugStrengthArray}
-                                    selectedDrug={this.selectedDrug}
-                                    setFirstChoice={this.setFirstChoice.bind(this)}
-                                    drugSearchResult={this.props.drugSearchResult}
-                                    actions={this.props.actions}
-                                    drugStrengthArray={this.props.drugStrengthArray}
-                                    updateDrug={this.updateDrug.bind(this)}
-                                    value={this.state.drugName}
-                                ></AutoSuggestComponent2><br />
-
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography verticalAlign="bottom"> Dosage Strength:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <DrugStrengthDropDown2 name="drugStrength"
-                                    drugStrengthArray={this.state.drugStrengthArray}
-                                    updateStrength={this.updateStrength.bind(this)}
-                                    drugStrength={this.state.drugStrengthIndex}
-                                    value={this.state.dosageStrength} /><br /><br />
-                            </Grid>
-                        </Grid>
-                        <Grid container  >
-                            <Grid item xs={5}>
-                                <Typography verticalAlign="bottom"> Quantity:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <DrugQuantityDropDown2 name="drugQuantity"
-                                    drugQuantityArray={this.state.drugQuantityArray}
-                                    drugQuantity={this.state.quantity}
-                                    updateQuantity={this.updateQuantity.bind(this)}
-                                    value={this.state.quantity}
-                                ></DrugQuantityDropDown2><br />
-                            </Grid>
-                        </Grid>
-                        <Grid container  >
-                            <Grid item xs={5}><br />
-                                <Typography verticalAlign="bottom"> Include In Report:</Typography>
-                            </Grid>
-                            <Grid item xs={7}><br />
-                                <Select name="addToReport" defaultValue={true}
-                                    className="form-control"
-                                    onChange={this.handleReportFlagChange.bind(this)} value={this.state.reportFlag}>
-                                    <MenuItem key="0" value={true}>
-                                        Yes
-                                        </MenuItem>
-                                    <MenuItem key="1" value={false}>
-                                        No
-                                        </MenuItem>
-                                </Select><br />
-                            </Grid>
-                        </Grid>
-
-                        <br />
-                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.createDrug.bind(this)} variant="contained" color="primary">Add Drug</Button>
-
-                    </DialogContent>
-                </Dialog>
-                <Dialog fullWidth onClose={() => this.handleEditDrugClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.editDrugDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.handleEditDrugClose.bind(this)}>
-                        Edit {this.state.editDrugName}
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography verticalAlign="bottom"> Dosage Strength:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <DrugStrengthDropDown2 name="drugStrength"
-                                    drugStrengthArray={this.state.drugStrengthArray}
-                                    updateStrength={this.updateEditStrength.bind(this)}
-                                    drugStrength={this.state.editDrugStrength}
-                                    value={this.state.editDrugStrength} /><br /><br />
-                            </Grid>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={5}>
-                                <Typography verticalAlign="bottom"> Quantity:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <DrugQuantityDropDown2 name="drugQuantity"
-                                    drugQuantityArray={this.state.drugQuantityArray}
-                                    drugQuantity={this.state.editDrugQuantity}
-                                    updateQuantity={this.updateEditQuantity.bind(this)}
-                                    value={this.state.editDrugQuantity}
-                                ></DrugQuantityDropDown2><br />
-                            </Grid>
-                        </Grid>
-                        <Grid container  >
-                            <Grid item xs={5}><br />
-                                <Typography verticalAlign="bottom"> Include In Report:</Typography>
-                            </Grid>
-                            <Grid item xs={7}><br />
-                                <Select name="addToReport" defaultValue={true}
-                                    className="form-control"
-                                    onChange={this.handleReportFlagChange.bind(this)} value={this.state.reportFlag}>
-                                    <MenuItem key="0" value={true}>
-                                        Yes
-                                        </MenuItem>
-                                    <MenuItem key="1" value={false}>
-                                        No
-                                        </MenuItem>
-                                </Select><br />
-                            </Grid>
-                        </Grid>
-
-                        <br />
-                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitEditDrug.bind(this)} variant="contained" color="primary">Edit Drug</Button>
-
-                    </DialogContent>
-                </Dialog>
-                <Dialog onClose={() => this.closeAddingDialog.bind(this)}
-                    aria-labelledby="customized-dialog-title" open={this.state.addingDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.closeAddingDialog.bind(this)}>
-                        Adding Drug
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                        <CircularProgress />
-                    </DialogContent>
-                </Dialog>
             </div>
         )
     }

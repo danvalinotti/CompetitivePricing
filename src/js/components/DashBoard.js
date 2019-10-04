@@ -5,8 +5,6 @@ import DrugStrengthDropDown from "./drugStrengthDropdown";
 import DrugQuantityDropDown from "./DrugQuantityDropDown";
 import "../../assests/sass/searchPage.css"
 import HeaderComponent from "./HeaderComponent";
-import gxImage from "../../assests/images/gxImage.png";
-import gxWave from "../../assests/images/GxWave-Logo.png";
 import { Field, reduxForm } from 'redux-form';
 import AutoSuggestComponent from "./AutoSuggestComponent";
 import { withRouter } from "react-router-dom";
@@ -14,15 +12,15 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Grid from '@material-ui/core/Grid';
 import { Snackbar, SnackbarContent, IconButton } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
+import {authenticateUser} from '../services/authService';
 
 class DashBoard extends React.Component {
 
     constructor(props) {
         super(props);
-        this.authenticateUser();
+        authenticateUser(this);
         
         this.state = { 
             drugName: '',
@@ -38,7 +36,6 @@ class DashBoard extends React.Component {
             invalid: false
         };
 
-        this.authenticateUser.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.selectedDrug = this.selectedDrug.bind(this);
         this.clickHome = this.clickHome.bind(this);
@@ -47,36 +44,6 @@ class DashBoard extends React.Component {
         this.handleClose = this.handleClose.bind(this);
         this.openDialog = this.openDialog.bind(this);
     }
-    authenticateUser(){
-      
-        var userToken = {};
-        userToken.name = window.sessionStorage.getItem("token");
-
-        axios.post('http://localhost:8081/authenticate/token' , userToken)
-        .then(r => {
-          
-            if(r.data.password != "false"){
-              this.setState({
-                openSignIn : false,
-                loggedIn : true,
-                loggedInProfile: r.data
-              });
-            
-             
-              window.sessionStorage.setItem("token",r.data.password);
-              window.sessionStorage.setItem("loggedIn","true");
-            //   this.props.history.push({ pathname: '/search' });
-            }else{
-             
-               this.props.history.push({ pathname: '/signIn' });
-            }
-        })
-    }
-   
-   
-
- 
-   
     setFirstChoice(drug){
         this.setState({
             firstChoice:drug,
@@ -86,7 +53,6 @@ class DashBoard extends React.Component {
         if (data.myZipCode !== undefined && this.state.drugName !== "" && this.state.dosageStrength !== "" && this.state.quantity !== undefined && this.state.selectedDrug !== null) {
 
             try {
-                let zip = parseFloat(data.myZipCode);
                 if (data.myZipCode.length === 5) {
                     var drugName = this.state.drugName;
                     var dosageStrength = this.state.dosageStrength;
@@ -220,7 +186,7 @@ class DashBoard extends React.Component {
             borderRadius: '8px',
             backgroundColor: '#FFFFFF',
             boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08)'
-        }
+        };
 
         const searchPrescri = {
             margin: '30px 0',
@@ -235,14 +201,14 @@ class DashBoard extends React.Component {
             textAlign: 'center',
             paddingTop: '1%',
 
-        }
+        };
         const seePricesBtn = {
             height: '60px ',
             width: '100% ',
             borderRadius: '8px ',
             backgroundColor: '#1B8DCA ',
             boxShadow: '0 10px 20px -10px rgba(0, 0, 0, 0.26) !important'
-        }
+        };
         
         return (
             <div>
@@ -332,12 +298,6 @@ class DashBoard extends React.Component {
                         </div>
                     </div>
                 </form>
-                {/* <br/><br/><br/><br/>
-              */}
-                    {/* <div xs={4} justify="center" style={{
-   position: 'fixed', left: '0', bottom: '0', width: '100%', textAlign: 'center',}}>
-                         <label  fontSize="9"> <strong style={{color:"darkgrey"}}>Powered By</strong></label>  <img  className="gxWave" src={gxWave} width="75px" height="25px"/>
-                    </div> */}
                 
                 <Dialog onClose={() => this.toggleDialog.bind(this)}
                     aria-labelledby="customized-dialog-title" open={this.state.showDialog}>

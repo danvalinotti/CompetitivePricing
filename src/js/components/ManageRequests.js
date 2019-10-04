@@ -2,37 +2,16 @@ import React, { Component } from "react";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
-import Grid from '@material-ui/core/Grid';
-import TextField from "@material-ui/core/TextField";
-import { Typography, Input } from "@material-ui/core";
 import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import FormControl from '@material-ui/core/FormControl';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import { RuleList } from "jss";
-import IntegrationReactSelect2 from './SelectDrugDropdown.1' 
+import {authenticateUser} from '../services/authService';
 
 class ManageRequests extends Component {
     constructor(props) {
         super(props);
 
-        this.authenticateUser();
+        authenticateUser(this);
 
         this.state = {
             requests: [],
@@ -56,10 +35,9 @@ class ManageRequests extends Component {
             options:[],
             drugList:[],
             newProgram:0,
-        }
-        this.getAllDrugs = this.getAllDrugs.bind(this)
+        };
+        this.getAllDrugs = this.getAllDrugs.bind(this);
         
-        this.authenticateUser.bind(this);
         
         this.populateRequests = this.populateRequests.bind(this);
         this.getAllDrugs();
@@ -84,36 +62,11 @@ class ManageRequests extends Component {
         var newOptions = [];
         drugList.map((drug) => {
             newOptions.push({ value: drug, label: drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")" })
-        })
+        });
         this.setState({
             options: newOptions
         })
         // console.log("SETOPTIONS");
-    }
-
-    authenticateUser() {
-        var userToken = {};
-        userToken.name = window.sessionStorage.getItem("token");
-
-        Axios.post('http://localhost:8081/authenticate/token', userToken)
-            .then(r => {
-                if (r.data.password != "false") {
-                    this.setState({
-                        openSignIn: false,
-                        loggedIn: true,
-                        loggedInProfile: r.data
-                    });
-
-                    window.sessionStorage.setItem("token", r.data.password);
-                    window.sessionStorage.setItem("loggedIn", "true");
-                    if (r.data.role != "admin" && r.data.role != "createdadmin") {
-                        this.props.history.push({ pathname: '/search' });
-                    }
-
-                } else {
-                    this.props.history.push({ pathname: '/signIn' });
-                }
-            })
     }
     populateRequests() {
         Axios.get('http://localhost:8081/get/requests')
@@ -362,223 +315,6 @@ class ManageRequests extends Component {
                         </Container><br /> <br />
                     </div>
                 </div>
-                <Dialog fullWidth onClose={()=>this.handleClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.editRequestDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
-                    Edit {this.state.selectedRequest ? this.state.selectedRequest.drugName: ''} {this.state.selectedRequest.program} Request
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Drug Name:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newDrugName} variant="outlined"
-                                    onChange={this.handleDrugNameChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Brand Indicator:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newBrandIndicator} variant="outlined"
-                                    onChange={this.handleBrandChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> NDC:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField required variant="outlined" value={this.state.newNDC} onChange={this.handleNDCChange.bind(this)} /><br />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GSN:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField margin="normal"  value={this.state.newGSN} variant="outlined"
-                                    onChange={this.handleGSNChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Quantity:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newQuantity} variant="outlined"
-                                    onChange={this.handleQuantityChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Zip Code:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newZipCode} variant="outlined"
-                                    onChange={this.handleZipCodeChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Latitude:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newLatitude} variant="outlined"
-                                    onChange={this.handleLatitudeChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Longitude:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField margin="normal"  value={this.state.newLongitude} variant="outlined"
-                                    onChange={this.handleLongitudeChange.bind(this)} />
-                            </Grid>
-                        </Grid>                     
-
-                        <br />
-                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitEditRequest.bind(this)} variant="contained" color="primary">Edit Request</Button>
-
-                    </DialogContent>
-                </Dialog>
-                <Dialog fullWidth onClose={()=>this.handleAddClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.newRequestDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.handleAddClose.bind(this)}>
-                    Add Request
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                    <Grid container >
-                        <Grid item xs={5}>
-                                <Typography  verticalAlign="bottom"> Select Drug:</Typography>
-                        </Grid>
-                                <Grid item xs={7}>
-                                    <IntegrationReactSelect2 drugValue={this.state.selectedOption}
-                                        drugOnChange={this.handleDrugChange.bind(this)} listOfDrugs={this.state.options}></IntegrationReactSelect2>
-                                </Grid>
-                                </Grid>
-                                <br/>
-                                <Grid container >
-                        <Grid item xs={5}>
-                                <Typography  verticalAlign="bottom"> Select Provider:</Typography>
-                        </Grid>
-                                <Grid item xs={7}>
-                                <FormControl variant="outlined" style={{width:'66%'}}>        
-                                     
-                                  <Select value={this.state.newProgram}  onChange={this.handleNewProviderChange.bind(this)} >          
-                                        
-                                     <MenuItem value={0}>InsideRx</MenuItem>           
-                                     <MenuItem value={1}>U.S Pharmacy Card</MenuItem>           
-                                     <MenuItem value={2}>WellRx</MenuItem> 
-                                     <MenuItem value={3}>MedImpact</MenuItem> 
-                                     <MenuItem value={4}>SingleCare</MenuItem> 
-                                     <MenuItem value={5}>Blink Health</MenuItem> 
-                                     <MenuItem value={6}>GoodRx</MenuItem>    
-                                          </Select>       
-                                          </FormControl>
-                                </Grid>
-                                </Grid>
-                                <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Drug Name:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField margin="normal"  value={this.state.newDrugName} variant="outlined"
-                                    onChange={this.handleDrugNameChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Brand Indicator:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newBrandIndicator} variant="outlined"
-                                    onChange={this.handleBrandChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> NDC:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField required variant="outlined" value={this.state.newNDC} onChange={this.handleNDCChange.bind(this)} /><br />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GSN:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField margin="normal"  value={this.state.newGSN} variant="outlined"
-                                    onChange={this.handleGSNChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Quantity:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newQuantity} variant="outlined"
-                                    onChange={this.handleQuantityChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                       
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Zip Code:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newZipCode} variant="outlined"
-                                    onChange={this.handleZipCodeChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Latitude:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newLatitude} variant="outlined"
-                                    onChange={this.handleLatitudeChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Longitude:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField margin="normal"  value={this.state.newLongitude} variant="outlined"
-                                    onChange={this.handleLongitudeChange.bind(this)} />
-                            </Grid>
-                        </Grid>    
-                         <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GoodRxId:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField margin="normal"  value={this.state.newGoodRxId} variant="outlined"
-                                    onChange={this.handleGoodRxIdChange.bind(this)} />
-                            </Grid>
-                        </Grid>                 
-
-                        <br />
-                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitAddRequest.bind(this)} variant="contained" color="primary">Add Request</Button>
-
-                    </DialogContent>
-                </Dialog>
-
             </div>
         )
     }

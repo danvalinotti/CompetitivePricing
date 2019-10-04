@@ -1,14 +1,12 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
+import React from "react";
 import { FormControl, FormGroup, FormLabel } from "@material-ui/core";
-import { withRouter } from "react-router-dom"
 import MultiChipSelect from "./MultiChipSelect";
 
 class MultipleSelect extends React.Component {
   constructor(props){
     super(props);
 
-   var  allItems = [{name:'hello'}]
+   var  allItems = [{name:'hello'}];
   this.state = {
     items: allItems,
     selectedItem: []

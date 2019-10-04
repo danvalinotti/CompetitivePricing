@@ -17,4 +17,4 @@ export const actions = {
             promise: drugSearchService(name)
         }
     })
-}
+};

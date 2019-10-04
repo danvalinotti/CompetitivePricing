@@ -3,7 +3,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from 'redux';
 import DashBoard from "../components/DashBoard";
 import {actions} from "../actions/dashBoardActions";
-import Axios from 'axios';
 
 import gxWave from "../../assests/images/GxWave-Logo.png";
 class DashBoardContainer extends Component {
@@ -12,8 +11,6 @@ class DashBoardContainer extends Component {
         
     }
     
-
-
     render() {
         return (
             <div>

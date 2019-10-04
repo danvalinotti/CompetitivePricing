@@ -6,7 +6,7 @@ const scope = 'service/';
 export  const DRUG_SEARCH = `${scope}DRUG_SEARCH`;
 export const DRUG_STRENGTH = `${scope}DRUG_STRENGTH`;
 export const DASHBOARD_DRUGS =`${scope}DASHBOARD_DRUGS`;
-export const DRUG_PRICE = `${scope}DRUG_PRICE`
+export const DRUG_PRICE = `${scope}DRUG_PRICE`;
 
 export const actions = {
     dashBoardActions : (name) => ({
@@ -35,4 +35,4 @@ export const actions = {
             promise: getDrugPriceService(drugNDC,data,drugName)
         }
     })
-}
+};

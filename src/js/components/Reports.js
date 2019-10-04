@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import HeaderComponent from "./HeaderComponent";
-import * as Sorting from "./Sorting";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
@@ -24,12 +23,12 @@ import SplitButton from './SplitButton';
 import Grid from '@material-ui/core/Grid';
 import FilterDialogs from './FilterDialogs'
 import ManualReportDialog from './ManualReportDialog'
-
+import {authenticateUser} from '../services/authService';
 
 class Reports extends Component {
     constructor(props) {
         super(props);
-        this.authenticateUser();
+        authenticateUser(this);
 
         this.state = {
             dashBoardDrugsData: this.props.dashBoardDrugsData,
@@ -39,7 +38,6 @@ class Reports extends Component {
             pharmCardSort: "off",
             wellRxSort: "off",
             medImpactSort: "off",
-            pharmCardSort: "off",
             singleCareSort: "off",
             lowestPriceSort: "off",
             reportsDialog: false,
@@ -53,8 +51,7 @@ class Reports extends Component {
             selectedReports: [],
             openManualReport:false,
             loggedInProfile:{},
-        }
-        this.authenticateUser.bind(this);
+        };
         this.getAllReports();
         
         this.clickHome = this.clickHome.bind(this);
@@ -63,28 +60,6 @@ class Reports extends Component {
             
             
 
-    }
-    authenticateUser(){
-       
-        var userToken = {};
-        userToken.name = window.sessionStorage.getItem("token");
-
-        Axios.post('http://localhost:8081/authenticate/token' , userToken)
-        .then(r => {
-            if(r.data.password != "false"){
-              this.setState({
-                openSignIn : false,
-                loggedIn : true,
-                loggedInProfile: r.data
-              });
-             
-              window.sessionStorage.setItem("token",r.data.password);
-              window.sessionStorage.setItem("loggedIn","true");
-            //   this.props.history.push({ pathname: '/search' });
-            }else{
-               this.props.history.push({ pathname: '/signIn' });
-            }
-        })
     }
     getAllReports(){
         Axios.get('http://localhost:8081/reports/getAll')
@@ -141,7 +116,7 @@ class Reports extends Component {
                 filteredList.push(val);
             }
 
-        })
+        });
         this.setState({
             filteredList: filteredList
         });
@@ -150,7 +125,7 @@ class Reports extends Component {
     exportReport(data) {
         let options = {
             responseType: 'blob',
-        }
+        };
         Axios.get('http://localhost:8081/asd/' + data.id,options)
         .then(response => {
             const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
@@ -166,7 +141,6 @@ class Reports extends Component {
         });
     }
     getDailyReports() {
-        var self = this;
         var inputVal = document.getElementById("mui-pickers-date").value;
         Axios.get('http://localhost:8081/masterList/getByDate/' + inputVal)
             .then(response => {
@@ -181,7 +155,7 @@ class Reports extends Component {
                             <br />
                         </div>
 
-                    ))} </div>
+                    ))} </div>;
 
                 if (response.data.length === 0) {
                     inner = <div> <br /> No Results Found</div>

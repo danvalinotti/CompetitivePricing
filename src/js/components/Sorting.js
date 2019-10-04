@@ -1,7 +1,7 @@
 
 export function sortByName(list, sort) {
 
-    var newlist = list.sort(function (a, b) {
+    return list.sort(function (a, b) {
         if (sort != "down") {
             if (a.name > b.name) {
                 return 1;
@@ -22,10 +22,9 @@ export function sortByName(list, sort) {
             }
         }
     });
-    return newlist;
 }
 export function sortByBrand(list, sort) {
-    var newlist = list.sort(function (a, b) {
+    return list.sort(function (a, b) {
         if (sort != "down") {
             if (a.drugType > b.drugType) {
                 return 1;
@@ -35,7 +34,7 @@ export function sortByBrand(list, sort) {
             } else {
                 return 0;
             }
-        }else{
+        } else {
             if (a.drugType < b.drugType) {
                 return 1;
             }
@@ -46,7 +45,6 @@ export function sortByBrand(list, sort) {
             }
         }
     });
-    return newlist;
 }
 export function sortByProgramPrice(list, program, sort) {
     return list.sort(function (a, b) {

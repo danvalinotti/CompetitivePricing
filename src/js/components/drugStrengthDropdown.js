@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import zIndex from "@material-ui/core/styles/zIndex";
 
 class DrugStrengthDropDown extends Component {
     constructor(props) {
@@ -25,8 +24,7 @@ class DrugStrengthDropDown extends Component {
 
     render() {
 
-        let drugDosageArray = this.props.drugStrengthArray;
-        const { input, label } = this.props;
+        const { input } = this.props;
 
         return (
             <select {...input} name="drugStrength" defaultValue="" onChange={() => this.onStrengthChange(event)} value={this.props.drugStrength} style={{

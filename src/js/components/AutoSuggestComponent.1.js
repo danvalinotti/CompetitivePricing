@@ -36,9 +36,7 @@ class AutoSuggestComponent2 extends React.Component {
     }
 
     getSuggestions(value) {
-        const providerPrices = this.state.providerPrices;
-        // console.log(this.state.providerPrices);
-        return providerPrices;
+        return this.state.providerPrices;
     }
     onClickDrug(drug) {
 
@@ -57,7 +55,7 @@ class AutoSuggestComponent2 extends React.Component {
     handleInputChange(event) {
         this.setState({
             inputValue: event.target.value,
-        })
+        });
 
         this.getProviderPrices(event.target.value);
     };
@@ -97,69 +95,6 @@ class AutoSuggestComponent2 extends React.Component {
 
 
     render() {
-
-        const { value, onSelected } = this.state;
-        const { classes } = this.props; 
-         
-
-        const theme = {
-            input: {
-                height: '60px ',
-                width: '100% ',
-                border: '1px solid #B3B3B3 ',
-                backgroundColor: ' #FFFFFF ',
-                borderRadius: '8px ',
-                boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08) '
-            },
-            suggestionsContainerOpen: {
-                flex: 'row',
-                border: '1px solid #B3B3B3 ',
-                backgroundColor: ' #FFFFFF ',
-                borderRadius: '8px ',
-                boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08) '
-            },
-            root: {
-                flexGrow: '1',
-         
-            },
-
-            container: {
-                flexGrow: '1',
-                position: 'relative',
-            },
-            paper: {
-                position: 'absolute',
-                zIndex: 5,
-                marginTop: 'theme.spacing.unit',
-                left: '0',
-                right: '0',
-            },
-            chip: {
-                margin: '`${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`',
-            },
-            inputRoot: {
-                flexWrap: 'wrap',
-            },
-            inputInput: {
-                width: 'auto',
-                flexGrow: '1',
-            },
-            divider: {
-                height: 'theme.spacing.unit * 2',
-            }
-        }
-        
-        const searchBarCopy = {
-
-            marginRight: '20%',
-            
-            height: '60px',
-            width: '100% ',
-            border: '1px solid #B3B3B3',
-            borderRadius: '8px',
-            backgroundColor: '#FFFFFF',
-            boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08)'
-        }
 
         return (
             <div >

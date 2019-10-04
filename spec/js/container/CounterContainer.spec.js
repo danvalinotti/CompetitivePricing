@@ -20,7 +20,7 @@ describe("A suite", function() {
     });
 
     it("counterContainer", function(){
-        console.log("length of div in Couter Container :" + counterContainer.find('div').length)
+        console.log("length of div in Couter Container :" + counterContainer.find('div').length);
         expect(counterContainer.find('Counter').length).toEqual(1);
         console.log("test container passed");
     });

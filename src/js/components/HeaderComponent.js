@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import image from "../../assests/images/InsideLogo_1.svg";
-
 import TabBar from "./TabBar";
 class HeaderComponent extends Component {
 

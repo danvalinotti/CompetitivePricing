@@ -3,7 +3,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from 'redux';
 import {actions} from "../actions/dashBoardActions";
 import ManageRequests from "../components/ManageRequests";
-import TabBar from "../components/TabBar";
 import gxWave from "../../assests/images/GxWave-Logo.png";
 class ManageRequestsContainer extends Component {
     constructor(props) {

@@ -2,9 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { components } from 'react-select'
-import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
+import { emphasize, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import NoSsr from '@material-ui/core/NoSsr';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
@@ -264,42 +263,15 @@ const DropdownIndicator = props => {
 export default function IntegrationReactSelect(props) {
 
   const classes = useStyles();
-  const theme = useTheme();
-  const [single, setSingle] = React.useState(null);
-  const [multi, setMulti] = React.useState(null);
-
-  function handleChangeSingle(value) {
-    setSingle(value);
-  }
-
-  function handleChangeMulti(value) {
-    setMulti(value);
-  }
-
-  const selectStyles = {
-    input: base => ({
-      ...base,
-      color: theme.palette.text.primary,
-      '& input': {
-        font: 'inherit',
-      },
-    }),
-  };
 
   return (
-    // <div className={classes.root}>
-    //   <NoSsr>
-
-    //     <div className={classes.divider} />
     <Select
       closeMenuOnSelect={false}
       cropWithEllipsis={true}
-      //  onFocus={(e) => e.target.size = 5}
      
       classes={classes}
 
       maxMenuHeight={200}
-      //   styles={selectStyles}
       inputId="react-select-multiple"
       TextFieldProps={{
 
@@ -316,7 +288,5 @@ export default function IntegrationReactSelect(props) {
       isMulti
       styles={{ maxHeight: '100px', overflow:'auto' }}
     />
-    //   </NoSsr>
-    // </div>
   );
 }

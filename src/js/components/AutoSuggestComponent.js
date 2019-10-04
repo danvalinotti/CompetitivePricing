@@ -1,6 +1,5 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-
 import Paper from "@material-ui/core/Paper/Paper";
 import Downshift from 'downshift';
 import TextField from '@material-ui/core/TextField';
@@ -41,9 +40,8 @@ class AutoSuggestComponent extends React.Component {
     }
 
     getSuggestions(value) {
-        const providerPrices = this.state.providerPrices;
 
-        return providerPrices;
+        return this.state.providerPrices;
     }
     onClickDrug(drug) {
 
@@ -62,7 +60,7 @@ class AutoSuggestComponent extends React.Component {
     handleInputChange(event) {
         this.setState({
             inputValue: event.target.value,
-        })
+        });
 
         this.getProviderPrices(event.target.value);
     };
@@ -154,7 +152,7 @@ class AutoSuggestComponent extends React.Component {
             divider: {
                 height: 'theme.spacing.unit * 2',
             }
-        }
+        };
         
         const searchBarCopy = {
 
@@ -166,14 +164,14 @@ class AutoSuggestComponent extends React.Component {
             borderRadius: '8px',
             backgroundColor: '#FFFFFF',
             boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08)'
-        }
+        };
 
         return (
             <div className="col-sm-9">
                 <Downshift onSelect={(drug) => this.onClickDrug(drug)} itemToString={i => { return i ? i.name : '' }} id="downshift-simple" 
                 >
                     {({
-                        theme = { theme },
+                        theme,
                         getInputProps,
                         getItemProps,
                         getMenuProps,

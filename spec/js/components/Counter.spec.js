@@ -10,10 +10,10 @@ describe("A suite", function() {
     let counterComponent;
     let props;
     beforeEach(() => {
-        jasmineEnzyme()
+        jasmineEnzyme();
         props = {
             count:0
-        }
+        };
         counterComponent = shallow(<Counter {...props}/>)
     });
 
