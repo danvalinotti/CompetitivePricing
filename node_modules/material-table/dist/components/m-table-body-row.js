@@ -393,7 +393,13 @@ function (_React$Component) {
             var panel = detailPanel;
 
             if (Array.isArray(panel)) {
-              panel = panel[panelIndex || 0].render;
+              panel = panel[panelIndex || 0];
+
+              if (typeof panel === "function") {
+                panel = panel(_this6.props.data);
+              }
+
+              panel = panel.render;
             }
 
             onToggleDetailPanel(_this6.props.path, panel);
