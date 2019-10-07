@@ -169,7 +169,7 @@ class Reports extends Component {
                 document.body.appendChild(link);
                 link.click(); 
         }).catch((error) => {
-            console.log(error);
+            // console.log(error);
             this.toggleDialog();
             this.handleErrorMessage();
         });
@@ -482,7 +482,7 @@ class Reports extends Component {
                 <Dialog onClose={() => this.toggleDialog.bind(this)}
                     aria-labelledby="customized-dialog-title" open={this.state.showDialog}>
                     <DialogTitle id="customized-dialog-title" onClose={this.toggleDialog.bind(this)}>
-                        Loading
+                        Downloading report...
                     </DialogTitle>
                     <DialogContent className="textCenter">
                         <CircularProgress />
@@ -496,7 +496,7 @@ class Reports extends Component {
                     onClose={this.handleErrorMessage}
                 >
                     <SnackbarContent 
-                        message={"An error occurred while downloading report. Check the console for errors"}
+                        message={"An error occurred while downloading report. Check the console for errors."}
                         style={{backgroundColor: "#e00000", fontWeight: 600}}
                         action={[
                             <IconButton key="close" aria-label="close" color="inherit" onClick={this.handleClose}>
