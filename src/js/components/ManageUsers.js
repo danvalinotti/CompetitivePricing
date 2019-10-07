@@ -18,14 +18,14 @@ import TableHead from '@material-ui/core/TableHead';
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
 import { Typography } from "@material-ui/core";
-
+import {authenticateUser} from '../services/authService';
 import TabBar from "./TabBar";
 
 class ManageUsers extends Component {
     constructor(props) {
         super(props);
         
-        this.authenticateUser();
+        authenticateUser(this);
 
         this.state = {
             profiles: [],
@@ -37,33 +37,8 @@ class ManageUsers extends Component {
             name:'',
             isAdmin:false,
             loggedInProfile:{},
-        }
-        this.authenticateUser.bind(this);
+        };
         this.populateProfiles();
-    }
-    authenticateUser(){
-        var userToken = {};
-        userToken.name = window.sessionStorage.getItem("token");
-
-        Axios.post('http://localhost:8081/authenticate/token' , userToken)
-        .then(r => {
-            if(r.data.password != "false"){
-              this.setState({
-                openSignIn : false,
-                loggedIn : true,
-                loggedInProfile: r.data
-              });
-             
-              window.sessionStorage.setItem("token",r.data.password);
-              window.sessionStorage.setItem("loggedIn","true");
-             if(r.data.role != "admin" && r.data.role != "createdadmin"){
-                 this.props.history.push({ pathname: '/search' });
-             }
-           
-            }else{
-               this.props.history.push({ pathname: '/signIn' });
-            }
-        })
     }
     populateProfiles() {
         Axios.get('http://localhost:8081/admin/get/users')
@@ -171,7 +146,7 @@ class ManageUsers extends Component {
                         <Container >
                             <Grid container spacing={1}>
 
-                                <Grid item direction="column" alignItems="right" justify="right">
+                                <Grid item direction="column" alignItems="flex-end" justify="flex-end">
                                     <Button style={{ fontSize: '13px', height: '32px' }} onClick={() => { this.addProfile() }} variant="contained" color="primary">Create Profile</Button>
                                 </Grid>
                             </Grid>

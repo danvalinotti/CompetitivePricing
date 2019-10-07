@@ -17,7 +17,7 @@ class DrugQuantityDropDown extends Component {
   
     render(){
         let drugDosageArray = this.props.drugQuantityArray;
-        const { input, label } = this.props;
+        const { input } = this.props;
         return (
                 <select {...input} name="drugQuantity" style={{ height: '60px',
                     width: '100%',

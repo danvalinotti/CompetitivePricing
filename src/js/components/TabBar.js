@@ -18,10 +18,9 @@ class TabBar extends React.Component {
 
   constructor(props) {
     super(props);
-   // window.sessionStorage.setItem("key", "value");
     var loggedIn = window.sessionStorage.getItem("loggedIn");
     
-    if(!(loggedIn == "true")){
+    if(loggedIn !== "true"){
       loggedIn = false;
     }else{
       loggedIn = true;
@@ -128,8 +127,6 @@ class TabBar extends React.Component {
   submitSignIn(profile){
     Axios.post('http://localhost:8081/create/token' , profile)
     .then(response => {
-      
-        var p = {};
         Axios.post('http://localhost:8081/authenticate/token' , response.data)
         .then(r => {
             if(r.data.password != "false"){

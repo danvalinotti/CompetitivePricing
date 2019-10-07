@@ -3,7 +3,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from 'redux';
 import {actions} from "../actions/dashBoardActions";
 import ManageAlerts from "../components/ManageAlerts";
-import TabBar from "../components/TabBar";
 import gxWave from "../../assests/images/GxWave-Logo.png";
 class ManageAlertsContainer extends Component {
     constructor(props) {

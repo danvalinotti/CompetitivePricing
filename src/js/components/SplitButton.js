@@ -24,7 +24,6 @@ class SplitButton extends Component {
   }
 
    handleClick() {
-    alert(`You clicked ${options[selectedIndex]}`);
   }
 
   handleMenuItemClick(event, option) {

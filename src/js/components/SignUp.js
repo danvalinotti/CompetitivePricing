@@ -1,21 +1,15 @@
 import React, { Component } from "react";
-import HeaderComponent from "./HeaderComponent";
-import * as Sorting from "./Sorting";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
-import Icons from "./Icons"
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import HorizontalLinearStepper from './SignInStepper'
 import TextField from '@material-ui/core/TextField'
 import galaxeLogo from "../../assests/images/RxWave Logo.png";
-import Divider from '@material-ui/core/Divider';
 
 class SignUp extends Component {
     constructor(props) {
@@ -137,7 +131,7 @@ class SignUp extends Component {
         profile.username = this.state.email;
         profile.password = this.state.password;
         profile.name = this.state.name;
-        profile.role = "user"
+        profile.role = "user";
         this.submitSignUp(profile);
     }
     submitSignUp(profile) {
@@ -160,24 +154,21 @@ class SignUp extends Component {
     }
     setActiveStep(newStep) {
         if(this.state.emailErrorText == '' && this.state.passwordErrorText == ''){
-            if(newStep == 0){
-
-            }else {
-                if(newStep()==0){
-                    this.setState({
-                        activeStep:0,
-                        email : '',
-                        password: '',
-                        warning :<div style={{color:"red"}}>Email taken, try again.</div>,
-                    })
-                }else{
-                
-                    var step = newStep(this.state.activeStep);
-                    this.setState({
-                        activeStep:step
-                    })
-                }
+            if(newStep()==0 && newStep == 0){
+                this.setState({
+                    activeStep:0,
+                    email : '',
+                    password: '',
+                    warning :<div style={{color:"red"}}>Email taken, try again.</div>,
+                })
+            } else if (newStep == 0) {
+            
+                var step = newStep(this.state.activeStep);
+                this.setState({
+                    activeStep:step
+                })
             }
+        
         
         }
        
@@ -214,7 +205,7 @@ class SignUp extends Component {
 
                                     </HorizontalLinearStepper>
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
+                                <Grid container item xs={12} spacing={3} direction="column" alignItems="flex-end" justify="flex-end">
                                     <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}  variant="contained" onClick={this.signInNav.bind(this)}>Sign In</Button>
                                 </Grid>
                             </Grid>

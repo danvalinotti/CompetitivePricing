@@ -1,5 +1,5 @@
 
-import React, {Fragment} from 'react';
+import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
@@ -121,7 +121,6 @@ const useStyles = makeStyles(theme => ({
 export default function DrugExpandableRow({ program, image, programId }) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
-    const rand = 1 + Math.random() * (99);
 
     const handleChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);

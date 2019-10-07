@@ -39,7 +39,7 @@ class ManualReportDialog extends React.Component {
                 { value: 'vanilla', label: 'Vanilla' },
             ],
             selectedOption: null,
-        }
+        };
         this.getLatestReport();
         this.loadPreviousReports();
 
@@ -68,7 +68,7 @@ class ManualReportDialog extends React.Component {
             var arr = [];
             event.target.value.drug_ids.map((drug, index) => {
                 arr.push({ 'label': drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")", 'value': drug })
-            })
+            });
             this.setState({
                 selectedPrevious: event.target.value.name,
                 selectedProviders: event.target.value.providers,
@@ -88,11 +88,11 @@ class ManualReportDialog extends React.Component {
         var selectedDrugs = [];
         this.state.selectedOption.map((option) => {
             selectedDrugs.push(option.value);
-        })
+        });
         var reportRequest = {
             'drugs': selectedDrugs, 'drugDetails': this.state.selectedDrugDetails,
             'providers': this.state.selectedProviders, 'isSaved': this.state.isSaved, 'name': this.state.reportName
-        }
+        };
         this.setState({
             buttonText: "Loading ...",
             buttonDisabled: true,
@@ -102,7 +102,7 @@ class ManualReportDialog extends React.Component {
         let options = {
             responseType: 'blob',
 
-        }
+        };
         Axios.post('http://localhost:8081/create/report/manual', reportRequest, options)
             .then(response => {
                 const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
@@ -134,7 +134,7 @@ class ManualReportDialog extends React.Component {
         var newOptions = [];
         drugList.map((drug) => {
             newOptions.push({ value: drug, label: drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")" })
-        })
+        });
         this.setState({
             options: newOptions
         })

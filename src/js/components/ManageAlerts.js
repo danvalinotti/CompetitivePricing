@@ -2,37 +2,16 @@ import React, { Component } from "react";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
-import Grid from '@material-ui/core/Grid';
-import TextField from "@material-ui/core/TextField";
-import { Typography, Input } from "@material-ui/core";
 import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import FormControl from '@material-ui/core/FormControl';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import { RuleList } from "jss";
-
+import {authenticateUser} from '../services/authService';
 
 class ManageAlerts extends Component {
     constructor(props) {
         super(props);
 
-        this.authenticateUser();
+        authenticateUser(this);
 
         this.state = {
             alerts: [],
@@ -57,8 +36,7 @@ class ManageAlerts extends Component {
             allDrugs:[],
             percentChange:0.0,
             alertAllDrugs:true,
-        }
-        this.authenticateUser.bind(this);
+        };
         this.getAllUsers = this.getAllUsers.bind(this);
         this.getAllDrugs = this.getAllDrugs.bind(this);
         
@@ -68,30 +46,6 @@ class ManageAlerts extends Component {
         
     }
     
-    authenticateUser() {
-        var userToken = {};
-        userToken.name = window.sessionStorage.getItem("token");
-
-        Axios.post('http://localhost:8081/authenticate/token', userToken)
-            .then(r => {
-                if (r.data.password != "false") {
-                    this.setState({
-                        openSignIn: false,
-                        loggedIn: true,
-                        loggedInProfile: r.data
-                    });
-
-                    window.sessionStorage.setItem("token", r.data.password);
-                    window.sessionStorage.setItem("loggedIn", "true");
-                    if (r.data.role != "admin" && r.data.role != "createdadmin") {
-                        this.props.history.push({ pathname: '/search' });
-                    }
-
-                } else {
-                    this.props.history.push({ pathname: '/signIn' });
-                }
-            })
-    }
     populateAlerts() {
         Axios.get('http://localhost:8081/get/alerts/all')
             .then(response => {
@@ -196,7 +150,7 @@ class ManageAlerts extends Component {
         // console.log(rule);
         Axios.post('http://localhost:8081/create/alert/type', alert)
             .then(response => {
-                rule.alertTypeId = response.data.id
+                rule.alertTypeId = response.data.id;
                 this.setState({
                     newAlertDialog: false,
                 });
@@ -279,7 +233,7 @@ class ManageAlerts extends Component {
         // console.log(event);
     }
     renderSelected(selectedArr){
-        var str = ""
+        var str = "";
         selectedArr.forEach(element => {
            str +=  element.name +", ";
         });
@@ -325,126 +279,9 @@ class ManageAlerts extends Component {
                                 onSelectionChange={(rows) => { this.drugChange(rows) }}
 
                             />
-
-
                         </Container><br /> <br />
                     </div>
                 </div>
-                <Dialog fullWidth onClose={() => this.handleClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.newAlertDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
-                        Send Alert
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                        <Grid container   >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> Alert Name:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField required variant="outlined" value={this.state.alertName} onChange={this.handleNameChange.bind(this)} /><br />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Summary Message:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-
-                                <TextField id="outlined-multiline-flexible"  margin="normal"
-                                    multiline rows="4" value={this.state.summary} variant="outlined"
-                                    onChange={this.handleSummaryChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container  >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'25%'}} verticalAlign="bottom"> Header Text:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                            
-                                <TextField id="outlined-multiline-flexible" margin="normal"
-                                    multiline rows="4" value={this.state.header} variant="outlined"
-                                    onChange={this.handleHeaderChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container  >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'25%'}} verticalAlign="bottom"> Footer Text:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                        
-                                <TextField id="outlined-multiline-flexible"  margin="normal"
-                                    multiline rows="4" value={this.state.footer} variant="outlined"
-                                    onChange={this.handleFooterChange.bind(this)} />
-                            </Grid>
-                        </Grid>
-                        <Grid container  >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Recipients:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <FormControl style={{padding:'5%'}} variant="outlined">
-                                    <Select
-                                        multiple style={{ width: '200px'}}
-                                        value={this.state.selectedRecipients}
-                                        onChange={this.handleRecipientChange.bind(this)}   
-                                        renderValue={selected => this.renderSelected(selected)}
-                                        input={<OutlinedInput  /> }  >
-                                        {this.state.users.map(user => (
-                                            <MenuItem key={user.id} value={user} >
-                                                <Checkbox
-                                                    checked={this.state.selectedRecipients.indexOf(user) > -1} />
-                                                <ListItemText primary={user.name} />
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                        <Grid container  >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Alert for All Drugs:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                            <Checkbox checked={this.state.alertAllDrugs} onChange={this.handleAlertAllDrugs.bind(this)}/>
-                            </Grid>
-                        </Grid>
-                        {this.state.alertAllDrugs ==false ? 
-                        <Grid container  >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Drug:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <FormControl style={{padding:'5%'}} variant="outlined">
-                                    <Select
-                                        style={{ width: '200px'}}
-                                        value={this.state.selectedDrug}
-                                        onChange={this.handleDrugChange.bind(this)}   
-                                        renderValue={selected => (selected.name+"").substring(0,20)}
-                                        input={<OutlinedInput  /> }  >
-                                        {this.state.allDrugs.map(drug => (
-                                            <MenuItem key={drug.id} value={drug} >
-                                                <ListItemText primary={drug.name + " "+ drug.dosageStrength+drug.dosageUOM + "("+drug.quantity+")"} />
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>: ''}
-                        <Grid container   >
-                            <Grid item xs={5}>
-                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> Percentage Change:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField required variant="outlined" value={this.state.percentChange} onChange={this.handlePercentChange.bind(this)} /><br />
-                            </Grid>
-                        </Grid>
-
-                        <br />
-                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.sendAlert.bind(this)} variant="contained" color="primary">Setup Alert</Button>
-
-                    </DialogContent>
-                </Dialog>
-
             </div>
         )
     }

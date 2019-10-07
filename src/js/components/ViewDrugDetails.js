@@ -2,25 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import '../../assests/sass/ViewDrugDetailsCSS.css'
-
 import HeaderComponent from "./HeaderComponent";
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import USProviderImg from "../../assests/images/usPharmCard2.png";
-import WellRxImg from "../../assests/images/wellRx2.png";
-import SingleCareImg from "../../assests/images/singleCare2.png";
-import MedImpactImg from "../../assests/images/medImpact2.png";
-import GoodRxImg from "../../assests/images/goodRx2.png";
-import HeaderWithSearch from "../components/HeaderWithSearch";
 import Arrow from "../components/Arrow";
 import DrugInformation from "../components/DrugInformation";
-import Axios from "axios";
-import TabBar from './TabBar';
 import DrugPriceExpandable from "./DrugPriceExpandable"
+import {authenticateUser} from '../services/authService';
+
 class ViewDrugDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.authenticateUser();
+    authenticateUser(this);
     var quantityList = [];
     
     if (!this.props.state.location.state) {
@@ -59,7 +52,6 @@ class ViewDrugDetails extends React.Component {
       };
      
     }
-    this.authenticateUser.bind(this);
     this.clickHome = this.clickHome.bind(this);
     this.clickDashboard = this.clickDashboard.bind(this);
     this.clickReports = this.clickReports.bind(this);
@@ -71,11 +63,8 @@ class ViewDrugDetails extends React.Component {
     var sum = 0;
    
     response.programs.forEach(program => {
-      // console.log(program.price);
-      // console.log(count);
-      // console.log(sum);
       if(program.price != "N/A"){
-        count++
+        count++;
         sum = sum+Number(program.price) 
       }
       
@@ -89,8 +78,6 @@ class ViewDrugDetails extends React.Component {
     
    
     response.programs.forEach(program => {
-      // console.log(program.price);
-      // console.log(lowest);
       if(program.price != "N/A"){
         if(lowest == "N/A"){
          lowest =  Number(program.price)
@@ -103,27 +90,6 @@ class ViewDrugDetails extends React.Component {
 
     return lowest;
   }
-  authenticateUser(){
-    var userToken = {};
-    userToken.name = window.sessionStorage.getItem("token");
-
-    Axios.post('http://localhost:8081/authenticate/token' , userToken)
-    .then(r => {
-        if(r.data.password != "false"){
-          this.setState({
-            openSignIn : false,
-            loggedIn : true,
-            loggedInProfile: r.data
-          });
-         
-          window.sessionStorage.setItem("token",r.data.password);
-          window.sessionStorage.setItem("loggedIn","true");
-        //   this.props.history.push({ pathname: '/search' });
-        }else{
-           this.props.history.push({ pathname: '/signIn' });
-        }
-    })
-}
   getIndexByLabel(label, list){
     var index = 0;
     list.map((obj,i)=>{
@@ -198,7 +164,7 @@ clickReports(){
   render() {
     if (this.state.selectedDrug != null) {
       const { classes } = this.props;
-      var averagePriceColor, lowestPriceColor, usPharmCardPriceColor, currentPriceColor, singleCarePriceColor, wellRxPriceColor, blinkPriceColor;
+      var averagePriceColor, lowestPriceColor, currentPriceColor;
       if (this.state.drugDetails) {
         if (this.state.drugDetails.averageDiff >= 0 || this.state.drugDetails.averageDiff === "N/A") {
 
@@ -219,26 +185,6 @@ clickReports(){
           } else {
             currentPriceColor = { color: 'red' };
           }
-          if (this.state.drugDetails.programs[1].prices[0].diff >= 0 || this.state.drugDetails.programs[1].prices[0].diff === "N/A") {
-            usPharmCardPriceColor = { color: '#08CA00' };
-          } else {
-            usPharmCardPriceColor = { color: 'red' };
-          }
-          if (this.state.drugDetails.programs[2].prices[0].diff >= 0 || this.state.drugDetails.programs[2].prices[0].diff === "N/A") {
-            wellRxPriceColor = { color: '#08CA00' };
-          } else {
-            wellRxPriceColor = { color: 'red' };
-          }
-          if (this.state.drugDetails.programs[3].prices[0].diff >= 0 || this.state.drugDetails.programs[3].prices[0].diff === "N/A") {
-            singleCarePriceColor = { color: '#08CA00' };
-          } else {
-            singleCarePriceColor = { color: 'red' };
-          }
-          if (this.state.drugDetails.programs[5].prices[0].diff >= 0 || this.state.drugDetails.programs[5].prices[0].diff === "N/A") {
-            blinkPriceColor = { color: '#08CA00' };
-          } else {
-            blinkPriceColor = { color: 'red' };
-          }
         } else {
           currentPriceColor = { color: '#08CA00'}
         }
@@ -247,15 +193,6 @@ clickReports(){
       return (
 
         <div>
-          {/* <HeaderWithSearch
-          
-            updateProperties={this.updateProperties.bind(this)}
-            toggleDialog={this.toggleDialog.bind(this)}
-            history={this.props.history}
-            value={0}
-            profile={this.state.loggedInProfile}
-            clickHome={this.clickHome} clickDashboard={this.clickDashboard} clickReports={this.clickReports}
-          ></HeaderWithSearch> */}
           <HeaderComponent profile={this.state.loggedInProfile} value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
 
       
@@ -330,18 +267,6 @@ clickReports(){
             <h3 className="competitorTitle"><strong>Competitor Pricing</strong></h3>
             <div >
               <DrugPriceExpandable prices= {this.state.drugDetails}></DrugPriceExpandable>
-              {/* <div name="SingleCareRow" className="row competitorRow">
-                <div className="col-xs-12 col-sm competitors firstCol " >  <img src={SingleCareImg} alt="SingleCare" style={{ height: '60px', width: '150px' }} /></div>
-                <div className=" col-xs-12 col-sm competitors pharmacy rest">{this.state.drugDetails && this.state.drugDetails != "N/A" ? this.state.drugDetails.programs[4].pharmacy : "N/A"}</div>
-                <div className=" col-xs-12 col-sm competitors price rest " style={singleCarePriceColor}>
-                  <span className="compPrice">
-                    <span ></span>
-                    {this.state.drugDetails && this.state.drugDetails.programs[4].price != "N/A" ? "$" + this.round(this.state.drugDetails.programs[4].price) : "N/A"}</span> <br />
-                  <span className="diff">
-                    <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails ? this.state.drugDetails.programs[4].diff : 0}></Arrow>{this.state.drugDetails && this.state.drugDetails.programs[4].diff != "N/A" ? this.round(this.state.drugDetails.programs[4].diff) : "N/A"}</span >
-                  </span ></div >
-              </div >
-              {/*<div name="MedImpactRow" className="row competitorRow">*/}
             </div >
           </div >
 

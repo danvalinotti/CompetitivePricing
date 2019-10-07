@@ -19,6 +19,6 @@ global.navigator = {
   userAgent: 'node.js'
 };
 
-var jasmine = new Jasmine()
-jasmine.loadConfigFile('spec/support/jasmine.json')
-jasmine.execute()
+var jasmine = new Jasmine();
+jasmine.loadConfigFile('spec/support/jasmine.json');
+jasmine.execute();

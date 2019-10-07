@@ -103,7 +103,7 @@ export default function HorizontalLinearStepper(props) {
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
             </Typography>
-            <Button onClick={handleReset(props)} className={classes.button}
+            <Button onClick={() => handleReset(props)} className={classes.button}
             style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}>
               Reset
             </Button>
@@ -119,7 +119,6 @@ export default function HorizontalLinearStepper(props) {
                 disabled={props.activeStep === 0}
                 onClick={()=>handleBack(props)}
                 className={classes.button}
-                // style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}
               >
                 Back
               </Button>
@@ -128,7 +127,6 @@ export default function HorizontalLinearStepper(props) {
                 variant="contained"
                
                 onClick={()=>{handleNext(props)}}
-                // className={classes.button}
                 style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}
                 color="blue"
                 

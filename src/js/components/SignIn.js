@@ -4,17 +4,13 @@ import { withRouter } from "react-router-dom";
 import Axios from "axios";
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
-import CardActions from '@material-ui/core/CardActions';
 import Dialog from "@material-ui/core/Dialog";
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import HorizontalLinearStepper from './SignInStepper'
 import TextField from '@material-ui/core/TextField'
 import galaxeLogo from "../../assests/images/RxWave Logo.png";
 
-import Divider from '@material-ui/core/Divider';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Link } from "@material-ui/core";
@@ -35,7 +31,7 @@ class SignIn extends Component {
             emailErrorText: '',
             passwordErrorText: '',
             confirmNewPassword: '',
-        }
+        };
         this.setActiveStep = this.setActiveStep.bind(this);
         this.submitSignIn = this.submitSignIn.bind(this);
     }
@@ -130,7 +126,6 @@ class SignIn extends Component {
             .then(response => {
 
                 if(response.data.password != "false"){
-                    var p = {};
                     Axios.post('http://localhost:8081/authenticate/token', response.data)
                     .then(r => {
 
@@ -171,27 +166,20 @@ class SignIn extends Component {
     }
     setActiveStep(newStep) {
         if (this.state.emailErrorText == '' && this.state.passwordErrorText == '') {
-
-
-            if (newStep == 0) {
-            } else {
-                if (newStep() == 0) {
-                    this.setState({
-                        activeStep: 0,
-                        email: '',
-                        password: '',
-                        warning: <div style={{ color: "red" }}>Wrong credentials, try again.</div>,
-                    })
-                } else {
-                    var step = newStep(this.state.activeStep);
-                    this.setState({
-                        activeStep: step
-                    })
-                }
+            if (newStep() == 0 && newStep == 0) {
+                this.setState({
+                    activeStep: 0,
+                    email: '',
+                    password: '',
+                    warning: <div style={{ color: "red" }}>Wrong credentials, try again.</div>,
+                })
+            } else if (newStep == 0) {
+                var step = newStep(this.state.activeStep);
+                this.setState({
+                    activeStep: step
+                })
             }
-
         }
-
     }
     handleClose() {
         this.setState({
@@ -269,25 +257,11 @@ class SignIn extends Component {
                             <Grid container spacing={1} direction="column" alignItems="center" justify="center">
                                 <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
                                   <br/>
-
-                                    {/* <Divider variant="middle" light={true} /> */}
                                     <img src={galaxeLogo} width= "200px" height= "71px" /><br/>
                                     <Typography variant="h6">Log In</Typography>
                                 </Grid>
 
                                 <Grid container item direction="column" spacing={3}>
-
-                                    {/* <HorizontalLinearStepper
-                                        step1={this.renderEmailStep.bind(this)}
-                                        step2={this.renderPasswordStep.bind(this)}
-                                        step3={this.renderFinalStep.bind(this)}
-                                        submit={this.handleSubmit.bind(this)}
-                                        steps={["Enter Email Address", "Enter Password", "Login"]}
-                                        activeStep= {this.state.activeStep}
-                                        setActiveStep = {this.setActiveStep.bind(this)}
-                                    >
-
-                                    </HorizontalLinearStepper> */}
                                     <div><br /> 
                                         <Grid container item xs={12} direction="column" alignItems="center" justify="center">
                                         <Typography verticalAlign="bottom">{this.state.warning}</Typography>
@@ -326,13 +300,13 @@ class SignIn extends Component {
                                     </div>
 
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}} variant="contained" onClick={this.handleSubmit.bind(this)}>Sign In</Button>
+                                <Grid container item xs={12} direction="column" alignItems="center" justify="center" style={{marginBottom: '-12px'}}>
+                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034', width: '80%'}} variant="contained" onClick={this.handleSubmit.bind(this)}>Sign In</Button>
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="right" justify="right">
-                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034'}}variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
+                                <Grid container item xs={12} direction="column" alignItems="center" justify="center">
+                                    <Button style={{backgroundColor:'rgb(28,173,220)', color:'#0F0034', width: '80%'}}variant="contained" onClick={this.signUpNav.bind(this)}>Sign Up</Button>
                                 </Grid><br />
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
+                                <Grid container item xs={12} direction="column" alignItems="center" justify="center">
                                     <Link  onClick={this.handleForgotPW.bind(this)}><label style={{cursor:'pointer' ,color:'rgb(28,173,220)'}}><strong>Forgot Password</strong></label></Link>
                                 </Grid>
                             </Grid>
@@ -340,50 +314,6 @@ class SignIn extends Component {
 
                     </Card>
                 </Grid>
-                {/* <Dialog onClose={() => this.handleClose()}
-                    aria-labelledby="customized-dialog-title" open={this.state.updateDialog}>
-                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
-                        Update Password
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                    {this.state.credWarning}
-                        <Grid container>
-                            <Grid item xs={5}>
-                                <Typography verticalAlign="bottom"> Old Password:</Typography>
-                            </Grid>
-                           
-                            <Grid item xs={7}>
-                                <TextField
-                                    id="standard-name"
-                                    type="password"
-                                    value={this.state.oldPassword}
-                                    onChange={this.handleOldPassword.bind(this)}
-                                    margin="none"
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item xs={5}>
-                                <Typography verticalAlign="bottom">New Password:</Typography>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField
-                                    id="standard-name"
-                                    type="password"
-                                    value={this.state.newPassword}
-                                    onChange={this.handleNewPassword.bind(this)}
-                                    margin="none"
-                                />
-                            </Grid>
-                        </Grid>
-
-
-                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={() => { this.updatePassword() }} variant="contained" color="primary">Update Password</Button>
-                    </DialogContent>
-                </Dialog> */}
-
-
-
                 <Dialog onClose={() => this.handleClose()}
                     aria-labelledby="customized-dialog-title" open={this.state.updateDialog}>
                     <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>

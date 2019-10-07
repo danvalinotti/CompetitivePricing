@@ -11,13 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 class DrugInformation extends React.Component {
 
     constructor(props) {
-        super(props);
-       
-        var drugQuantity;
-        var drugStrength;
-      
-        drugQuantity = this.getIndexWithValue(this.props.drugQuantity,this.props.quantityList);
-        drugStrength = this.getIndexWithLabel(this.props.drugStrength,this.props.strengthList);
+        super(props);      
        
         this.state = {
             drugRequest: '',
@@ -25,7 +19,7 @@ class DrugInformation extends React.Component {
             dosageForm:"",
             pastDrugName: this.props.drugRequest.drugName,
             drugDescription:this.props.selectedDrug.description,
-        }
+        };
        this.getDosageForm = this.getDosageForm.bind(this);
        this.getDrugDescription = this.getDrugDescription.bind(this);
         this.getDosageForm();
@@ -110,9 +104,9 @@ class DrugInformation extends React.Component {
         const drugStrength =this.props.strengthList[this.props.drugStrength].label;
         const quantity = this.props.quantityList[this.props.drugQuantity].value;
         const drugName = this.props.selectedDrug.name;
-        const drugNDC = this.getNDC(drugStrength,this.props.selectedDrug)
+        const drugNDC = this.getNDC(drugStrength,this.props.selectedDrug);
         const drugRequest = { "drugNDC": drugNDC, "drugName": drugName, "drugType": drugType, "dosageStrength": drugStrength, 
-        "quantity": quantity, "zipcode": zipCode, "longitude": "longitude", "latitude": "latitude" }
+        "quantity": quantity, "zipcode": zipCode, "longitude": "longitude", "latitude": "latitude" };
         this.setState({
             drugRequest: drugRequest,
         });
@@ -156,12 +150,10 @@ class DrugInformation extends React.Component {
         return text;
     }
     render() {
-        if(this.state.pastDrugName === this.props.drugRequest.drugName){
-
-        }else{
+        if(this.state.pastDrugName !== this.props.drugRequest.drugName){
             this.setState({
                 pastDrugName: this.props.drugRequest.drugName
-            })
+            });
             this.getDosageForm();
         }
         return (

@@ -4,8 +4,6 @@ import {bindActionCreators} from 'redux';
 import {actions} from "../actions/dashBoardActions";
 import SignIn from "../components/SignIn";
 import gxWave from "../../assests/images/GxWave-Logo-White.png";
-import { inherits } from "util";
-
 
 class SignInContainer extends Component {
     constructor(props) {
