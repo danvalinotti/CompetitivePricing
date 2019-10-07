@@ -255,7 +255,6 @@ clickReports(){
                     <div className=" overallPrice last col-sm " style={lowestPriceColor}>
                       <div className="headerhelp ">
                         <span ></span>
-                        {console.log(this.state.drugDetails.recommendedPrice)}
                         {(this.state.drugDetails && this.state.drugDetails.recommendedPrice != "N/A") ? "$" + this.round(this.state.drugDetails.recommendedPrice) : "N/A"}</div>
                       <div className="diff">
                         <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails ? this.state.drugDetails.recommendedDiff : 0}></Arrow>{(this.state.drugDetails && this.state.drugDetails != "N/A") ? this.round(this.state.drugDetails.recommendedDiff) : "N/A"}</span>
