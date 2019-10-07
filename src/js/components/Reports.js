@@ -9,6 +9,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import CircularProgress from "@material-ui/core/CircularProgress"; 
+import {Snackbar, SnackbarContent, IconButton} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import DatePicker from './DatePicker';
 import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
@@ -51,16 +53,45 @@ class Reports extends Component {
             selectedReports: [],
             openManualReport:false,
             loggedInProfile:{},
+            showDialog: false,
+            errorMessage: false
         };
         this.getAllReports();
         
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
-            
-            
-
+        this.toggleDialog = this.toggleDialog.bind(this);
+        this.handleErrorMessage = this.handleErrorMessage.bind(this);
+        this.openErrorMessage = this.openErrorMessage.bind(this);
+        this.closeErrorMessage = this.closeErrorMessage.bind(this);
     }
+
+    handleErrorMessage() {
+        this.openErrorMessage();
+        setTimeout(() => {
+            this.closeErrorMessage();
+        }, 5000);
+    }
+
+    openErrorMessage() {
+        this.setState({
+            errorMessage: true
+        });
+    }
+
+    closeErrorMessage() {
+        this.setState({
+            errorMessage: false
+        })
+    }
+
+    toggleDialog() {
+        this.setState({
+            showDialog: this.state.showDialog ? false : true
+        });
+    }
+
     getAllReports(){
         Axios.get('http://localhost:8081/reports/getAll')
             .then(response => {
@@ -126,18 +157,21 @@ class Reports extends Component {
         let options = {
             responseType: 'blob',
         };
+        this.toggleDialog();
         Axios.get('http://localhost:8081/asd/' + data.id,options)
         .then(response => {
+            this.toggleDialog();
             const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
                 const link = document.createElement('a');
 
                 link.href = url;
                 link.setAttribute('download', 'poi-generated-file.xlsx');
                 document.body.appendChild(link);
-                link.click();
-              
-               
-                
+                link.click(); 
+        }).catch((error) => {
+            console.log(error);
+            this.toggleDialog();
+            this.handleErrorMessage();
         });
     }
     getDailyReports() {
@@ -165,6 +199,9 @@ class Reports extends Component {
                 this.setState({
                     reportsByDate: inner
                 });
+            }).catch((error) => {
+                this.toggleDialog();
+
             });
 
     }
@@ -442,6 +479,32 @@ class Reports extends Component {
                     </DialogContent>
 
                 </Dialog>
+                <Dialog onClose={() => this.toggleDialog.bind(this)}
+                    aria-labelledby="customized-dialog-title" open={this.state.showDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.toggleDialog.bind(this)}>
+                        Loading
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                        <CircularProgress />
+                    </DialogContent>
+                </Dialog>
+
+                <Snackbar
+                    anchorOrigin={{vertical: "bottom", horizontal: "left"}}
+                    open={this.state.errorMessage}
+                    autoHideDuration={5000}
+                    onClose={this.handleErrorMessage}
+                >
+                    <SnackbarContent 
+                        message={"An error occurred while downloading report. Check the console for errors"}
+                        style={{backgroundColor: "#e00000", fontWeight: 600}}
+                        action={[
+                            <IconButton key="close" aria-label="close" color="inherit" onClick={this.handleClose}>
+                                <CloseIcon />
+                            </IconButton>
+                        ]}
+                    />
+                </Snackbar>
                 <FilterDialogs updateDialog={this.updateDialog.bind(this)} dialog={this.state.openFilter} filterFunc={this.state.filterFunc}></FilterDialogs>
                 <ManualReportDialog dialog={this.state.openManualReport} onCloseFunc={this.handleManualReportClose.bind(this)}></ManualReportDialog>
             </div>
