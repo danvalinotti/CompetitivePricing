@@ -130,6 +130,16 @@ export default function DrugExpandableRow({ program, image, programId }) {
         return Number(num).toFixed(2);
     }
 
+    function comparePrices(price, uncPrice) {
+        if (parseFloat(uncPrice) > parseFloat(price)) {
+            return uncPrice;
+        } else {
+            return price;
+        }
+    }
+
+    console.log(program);
+
     return (
         <ExpansionPanel
             square={true}
@@ -158,7 +168,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
 
                         {program.prices.length > 0 ? (
                             <Typography align="right" className={classes.priceText}>
-                                {(program.prices[0].price === "N/A") ? "N/A" : "$" + round(program.prices[0].price)}
+                                {(program.prices[0].price === "N/A") ? "N/A" : "$" + round(program.prices[0].uncPriceFlag ? program.prices[0].uncPrice : program.prices[0].price)}
                             </Typography>
                         ) : (
                                 <Typography align="right" className={classes.priceText}>
@@ -195,7 +205,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
                                             </div>
                                         ) : (<div></div>)}
                                             <span>
-                                                {price.price != "N/A" ? "$" + round(price.price) : "N/A"}
+                                                {price.price === "N/A" ? "N/A" : "$" + round(price.uncPriceFlag ? price.uncPrice : price.price)}
                                             </span>
                                         </div>
                                     </div>
