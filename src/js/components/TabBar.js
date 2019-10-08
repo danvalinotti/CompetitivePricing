@@ -60,7 +60,7 @@ class TabBar extends React.Component {
   logout(){
     var userToken = {};
     userToken.name = window.sessionStorage.getItem("token");
-    Axios.post('http://localhost:8081/profile/logout' , userToken)
+    Axios.post(process.env.API_URL + '/profile/logout' , userToken)
     .then(r => {
       
       this.setState({
@@ -115,7 +115,7 @@ class TabBar extends React.Component {
     })
   }
   submitSignUp(profile){
-    Axios.post('http://localhost:8081/signUp' , profile)
+    Axios.post(process.env.API_URL + '/signUp' , profile)
     .then(response => {
       // console.log("response");
     });
@@ -125,9 +125,9 @@ class TabBar extends React.Component {
     })
   }
   submitSignIn(profile){
-    Axios.post('http://localhost:8081/create/token' , profile)
+    Axios.post(process.env.API_URL + '/create/token' , profile)
     .then(response => {
-        Axios.post('http://localhost:8081/authenticate/token' , response.data)
+        Axios.post(process.env.API_URL + '/authenticate/token' , response.data)
         .then(r => {
             if(r.data.password != "false"){
               this.setState({

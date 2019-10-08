@@ -121,12 +121,11 @@ class SignIn extends Component {
         this.submitSignIn(profile);
     }
     submitSignIn(profile) {
-
-        Axios.post('http://localhost:8081/create/token', profile)
+        Axios.post(process.env.API_URL + '/create/token', profile)
             .then(response => {
 
                 if(response.data.password != "false"){
-                    Axios.post('http://localhost:8081/authenticate/token', response.data)
+                    Axios.post(process.env.API_URL + '/authenticate/token', response.data)
                     .then(r => {
 
                         if (r.data.password != "false") {
@@ -219,7 +218,7 @@ class SignIn extends Component {
         profile.role = this.state.newPassword;
         if(this.state.newPassword == this.state.confirmNewPassword){
         if(this.state.newPassword != this.state.oldPassword){
-        Axios.post('http://localhost:8081/update/password', profile)
+        Axios.post(process.env.API_URL + '/update/password', profile)
             .then(response => {
                 if (response.data == null) {
                     this.setState({

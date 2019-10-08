@@ -4,7 +4,7 @@ export function authenticateUser(self) {
     var userToken = {}
     userToken.name = window.sessionStorage.getItem('token')
 
-    Axios.post('http://localhost:8081/authenticate/token', userToken).then(
+    Axios.post(process.env.API_URL + '/authenticate/token', userToken).then(
       r => {
         if (r.data.password != 'false') {
           self.setState({
