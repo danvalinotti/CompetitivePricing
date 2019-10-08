@@ -2,7 +2,7 @@ import fetch from "fetch-retry";
 
 
 function getDashBoardDrugsService() {
-    const url = 'http://localhost:8081/dashboard/get';
+    const url = process.env.API_URL + '/dashboard/get';
     // executeFetch(url,'GET')
     return fetch(
         url,

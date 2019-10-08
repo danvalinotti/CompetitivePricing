@@ -1,5 +1,8 @@
 const path = require("path");
+const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const dotenv = require('dotenv-flow');
+const DotenvFlow = require('dotenv-flow-webpack');
 
 module.exports = {
   entry: ["./src/js/index.js"],
@@ -10,10 +13,9 @@ module.exports = {
   devServer: {
     contentBase: "./dist"
   },
-    devtool: 'source-map',
+  devtool: 'source-map',
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
@@ -22,56 +24,53 @@ module.exports = {
       },
       {
         test: /\.html$/,
+        use: [{
+          loader: "html-loader"
+        }]
+      },
+      {
+        test: /\.scss$/,
         use: [
+          "style-loader",
+          "css-loader",
           {
-            loader: "html-loader"
-          }
+            loader: 'postcss-loader',
+            options: {
+              plugins: function () {
+                return [
+                  require('precss'),
+                  require('autoprefixer')
+                ];
+              }
+            }
+          },
+          "sass-loader"
         ]
       },
-        {
-            test: /\.scss$/,
-            use: [
-                "style-loader",
-                "css-loader",
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        plugins: function () {
-                            return [
-                                require('precss'),
-                                require('autoprefixer')
-                            ];
-                        }
-                    }
-                },
-                "sass-loader"
-            ]
-        },
-        {
-            test: /\.css/,
-            use: [
-                'style-loader',
-                    'css-loader'
-            ]
-        },
-        {
-            test: /\.(png|jpg|gif|svg)$/,
-            use: [
-                {
-                    loader: "file-loader",
-                    options: {
-                        name: "[name].[ext]",
-                        outputPath: "img/"
-                    }
-                }
-            ]
-        },
+      {
+        test: /\.css/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        use: [{
+          loader: "file-loader",
+          options: {
+            name: "[name].[ext]",
+            outputPath: "img/"
+          }
+        }]
+      },
     ]
   },
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",
       filename: "./index.html"
-    })
+    }),
+    new DotenvFlow()
   ]
 };

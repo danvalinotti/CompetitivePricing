@@ -82,7 +82,7 @@ class DrugInformation extends React.Component {
 
     getDrugDetails(drugRequest) {
 
-        axios.post('http://localhost:8081/getPharmacyPrice', drugRequest)
+        axios.post(process.env.API_URL + '/getPharmacyPrice', drugRequest)
             .then(response => {
                 this.props.toggleDialog();
                 this.setState({
@@ -117,7 +117,7 @@ class DrugInformation extends React.Component {
     addDrug() {
 
         this.props.toggleDialog();
-        axios.post('http://localhost:8081/dashboard/drugs/add', this.props.drugRequest)
+        axios.post(process.env.API_URL + '/dashboard/drugs/add', this.props.drugRequest)
             .then(response => {
                 
                 this.props.toggleDialog();

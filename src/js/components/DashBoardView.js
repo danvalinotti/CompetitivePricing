@@ -82,7 +82,7 @@ class DashBoardViewComponent extends Component {
     link.click() // This will download the data file named "my_data.csv".
   }
   deleteDrug (drug, index) {
-    Axios.post('http://localhost:8081/dashboard/drug/delete', drug).then(
+    Axios.post(process.env.API_URL + '/dashboard/drug/delete', drug).then(
       response => {
         this.setState({
           dashBoardDrugsData: this.state.dashBoardDrugsData.splice(index, 1)
@@ -97,7 +97,7 @@ class DashBoardViewComponent extends Component {
     token.value = strtoken
     token.key = strtoken
 
-    Axios.post('http://localhost:8081/dashboard/get', token).then(response => {
+    Axios.post(process.env.API_URL + '/dashboard/get', token).then(response => {
       this.setState({
         dashBoardDrugsData: response.data,
         filteredList: response.data

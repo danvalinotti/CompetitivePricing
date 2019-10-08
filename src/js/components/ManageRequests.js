@@ -47,7 +47,7 @@ class ManageRequests extends Component {
     
     getAllDrugs() {
     //  console.log("getting alldrugs")
-        Axios.get('http://localhost:8081/drugmaster/get/all')
+        Axios.get(process.env.API_URL + '/drugmaster/get/all')
             .then(response => {
                 // console.log("got ")
                 // console.log(response.data)
@@ -69,7 +69,7 @@ class ManageRequests extends Component {
         // console.log("SETOPTIONS");
     }
     populateRequests() {
-        Axios.get('http://localhost:8081/get/requests')
+        Axios.get(process.env.API_URL + '/get/requests')
             .then(response => {
                 // console.log(response.data);
                 this.setState({
@@ -167,7 +167,7 @@ class ManageRequests extends Component {
     editRequest(event, request){
         // console.log(request);
         // console.log(request);
-        Axios.get('http://localhost:8081/drugmaster/get/id/'+request.drugId)
+        Axios.get(process.env.API_URL + '/drugmaster/get/id/'+request.drugId)
         .then(r => {
         this.setState({
             selectedRequest:request,
@@ -233,7 +233,7 @@ class ManageRequests extends Component {
         drugRequest.longitude = this.state.newLongitude;
         
         // console.log(drugRequest);
-        Axios.post('http://localhost:8081/request/edit', drugRequest)
+        Axios.post(process.env.API_URL + '/request/edit', drugRequest)
             .then(response => {
                 this.populateRequests();
                 this.setState({
@@ -257,7 +257,7 @@ class ManageRequests extends Component {
         drugRequest.good_rx_id = this.state.newGoodRxId;
         drugRequest.programId = this.state.newProgram;
         // console.log(drugRequest);
-        Axios.post('http://localhost:8081/request/create', drugRequest)
+        Axios.post(process.env.API_URL + '/request/create', drugRequest)
             .then(response => {
                 this.populateRequests();
                 this.setState({

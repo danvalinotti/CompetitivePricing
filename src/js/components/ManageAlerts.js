@@ -47,7 +47,7 @@ class ManageAlerts extends Component {
     }
     
     populateAlerts() {
-        Axios.get('http://localhost:8081/get/alerts/all')
+        Axios.get(process.env.API_URL + '/get/alerts/all')
             .then(response => {
                 // console.log(response.data)
                 this.setState({
@@ -106,7 +106,7 @@ class ManageAlerts extends Component {
         // console.log("addDrug")
     }
     getAllUsers(){
-        Axios.get('http://localhost:8081/admin/get/users')
+        Axios.get(process.env.API_URL + '/admin/get/users')
             .then(response => {
             // console.log(response.data)
                 this.setState({
@@ -115,7 +115,7 @@ class ManageAlerts extends Component {
             })
     }
     getAllDrugs(){
-        Axios.get('http://localhost:8081/drugmaster/get/all')
+        Axios.get(process.env.API_URL + '/drugmaster/get/all')
             .then(response => {
            
                 this.setState({
@@ -148,14 +148,14 @@ class ManageAlerts extends Component {
         
         rule.percentChange = this.state.percentChange;
         // console.log(rule);
-        Axios.post('http://localhost:8081/create/alert/type', alert)
+        Axios.post(process.env.API_URL + '/create/alert/type', alert)
             .then(response => {
                 rule.alertTypeId = response.data.id;
                 this.setState({
                     newAlertDialog: false,
                 });
                 
-                Axios.post('http://localhost:8081/create/drug/rule', rule)
+                Axios.post(process.env.API_URL + '/create/drug/rule', rule)
                 .then(response => {
                     
                 });

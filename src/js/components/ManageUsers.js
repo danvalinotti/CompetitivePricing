@@ -41,7 +41,7 @@ class ManageUsers extends Component {
         this.populateProfiles();
     }
     populateProfiles() {
-        Axios.get('http://localhost:8081/admin/get/users')
+        Axios.get(process.env.API_URL + '/admin/get/users')
             .then(response => {
                 this.setState({
                     profiles: response.data,
@@ -97,7 +97,7 @@ class ManageUsers extends Component {
       }
      
 
-      Axios.post('http://localhost:8081/admin/create/user' , profile)
+      Axios.post(process.env.API_URL + '/admin/create/user' , profile)
             .then(response => {
                 this.populateProfiles(); 
                   this.setState({

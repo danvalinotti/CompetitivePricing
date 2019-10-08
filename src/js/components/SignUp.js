@@ -136,7 +136,7 @@ class SignUp extends Component {
     }
     submitSignUp(profile) {
         
-        Axios.post('http://localhost:8081/signUp', profile)
+        Axios.post(process.env.API_URL + '/signUp', profile)
             .then(response => {
                 // console.log(response.data.username)
                 if(response.data.username === "Exists"){

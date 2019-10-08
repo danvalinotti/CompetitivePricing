@@ -35,7 +35,7 @@ class ManageDrugs extends Component {
     }
     populateDrugs() {
 
-        Axios.get('http://localhost:8081/drugmaster/get/all')
+        Axios.get(process.env.API_URL + '/drugmaster/get/all')
             .then(response => {
                 // console.log("POPULATE DURGS");
                 // console.log(response);
@@ -75,7 +75,7 @@ class ManageDrugs extends Component {
         // updateStrength={this.updateStrength.bind(this)}
         // drugStrength={this.state.drugStrengthIndex}
         // value={this.state.editDrugStrength} /><br /><br />
-        Axios.get('http://localhost:8081/getDrugInfo/' + drug.name)
+        Axios.get(process.env.API_URL + '/getDrugInfo/' + drug.name)
             .then(response => {
                 // console.log(response.data[0]);
                 var drugDetails = response.data[0];
@@ -146,7 +146,7 @@ class ManageDrugs extends Component {
         drug.drugNDC = this.state.dosageStrength.value;
         drug.reportFlag = this.state.reportFlag;
         
-        Axios.post('http://localhost:8081/add/drug', drug)
+        Axios.post(process.env.API_URL + '/add/drug', drug)
             .then(response => {
                this.populateDrugs();
                 this.setState({
@@ -255,7 +255,7 @@ class ManageDrugs extends Component {
         })
     }
     getDrugDetails(drugName) {
-        Axios.get('http://localhost:8081/getDrugInfo/' + drugName)
+        Axios.get(process.env.API_URL + '/getDrugInfo/' + drugName)
             .then(response => {
                 // console.log(response.data[0]);
                 return response.data[0];
@@ -272,7 +272,7 @@ class ManageDrugs extends Component {
             drug.drugNDC = this.state.drugStrengthArray[this.state.editDrugStrength].value;
             drug.reportFlag = this.state.reportFlag;
             
-            Axios.post('http://localhost:8081/edit/drug', drug)
+            Axios.post(process.env.API_URL + '/edit/drug', drug)
                 .then(response => {
                     this.populateDrugs();
                     this.setState({

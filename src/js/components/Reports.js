@@ -93,7 +93,7 @@ class Reports extends Component {
     }
 
     getAllReports(){
-        Axios.get('http://localhost:8081/reports/getAll')
+        Axios.get(process.env.API_URL + '/reports/getAll')
             .then(response => {
                this.state.reports = response.data;
                 this.setState({
@@ -158,7 +158,7 @@ class Reports extends Component {
             responseType: 'blob',
         };
         this.toggleDialog();
-        Axios.get('http://localhost:8081/asd/' + data.id,options)
+        Axios.get(process.env.API_URL + '/asd/' + data.id,options)
         .then(response => {
             this.toggleDialog();
             const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
@@ -176,7 +176,7 @@ class Reports extends Component {
     }
     getDailyReports() {
         var inputVal = document.getElementById("mui-pickers-date").value;
-        Axios.get('http://localhost:8081/masterList/getByDate/' + inputVal)
+        Axios.get(process.env.API_URL + '/masterList/getByDate/' + inputVal)
             .then(response => {
 
                 var inner = <div><br />
@@ -306,7 +306,7 @@ class Reports extends Component {
         });
     }
     getBetweenDates(start, end) {
-        Axios.get('http://localhost:8081/reports/get/between/' + start + '/' + end)
+        Axios.get(process.env.API_URL + '/reports/get/between/' + start + '/' + end)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -315,7 +315,7 @@ class Reports extends Component {
     }
     
     equalDate(date) {
-        Axios.get('http://localhost:8081/reports/get/date/' + date)
+        Axios.get(process.env.API_URL + '/reports/get/date/' + date)
             .then(response => {
                 this.setState({
                     reports: response.data
@@ -324,7 +324,7 @@ class Reports extends Component {
     }
     getWithDrugCount(drugCount) {
 
-        Axios.get('http://localhost:8081/reports/get/drugCount/' + drugCount)
+        Axios.get(process.env.API_URL + '/reports/get/drugCount/' + drugCount)
             .then(response => {
                 this.setState({
                     reports: response.data
