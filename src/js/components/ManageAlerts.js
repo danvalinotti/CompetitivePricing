@@ -7,6 +7,19 @@ import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
 import {authenticateUser} from '../services/authService';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from "@material-ui/core/Select";
+import AutoSuggestComponent from "./AutoSuggestComponent";
+import DrugStrengthDropDown from "./drugStrengthDropdown";
+import DrugQuantityDropDown from "./DrugQuantityDropDown";
+import Button from '@material-ui/core/Button';
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 class ManageAlerts extends Component {
     constructor(props) {
         super(props);
@@ -282,6 +295,120 @@ class ManageAlerts extends Component {
                         </Container><br /> <br />
                     </div>
                 </div>
+                <Dialog fullWidth onClose={() => this.handleClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.newAlertDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
+                        Send Alert
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                        <Grid container   >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> Alert Name:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField required variant="outlined" value={this.state.alertName} onChange={this.handleNameChange.bind(this)} /><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Summary Message:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField id="outlined-multiline-flexible"  margin="normal"
+                                    multiline rows="4" value={this.state.summary} variant="outlined"
+                                    onChange={this.handleSummaryChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container  >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'25%'}} verticalAlign="bottom"> Header Text:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField id="outlined-multiline-flexible" margin="normal"
+                                    multiline rows="4" value={this.state.header} variant="outlined"
+                                    onChange={this.handleHeaderChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container  >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'25%'}} verticalAlign="bottom"> Footer Text:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField id="outlined-multiline-flexible"  margin="normal"
+                                    multiline rows="4" value={this.state.footer} variant="outlined"
+                                    onChange={this.handleFooterChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container  >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Recipients:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <FormControl style={{padding:'5%'}} variant="outlined">
+                                    <Select
+                                        multiple style={{ width: '200px'}}
+                                        value={this.state.selectedRecipients}
+                                        onChange={this.handleRecipientChange.bind(this)}   
+                                        renderValue={selected => this.renderSelected(selected)}
+                                        input={<OutlinedInput  /> }  >
+                                        {this.state.users.map(user => (
+                                            <MenuItem key={user.id} value={user} >
+                                                <Checkbox
+                                                    checked={this.state.selectedRecipients.indexOf(user) > -1} />
+                                                <ListItemText primary={user.name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                        <Grid container  >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Alert for All Drugs:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                            <Checkbox checked={this.state.alertAllDrugs} onChange={this.handleAlertAllDrugs.bind(this)}/>
+                            </Grid>
+                        </Grid>
+                        {this.state.alertAllDrugs ==false ? 
+                        <Grid container  >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'15%'}} verticalAlign="bottom"  > Drug:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <FormControl style={{padding:'5%'}} variant="outlined">
+                                    <Select
+                                        style={{ width: '200px'}}
+                                        value={this.state.selectedDrug}
+                                        onChange={this.handleDrugChange.bind(this)}   
+                                        renderValue={selected => (selected.name+"").substring(0,20)}
+                                        input={<OutlinedInput  /> }  >
+                                        {this.state.allDrugs.map(drug => (
+                                            <MenuItem key={drug.id} value={drug} >
+                                                <ListItemText primary={drug.name + " "+ drug.dosageStrength+drug.dosageUOM + "("+drug.quantity+")"} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </Grid>: ''}
+                        <Grid container   >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> Percentage Change:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField required variant="outlined" value={this.state.percentChange} onChange={this.handlePercentChange.bind(this)} /><br />
+                            </Grid>
+                        </Grid>
+
+                        <br />
+                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.sendAlert.bind(this)} variant="contained" color="primary">Setup Alert</Button>
+
+                    </DialogContent>
+                </Dialog>
             </div>
         )
     }

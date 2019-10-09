@@ -7,6 +7,19 @@ import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
 import {authenticateUser} from '../services/authService';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from "@material-ui/core/Select";
+import AutoSuggestComponent from "./AutoSuggestComponent";
+import DrugStrengthDropDown from "./drugStrengthDropdown";
+import DrugQuantityDropDown from "./DrugQuantityDropDown";
+import Button from '@material-ui/core/Button';
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 class ManageRequests extends Component {
     constructor(props) {
         super(props);
@@ -315,6 +328,222 @@ class ManageRequests extends Component {
                         </Container><br /> <br />
                     </div>
                 </div>
+                <Dialog fullWidth onClose={()=>this.handleClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.editRequestDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
+                    Edit {this.state.selectedRequest ? this.state.selectedRequest.drugName: ''} {this.state.selectedRequest.program} Request
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Drug Name:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newDrugName} variant="outlined"
+                                    onChange={this.handleDrugNameChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Brand Indicator:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newBrandIndicator} variant="outlined"
+                                    onChange={this.handleBrandChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> NDC:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField required variant="outlined" value={this.state.newNDC} onChange={this.handleNDCChange.bind(this)} /><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GSN:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newGSN} variant="outlined"
+                                    onChange={this.handleGSNChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Quantity:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newQuantity} variant="outlined"
+                                    onChange={this.handleQuantityChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Zip Code:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newZipCode} variant="outlined"
+                                    onChange={this.handleZipCodeChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Latitude:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newLatitude} variant="outlined"
+                                    onChange={this.handleLatitudeChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Longitude:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newLongitude} variant="outlined"
+                                    onChange={this.handleLongitudeChange.bind(this)} />
+                            </Grid>
+                        </Grid>                     
+
+                        <br />
+                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitEditRequest.bind(this)} variant="contained" color="primary">Edit Request</Button>
+
+                    </DialogContent>
+                </Dialog>
+                <Dialog fullWidth onClose={()=>this.handleAddClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.newRequestDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleAddClose.bind(this)}>
+                    Add Request
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                    <Grid container >
+                        <Grid item xs={5}>
+                                <Typography  verticalAlign="bottom"> Select Drug:</Typography>
+                        </Grid>
+                                <Grid item xs={7}>
+                                    <IntegrationReactSelect2 drugValue={this.state.selectedOption}
+                                        drugOnChange={this.handleDrugChange.bind(this)} listOfDrugs={this.state.options}></IntegrationReactSelect2>
+                                </Grid>
+                                </Grid>
+                                <br/>
+                                <Grid container >
+                        <Grid item xs={5}>
+                                <Typography  verticalAlign="bottom"> Select Provider:</Typography>
+                        </Grid>
+                                <Grid item xs={7}>
+                                <FormControl variant="outlined" style={{width:'66%'}}>        
+
+                                  <Select value={this.state.newProgram}  onChange={this.handleNewProviderChange.bind(this)} >          
+
+                                     <MenuItem value={0}>InsideRx</MenuItem>           
+                                     <MenuItem value={1}>U.S Pharmacy Card</MenuItem>           
+                                     <MenuItem value={2}>WellRx</MenuItem> 
+                                     <MenuItem value={3}>MedImpact</MenuItem> 
+                                     <MenuItem value={4}>SingleCare</MenuItem> 
+                                     <MenuItem value={5}>Blink Health</MenuItem> 
+                                     <MenuItem value={6}>GoodRx</MenuItem>    
+                                          </Select>       
+                                          </FormControl>
+                                </Grid>
+                                </Grid>
+                                <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Drug Name:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newDrugName} variant="outlined"
+                                    onChange={this.handleDrugNameChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Brand Indicator:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newBrandIndicator} variant="outlined"
+                                    onChange={this.handleBrandChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'5%'}} verticalAlign="bottom"> NDC:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField required variant="outlined" value={this.state.newNDC} onChange={this.handleNDCChange.bind(this)} /><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GSN:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newGSN} variant="outlined"
+                                    onChange={this.handleGSNChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Quantity:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newQuantity} variant="outlined"
+                                    onChange={this.handleQuantityChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Zip Code:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newZipCode} variant="outlined"
+                                    onChange={this.handleZipCodeChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Latitude:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newLatitude} variant="outlined"
+                                    onChange={this.handleLatitudeChange.bind(this)} />
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> Longitude:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField margin="normal"  value={this.state.newLongitude} variant="outlined"
+                                    onChange={this.handleLongitudeChange.bind(this)} />
+                            </Grid>
+                        </Grid>    
+                         <Grid container >
+                            <Grid item xs={5}>
+                                <Typography style={{padding:'20%'}} verticalAlign="bottom"> GoodRxId:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+
+                                <TextField margin="normal"  value={this.state.newGoodRxId} variant="outlined"
+                                    onChange={this.handleGoodRxIdChange.bind(this)} />
+                            </Grid>
+                        </Grid>                 
+
+                        <br />
+                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitAddRequest.bind(this)} variant="contained" color="primary">Add Request</Button>
+
+                    </DialogContent>
+                </Dialog>
             </div>
         )
     }
