@@ -6,6 +6,19 @@ import Container from '@material-ui/core/Container';
 import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
 import {authenticateUser} from  '../services/authService';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from "@material-ui/core/Select";
+import AutoSuggestComponent from "./AutoSuggestComponent";
+import DrugStrengthDropDown from "./drugStrengthDropdown";
+import DrugQuantityDropDown from "./DrugQuantityDropDown";
+import Button from '@material-ui/core/Button';
+import CircularProgress from "@material-ui/core/CircularProgress";
 class ManageDrugs extends Component {
     constructor(props) {
         super(props);
@@ -139,11 +152,11 @@ class ManageDrugs extends Component {
         // console.log(this.state.selectedDrug);
         // console.log("HELLO");
         // console.log(this.state.dosageStrength);
-        drug.zipcode = "08873";
-        drug.drugName = this.state.drugName;
+        drug.zipCode = "08873";
+        drug.name = this.state.drugName;
         drug.dosageStrength = this.state.dosageStrength.label;
         drug.quantity = this.state.quantity;
-        drug.drugNDC = this.state.dosageStrength.value;
+        drug.ndc = this.state.dosageStrength.value;
         drug.reportFlag = this.state.reportFlag;
         
         Axios.post(process.env.API_URL + '/add/drug', drug)
@@ -217,9 +230,8 @@ class ManageDrugs extends Component {
     }
     closeAddingDialog(){
         this.setState({
-            
             addingDialog:false
-        })
+        });
     }
     handleReportFlagChange(event) {
         this.setState({
@@ -265,11 +277,11 @@ class ManageDrugs extends Component {
       
             var drug = {};
             drug.id = this.state.editDrug.id;
-            drug.zipcode = "08873";
-            drug.drugName = this.state.editDrugName;
+            drug.zipCode = "08873";
+            drug.name = this.state.editDrugName;
             drug.dosageStrength = this.state.drugStrengthArray[this.state.editDrugStrength].label;
             drug.quantity = this.state.editDrugQuantity;
-            drug.drugNDC = this.state.drugStrengthArray[this.state.editDrugStrength].value;
+            drug.ndc = this.state.drugStrengthArray[this.state.editDrugStrength].value;
             drug.reportFlag = this.state.reportFlag;
             
             Axios.post(process.env.API_URL + '/edit/drug', drug)
@@ -329,6 +341,142 @@ class ManageDrugs extends Component {
                         </Container><br /> <br />
                     </div>
                 </div>
+                <Dialog fullWidth onClose={() => this.handleClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.newDrugDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
+                        Add Drug
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                        <Grid container   >
+                            <Grid item xs={5}>
+                                <Typography verticalAlign="bottom"> Drug Name:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <AutoSuggestComponent name="autoSuggestValue"
+                                    AutoSuggestComponent={this.props.drugStrengthArray}
+                                    selectedDrug={this.selectedDrug}
+                                    setFirstChoice={this.setFirstChoice.bind(this)}
+                                    drugSearchResult={this.props.drugSearchResult}
+                                    actions={this.props.actions}
+                                    drugStrengthArray={this.props.drugStrengthArray}
+                                    updateDrug={this.updateDrug.bind(this)}
+                                    value={this.state.drugName}
+                                ></AutoSuggestComponent><br />
+
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography verticalAlign="bottom"> Dosage Strength:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <DrugStrengthDropDown name="drugStrength"
+                                    drugStrengthArray={this.state.drugStrengthArray}
+                                    updateStrength={this.updateStrength.bind(this)}
+                                    drugStrength={this.state.drugStrengthIndex}
+                                    value={this.state.dosageStrength} /><br /><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container  >
+                            <Grid item xs={5}>
+                                <Typography verticalAlign="bottom"> Quantity:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <DrugQuantityDropDown name="drugQuantity"
+                                    drugQuantityArray={this.state.drugQuantityArray}
+                                    drugQuantity={this.state.quantity}
+                                    updateQuantity={this.updateQuantity.bind(this)}
+                                    value={this.state.quantity}
+                                ></DrugQuantityDropDown><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container  >
+                            <Grid item xs={5}><br />
+                                <Typography verticalAlign="bottom"> Include In Report:</Typography>
+                            </Grid>
+                            <Grid item xs={7}><br />
+                                <Select name="addToReport" defaultValue={true}
+                                    className="form-control"
+                                    onChange={this.handleReportFlagChange.bind(this)} value={this.state.reportFlag}>
+                                    <MenuItem key="0" value={true}>
+                                        Yes
+                                        </MenuItem>
+                                    <MenuItem key="1" value={false}>
+                                        No
+                                        </MenuItem>
+                                </Select><br />
+                            </Grid>
+                        </Grid>
+
+                        <br />
+                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.createDrug.bind(this)} variant="contained" color="primary">Add Drug</Button>
+
+                    </DialogContent>
+                </Dialog>
+                <Dialog fullWidth onClose={() => this.handleEditDrugClose()}
+                    aria-labelledby="customized-dialog-title" open={this.state.editDrugDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.handleEditDrugClose.bind(this)}>
+                        Edit {this.state.editDrugName}
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+
+                        <Grid container >
+                            <Grid item xs={5}>
+                                <Typography verticalAlign="bottom"> Dosage Strength:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <DrugStrengthDropDown name="drugStrength"
+                                    drugStrengthArray={this.state.drugStrengthArray}
+                                    updateStrength={this.updateEditStrength.bind(this)}
+                                    drugStrength={this.state.editDrugStrength}
+                                    value={this.state.editDrugStrength} /><br /><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={5}>
+                                <Typography verticalAlign="bottom"> Quantity:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <DrugQuantityDropDown name="drugQuantity"
+                                    drugQuantityArray={this.state.drugQuantityArray}
+                                    drugQuantity={this.state.editDrugQuantity}
+                                    updateQuantity={this.updateEditQuantity.bind(this)}
+                                    value={this.state.editDrugQuantity}
+                                ></DrugQuantityDropDown><br />
+                            </Grid>
+                        </Grid>
+                        <Grid container  >
+                            <Grid item xs={5}><br />
+                                <Typography verticalAlign="bottom"> Include In Report:</Typography>
+                            </Grid>
+                            <Grid item xs={7}><br />
+                                <Select name="addToReport" defaultValue={true}
+                                    className="form-control"
+                                    onChange={this.handleReportFlagChange.bind(this)} value={this.state.reportFlag}>
+                                    <MenuItem key="0" value={true}>
+                                        Yes
+                                        </MenuItem>
+                                    <MenuItem key="1" value={false}>
+                                        No
+                                        </MenuItem>
+                                </Select><br />
+                            </Grid>
+                        </Grid>
+
+                        <br />
+                        <Button style={{ fontSize: '13px', height: '32px' }} onClick={this.submitEditDrug.bind(this)} variant="contained" color="primary">Edit Drug</Button>
+
+                    </DialogContent>
+                </Dialog>
+                <Dialog onClose={() => this.closeAddingDialog.bind(this)}
+                    aria-labelledby="customized-dialog-title" open={this.state.addingDialog}>
+                    <DialogTitle id="customized-dialog-title" onClose={this.closeAddingDialog.bind(this)}>
+                        Adding Drug
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                        <CircularProgress />
+                    </DialogContent>
+                </Dialog>
             </div>
         )
     }

@@ -675,7 +675,7 @@ function () {
           if (!group) {
             var path = [].concat((0, _toConsumableArray2["default"])(o.path || []), [value]);
             var oldGroup = _this5.findGroupByGroupPath(_this5.groupedData, path) || {
-              isExpanded: _this5.defaultExpanded ? true : false
+              isExpanded: typeof _this5.defaultExpanded === 'boolean' ? _this5.defaultExpanded : false
             };
             group = {
               value: value,
@@ -782,7 +782,10 @@ function () {
         if (!_this6.searchText && !_this6.columns.some(function (columnDef) {
           return columnDef.tableData.filterValue;
         })) {
-          rowData.tableData.isTreeExpanded = rowData.tableData.isTreeExpanded === undefined ? _this6.defaultExpanded : rowData.tableData.isTreeExpanded;
+          if (rowData.tableData.isTreeExpanded === undefined) {
+            var isExpanded = typeof _this6.defaultExpanded === 'boolean' ? _this6.defaultExpanded : _this6.defaultExpanded(rowData);
+            rowData.tableData.isTreeExpanded = isExpanded;
+          }
         }
 
         var hasSearchMatchedChildren = rowData.tableData.isTreeExpanded;
