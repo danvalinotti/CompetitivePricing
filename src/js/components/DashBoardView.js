@@ -22,6 +22,8 @@ class DashBoardViewComponent extends Component {
       wellRxSort: 'off',
       medImpactSort: 'off',
       singleCareSort: 'off',
+      blinkHealthSort: 'off',
+      goodRxSort: 'off',
       lowestPriceSort: 'off',
       loggedInProfile: {}
     }
@@ -44,6 +46,8 @@ class DashBoardViewComponent extends Component {
         'Well Rx Price',
         'MedImpact Price',
         'Singlecare Price',
+        'Blink Price',
+        'GoodRx Price',
         'Recommended Price',
         'Difference'
       ]
@@ -60,6 +64,8 @@ class DashBoardViewComponent extends Component {
         element.programs[2].price,
         element.programs[3].price,
         element.programs[4].price,
+        element.programs[5].price,
+        element.programs[6].price,
         element.recommendedPrice,
         element.recommendedDiff
       ]
@@ -98,6 +104,7 @@ class DashBoardViewComponent extends Component {
     token.key = strtoken
 
     Axios.post(process.env.API_URL + '/dashboard/get', token).then(response => {
+      console.log(response.data);
       this.setState({
         dashBoardDrugsData: response.data,
         filteredList: response.data
@@ -243,6 +250,66 @@ class DashBoardViewComponent extends Component {
       medImpactSort: 'off',
       pharmCardSort: sort,
       singleCareSort: 'off',
+      lowestPriceSort: 'off',
+      filteredList: Sorting.sortByProgramPrice(
+        this.state.filteredList,
+        1,
+        sort
+      )
+    })
+  }
+  sortByBlink () {
+    var sort = 'off'
+    switch (this.state.blinkHealthSort) {
+      case 'off':
+        sort = 'up'
+        break
+      case 'up':
+        sort = 'down'
+        break
+      case 'down':
+        sort = 'off'
+        break
+    }
+    this.setState({
+      drugSort: 'off',
+      insideRxSort: 'off',
+      wellRxSort: 'off',
+      medImpactSort: 'off',
+      pharmCardSort: 'off',
+      singleCareSort: 'off',
+      blinkHealthSort: sort,
+      goodRxSort: 'off',
+      lowestPriceSort: 'off',
+      filteredList: Sorting.sortByProgramPrice(
+        this.state.filteredList,
+        1,
+        sort
+      )
+    })
+  }
+  sortByGoodRx () {
+    var sort = 'off'
+    switch (this.state.goodRxSort) {
+      case 'off':
+        sort = 'up'
+        break
+      case 'up':
+        sort = 'down'
+        break
+      case 'down':
+        sort = 'off'
+        break
+    }
+    this.setState({
+      drugSort: 'off',
+      insideRxSort: 'off',
+      wellRxSort: 'off',
+      medImpactSort: 'off',
+      pharmCardSort: 'off',
+      singleCareSort: 'off',
+      blinkHealthSort: 'off',
+      goodRxSort: sort,
       lowestPriceSort: 'off',
       filteredList: Sorting.sortByProgramPrice(
         this.state.filteredList,
@@ -481,7 +548,7 @@ class DashBoardViewComponent extends Component {
                         className='dashboardTableHeader'
                         style={{ float: 'left' }}
                       >
-                        US Pharmacy Card Price
+                        USPharmacy
                       </label>
                       <div style={{ float: 'left' }}>
                         {' '}
@@ -504,7 +571,7 @@ class DashBoardViewComponent extends Component {
                         className='dashboardTableHeader'
                         style={{ float: 'left' }}
                       >
-                        Well Rx Price
+                        WellRx
                       </label>
                       <div style={{ float: 'left' }}>
                         {' '}
@@ -527,12 +594,35 @@ class DashBoardViewComponent extends Component {
                         className='dashboardTableHeader'
                         style={{ float: 'left' }}
                       >
-                        MedImpact Price
+                        MedImpact
                       </label>
                       <div style={{ float: 'left' }}>
                         {' '}
                         <Icons
                           icon={this.state.medImpactSort}
+                          height='24'
+                          width='24'
+                        />
+                      </div>
+                    </div>
+                  </th>
+                  <th
+                    className='tableHeader dashboardCellHeader'
+                    onClick={() => {
+                      this.sortByBlink()
+                    }}
+                  >
+                    <div style={{ display: 'inline-flex' }}>
+                      <label
+                        className='dashboardTableHeader'
+                        style={{ float: 'left' }}
+                      >
+                        BlinkHealth
+                      </label>
+                      <div style={{ float: 'left' }}>
+                        {' '}
+                        <Icons
+                          icon={this.state.blinkHealthSort}
                           height='24'
                           width='24'
                         />
@@ -550,12 +640,35 @@ class DashBoardViewComponent extends Component {
                         className='dashboardTableHeader'
                         style={{ float: 'left' }}
                       >
-                        SingleCare Price
+                        SingleCare
                       </label>
                       <div style={{ float: 'left' }}>
                         {' '}
                         <Icons
                           icon={this.state.singleCareSort}
+                          height='24'
+                          width='24'
+                        />
+                      </div>
+                    </div>
+                  </th>
+                  <th
+                    className='tableHeader dashboardCellHeader'
+                    onClick={() => {
+                      this.sortByGoodRx()
+                    }}
+                  >
+                    <div style={{ display: 'inline-flex' }}>
+                      <label
+                        className='dashboardTableHeader'
+                        style={{ float: 'left' }}
+                      >
+                        GoodRx
+                      </label>
+                      <div style={{ float: 'left' }}>
+                        {' '}
+                        <Icons
+                          icon={this.state.goodRxSort}
                           height='24'
                           width='24'
                         />
@@ -642,6 +755,18 @@ class DashBoardViewComponent extends Component {
                       <td>
                         <span className='programPrice colorBlue'>
                           {this.getDiv(drug.programs[4].prices[0])}
+                        </span>
+                        <br />
+                      </td>
+                      <td>
+                        <span className='programPrice colorBlue'>
+                          {this.getDiv(drug.programs[5].prices[0])}
+                        </span>
+                        <br />
+                      </td>
+                      <td>
+                        <span className='programPrice colorBlue'>
+                          {this.getDiv(drug.programs[6].prices[0])}
                         </span>
                         <br />
                       </td>
