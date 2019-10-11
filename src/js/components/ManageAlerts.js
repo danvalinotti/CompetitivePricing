@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
-import Container from '@material-ui/core/Container';
-import MaterialTable from 'material-table';
+import Container from "@material-ui/core/Container";
+import MaterialTable from "material-table";
 import TabBar from "./TabBar";
-import {authenticateUser} from '../services/authService';
+import { authenticateUser } from "../services/authService";
+import NewTableItemDialog from "./NewTableItemDialog";
 
 class ManageAlerts extends Component {
     constructor(props) {
@@ -16,70 +17,29 @@ class ManageAlerts extends Component {
         this.state = {
             alerts: [],
             page: 0,
-            rowsPerPage: 5,
-            selectedProfiles: [],
-            newProfileDialog: false,
-            email: '',
-            alertName: '',
-            alertType: '',
-            isAdmin: false,
+            email: "",
             loggedInProfile: {},
             newAlertDialog: false,
-            message: '',
-            summary:'',
-            header:'',
-            footer: '',
-            users:[],
-            selectedRecipients:[],
-            selectedNames:[],
-            selectedDrug:null,
-            allDrugs:[],
-            percentChange:0.0,
-            alertAllDrugs:true,
+            users: [],
+            allDrugs: [],
+            percentChange: 0.0,
+            alertAllDrugs: true
         };
         this.getAllUsers = this.getAllUsers.bind(this);
         this.getAllDrugs = this.getAllDrugs.bind(this);
-        
+        this.toggleDialog = this.toggleDialog.bind(this);
+        this.submit = this.submit.bind(this);
         this.populateAlerts();
         this.getAllDrugs();
         this.getAllUsers();
-        
     }
-    
-    populateAlerts() {
-        Axios.get(process.env.API_URL + '/get/alerts/all')
-            .then(response => {
-                // console.log(response.data)
-                this.setState({
-                    alerts: response.data,
 
-                })
-            })
-    }
-    handleChangePage(event, newPage) {
-        this.setState({
-            page: newPage,
-        });
-    }
-    handleSummaryChange(event) {
-        this.setState({
-            summary: event.target.value,
-        });
-    }
-    handleHeaderChange(event) {
-        this.setState({
-            header: event.target.value,
-        });
-    }
-    handleFooterChange(event) {
-        this.setState({
-            footer: event.target.value,
-        });
-    }
-    handleChangeRowsPerPage(event) {
-        var rows = parseInt(event.target.value);
-        this.setState({
-            rowsPerPage: rows
+    populateAlerts() {
+        Axios.get(process.env.API_URL + "/get/alerts/all").then(response => {
+            // console.log(response.data)
+            this.setState({
+                alerts: response.data
+            });
         });
     }
     clickHome() {
@@ -94,196 +54,183 @@ class ManageAlerts extends Component {
     clickAlerts() {
         this.props.history.push("/admin/manage/alerts");
     }
-    handleClose() {
-        this.setState({
-            newAlertDialog: false
-        })
-    }
-    addDrug() {
-        this.setState({
-            newAlertDialog: true
-        })
-        // console.log("addDrug")
-    }
-    getAllUsers(){
-        Axios.get(process.env.API_URL + '/admin/get/users')
-            .then(response => {
-            // console.log(response.data)
-                this.setState({
-                    users: response.data,
-                })
-            })
-    }
-    getAllDrugs(){
-        Axios.get(process.env.API_URL + '/drugmaster/get/all')
-            .then(response => {
-           
-                this.setState({
-                    allDrugs: response.data,
-                })
-            })
-    }
-
-    sendAlert() {
-        var alert = {};
-        var recipientIds = [];
-        this.state.selectedRecipients.forEach(element => {
-            recipientIds.push(element.id);
-        });
-
-        alert.name          = this.state.alertName;
-        alert.header        = this.state.header;
-        alert.footer        = this.state.footer;
-        alert.summary       = this.state.summary;
-        alert.deliveryType  = "email";
-        alert.active = true;
-        alert.recipients = recipientIds.toString();
-        // console.log(alert);
-        var rule = {};
-        if(this.state.alertAllDrugs == true){
-            rule.drugId = 0;
-        }else{
-            rule.drugId = this.state.selectedDrug.id;
-        }
-        
-        rule.percentChange = this.state.percentChange;
-        // console.log(rule);
-        Axios.post(process.env.API_URL + '/create/alert/type', alert)
-            .then(response => {
-                rule.alertTypeId = response.data.id;
-                this.setState({
-                    newAlertDialog: false,
-                });
-                
-                Axios.post(process.env.API_URL + '/create/drug/rule', rule)
-                .then(response => {
-                    
-                });
-            });
-
-    }
-    handleEmailChange(event) {
-        this.setState({
-            email: event.target.value
-        })
-    }
-    handleNameChange(event) {
-        this.setState({
-            alertName: event.target.value
-        })
-    }
-
-    handleChange(event, index) {
-
-
-        if (event.target.checked) {
-            this.state.selectedProfiles[index] = true;
-            this.setState({
-                selectedProfiles: this.state.selectedProfiles,
-            })
-
-        } else {
-            this.state.selectedProfiles[index] = false;
-            this.setState({
-                selectedProfiles: this.state.selectedProfiles,
-            })
-        }
-
-    }
-    handleTypeChange(event) {
-        this.setState({
-            alertType: event.target.value
-        })
-    }
-    handleMessageChange(event) {
-        this.setState({
-            message: event.target.value
-        })
-    }
-    getDate(time) {
-
-        var d = new Date(time);
-        return d.toLocaleString();
-    }
-    handleRecipientChange(event) {
-        this.setState({
-            selectedRecipients: event.target.value,
-        });
-
-    }
-    handleDrugChange(event) {
-        this.setState({
-            selectedDrug: event.target.value,
-        });
-
-    }
     clickRequests() {
         this.props.history.push("/admin/manage/requests");
     }
-    handlePercentChange(event) {
-        this.setState({
-            percentChange: event.target.value,
+    getAllUsers() {
+        Axios.get(process.env.API_URL + "/admin/get/users").then(response => {
+            // console.log(response.data)
+            this.setState({
+                users: response.data
+            });
         });
+    }
+    getAllDrugs() {
+        Axios.get(process.env.API_URL + "/drugmaster/get/all").then(
+            response => {
+                this.setState({
+                    allDrugs: response.data
+                });
+            }
+        );
+    }
+    getDate(time) {
+        var d = new Date(time);
+        return d.toLocaleString();
+    }
+    toggleDialog() {
+        this.setState({
+            newAlertDialog: !this.state.newAlertDialog
+        });
+    }
 
-    }
-    handleAlertAllDrugs(event){
-        this.setState({
-            alertAllDrugs : !this.state.alertAllDrugs,
-        });
-        // console.log(event);
-    }
-    renderSelected(selectedArr){
-        var str = "";
-        selectedArr.forEach(element => {
-           str +=  element.name +", ";
-        });
-        if(str.length>3){
-            str = str.substring(0 , str.length-2)
+    submit(values) {
+        let alert = {};
+        alert.name = values.name;
+        alert.header = values.header;
+        alert.footer = values.footer;
+        alert.summary = values.summary;
+        alert.deliveryType = "email";
+        alert.active = true;
+        alert.recipients = values.recipients.toString();
+
+        var rule = {};
+        if (alert.selectedDrug === 0) {
+          rule.drugId = 0;
+        } else {
+          rule.drugId = alert.selectedDrug
         }
-        return str.substring(0,20);
+        rule.percentChange = values.percentChange;
+        console.log(rule);
+        Axios.post(process.env.API_URL + "/create/alert/type", alert).then(
+            response => {
+                rule.alertTypeId = response.data.id;
+                this.setState({
+                    newAlertDialog: false
+                });
+
+                Axios.post(
+                    process.env.API_URL + "/create/drug/rule",
+                    rule
+                ).then(response => {
+                    console.log(response);
+                });
+            }
+        );
     }
 
     render() {
-
         return (
             <div>
-                <TabBar page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={3} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
-                <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
+                <TabBar
+                    page="admin"
+                    profile={this.state.loggedInProfile}
+                    color={"steelblue"}
+                    value={3}
+                    history={this.props.history}
+                    tab1={"Home"}
+                    clickHome={this.clickHome.bind(this)}
+                    tab2={"Manage Users"}
+                    clickDashboard={this.clickDashboard.bind(this)}
+                    tab3={"Manage Drugs"}
+                    clickReports={this.clickReports.bind(this)}
+                    tab4={"Manage Alerts"}
+                    clickTab4={this.clickAlerts.bind(this)}
+                    tab5={"Manage Requests"}
+                    clickTab5={this.clickRequests.bind(this)}
+                />
+                <div style={{ paddingLeft: "10%", paddingRight: "10%" }}>
                     <br />
-                    <div style={{ paddingTop: '30px' }}>
-
+                    <div style={{ paddingTop: "30px" }}>
                         <Container>
                             <MaterialTable
                                 title="Manage Alerts"
-                                style={{ boxShadow: 0 }}
-                                columns={[{ title: 'Alert Name', field: 'name' },
-                                { title: 'Type', field: 'type' },
-                                { title: 'Date / Time', field: 'time', type: 'datetime', render: (rowData) => this.getDate(rowData.time) },
+                                style={{ boxShadow: 0, padding: 15 }}
+                                columns={[
+                                    { title: "Alert Name", field: "name" },
+                                    { title: "Type", field: "type" },
+                                    {
+                                        title: "Date / Time",
+                                        field: "time",
+                                        type: "datetime",
+                                        render: rowData =>
+                                            this.getDate(rowData.time)
+                                    }
                                 ]}
                                 data={this.state.alerts}
-                                editable={{
-                                    onRowAdd: newData =>
-                                        new Promise((resolve, reject) => {
-                                            // console.log("add")
-                                        }),
-                                    addFunction: () => this.addDrug.bind(this),
-
-                                }}
                                 options={{
                                     sorting: true,
                                     draggable: false,
-                                    search: true,
-                                    // selection: true,
-
+                                    search: true
                                 }}
-                                onSelectionChange={(rows) => { this.drugChange(rows) }}
-
+                                actions={[
+                                    {
+                                        icon: "add",
+                                        isFreeAction: true,
+                                        onClick: () => this.toggleDialog()
+                                    }
+                                ]}
                             />
-                        </Container><br /> <br />
+                        </Container>
+                        <br /> <br />
                     </div>
                 </div>
+                <NewTableItemDialog
+                    title="New Alert"
+                    initValues={[
+                        {
+                            name: "Alert Name",
+                            id: "name",
+                            type: "text",
+                            value: ""
+                        },
+                        {
+                            name: "Header Text",
+                            id: "header",
+                            type: "text",
+                            value: ""
+                        },
+                        {
+                            name: "Footer Text",
+                            id: "footer",
+                            type: "text",
+                            value: ""
+                        },
+                        {
+                            name: "Summary",
+                            id: "summary",
+                            type: "text",
+                            value: ""
+                        },
+                        {
+                            name: "Percent change",
+                            id: "percentChange",
+                            type: "number",
+                            value: 0
+                        },
+                        {
+                            name: "Recipients",
+                            id: "recipients",
+                            type: "selectMulti",
+                            values: this.state.users,
+                            selector: 'username',
+                            value: []
+                        },
+                        {
+                          name: "Selected drug",
+                          id: "selectedDrug",
+                          type: "select",
+                          values: [{id: 0, name: 'All'}, ...this.state.allDrugs],
+                          selector: 'id',
+                          value: 0
+                        }
+                    ]}
+                    open={this.state.newAlertDialog}
+                    toggleDialog={this.toggleDialog}
+                    handleSubmit={this.submit}
+                />
             </div>
-        )
+        );
     }
 }
 
