@@ -142,11 +142,11 @@ class ManageDrugs extends Component {
         // console.log(this.state.selectedDrug);
         // console.log("HELLO");
         // console.log(this.state.dosageStrength);
-        drug.zipcode = "08873";
-        drug.drugName = this.state.drugName;
+        drug.zipCode = "08873";
+        drug.name = this.state.drugName;
         drug.dosageStrength = this.state.dosageStrength.label;
         drug.quantity = this.state.quantity;
-        drug.drugNDC = this.state.dosageStrength.value;
+        drug.ndc = this.state.dosageStrength.value;
         drug.reportFlag = this.state.reportFlag;
         
         Axios.post(process.env.API_URL + '/add/drug', drug)
@@ -220,9 +220,8 @@ class ManageDrugs extends Component {
     }
     closeAddingDialog(){
         this.setState({
-            
             addingDialog:false
-        })
+        });
     }
     handleReportFlagChange(event) {
         this.setState({
@@ -268,11 +267,11 @@ class ManageDrugs extends Component {
       
             var drug = {};
             drug.id = this.state.editDrug.id;
-            drug.zipcode = "08873";
-            drug.drugName = this.state.editDrugName;
+            drug.zipCode = "08873";
+            drug.name = this.state.editDrugName;
             drug.dosageStrength = this.state.drugStrengthArray[this.state.editDrugStrength].label;
             drug.quantity = this.state.editDrugQuantity;
-            drug.drugNDC = this.state.drugStrengthArray[this.state.editDrugStrength].value;
+            drug.ndc = this.state.drugStrengthArray[this.state.editDrugStrength].value;
             drug.reportFlag = this.state.reportFlag;
             
             Axios.post(process.env.API_URL + '/edit/drug', drug)
