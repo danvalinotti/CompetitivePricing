@@ -138,8 +138,6 @@ export default function DrugExpandableRow({ program, image, programId }) {
         }
     }
 
-    console.log(program);
-
     return (
         <ExpansionPanel
             square={true}

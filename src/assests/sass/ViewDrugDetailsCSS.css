@@ -274,6 +274,9 @@ table {
 .textCenter{
   text-align: center;
 }
+.textCenter > div {
+  padding-bottom: 10px;
+}
 
 .search-bar-copy {
 	height: 50px;
