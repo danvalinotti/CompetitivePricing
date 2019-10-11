@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
 import {authenticateUser} from  '../services/authService';
+import NewTableItemDialog from "./NewTableItemDialog";
 class ManageDrugs extends Component {
     constructor(props) {
         super(props);
@@ -32,6 +33,8 @@ class ManageDrugs extends Component {
         };
         this.populateDrugs();
         this.editDrug = this.editDrug.bind(this);
+        this.toggleDialog = this.toggleDialog.bind(this);
+        this.submit = this.submit.bind(this);
     }
     populateDrugs() {
 
@@ -283,6 +286,34 @@ class ManageDrugs extends Component {
             
     
     }
+    toggleDialog() {
+        this.setState({
+            newDrugDialog: this.state.newDrugDialog ? false : true
+        });
+    }
+    submit(values) {
+        this.setState({
+            newDrugDialog: false,
+            loading: true
+        });
+        var drug = {};
+        drug.id = values.id;
+        drug.zipcode = values.zipCode;
+        drug.drugName = values.name;
+        drug.dosageStrength = values.dosageStrength;
+        drug.quantity = values.quantity;
+        drug.drugNDC = values.ndc;
+        drug.reportFlag = state.reportFlag;
+        
+        Axios.post(process.env.API_URL + '/add/drug', drug)
+            .then(response => {
+                this.populateDrugs();
+                this.setState({
+                    loading: false
+                })
+                // console.log("FINISHED ADDING");
+            })
+    }
 
 
     render() {
@@ -297,7 +328,7 @@ class ManageDrugs extends Component {
                         <Container>
                             <MaterialTable
                                 title="Manage Drugs"
-                                style={{ boxShadow: 0 }}
+                                style={{ boxShadow: 0, padding: 15 }}
                                 columns={[{ title: 'Drug Name', field: 'name' },
                                 { title: 'Brand/Generic', field: 'drugType', render: rowData => this.renderDrugType(rowData.drugType) },
                                 { title: 'Dosage Strength', field: 'dosageStrength', render: rowData => this.renderDrugDosage(rowData.dosageStrength, rowData.dosageUOM) },
@@ -305,11 +336,6 @@ class ManageDrugs extends Component {
                                 { title: 'Include', field: 'reportFlag', render: rowData => { return (this.renderReportFlag(rowData.reportFlag)) }, type: 'html' }]}
                                 data={this.state.drugs}
                                 editable={{
-                                    onRowAdd: newData =>
-                                        new Promise((resolve, reject) => {
-                                            // console.log("add")
-                                        }),
-                                    addFunction: () => this.addDrug.bind(this),
                                     onRowUpdate: (newData, oldData) =>
                                         new Promise((resolve, reject) => {
                                             // console.log("update")
@@ -324,11 +350,81 @@ class ManageDrugs extends Component {
 
                                 }}
                                 onSelectionChange={(rows) => { this.drugChange(rows) }}
+                                actions={[
+                                    {
+                                        icon: "add",
+                                        isFreeAction: true,
+                                        onClick: () => this.toggleDialog()
+                                    }
+                                ]}
 
                             />
                         </Container><br /> <br />
                     </div>
                 </div>
+                <NewTableItemDialog
+                    title="New Drug"
+                    open={this.state.newDrugDialog}
+                    toggleDialog={this.toggleDialog}
+                    handleSubmit={this.submit}
+                    loading={this.state.loading}
+                    initValues={[
+                        {
+                            name: "Name",
+                            id: 'name',
+                            type: 'text',
+                            value: ''
+                        },
+                        {
+                            name: "Drug ID",
+                            id: 'id',
+                            type: 'number',
+                            value: 0
+                        },
+                        {
+                            name: "Dosage Strength",
+                            id: 'dosageStrength',
+                            type: 'text',
+                            value: ''
+                        },
+                        // {
+                        //     name: 'GSN',
+                        //     id: 'gsn',
+                        //     type: 'tetx',
+                        //     value: ''
+                        // },
+                        {
+                            name: "NDC",
+                            id: 'ndc',
+                            type: 'text',
+                            value: ''
+                        },
+                        {
+                            name: "Quantity",
+                            id: 'quantity',
+                            type: 'number',
+                            value: 0
+                        },
+                        {
+                            name: 'Drug Type',
+                            id: 'drugType',
+                            type: 'text',
+                            value: '',  
+                        },
+                        {
+                            name: "Zip Code",
+                            id: 'zipCode',
+                            type: 'text',
+                            value: ''
+                        },
+                        {
+                            name: "Add to report:",
+                            id: 'reportFlag',
+                            type: 'checkbox',
+                            value: true
+                        }
+                    ]}
+                />
             </div>
         )
     }

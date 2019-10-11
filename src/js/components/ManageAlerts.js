@@ -23,7 +23,8 @@ class ManageAlerts extends Component {
             users: [],
             allDrugs: [],
             percentChange: 0.0,
-            alertAllDrugs: true
+            alertAllDrugs: true,
+            loading: false
         };
         this.getAllUsers = this.getAllUsers.bind(this);
         this.getAllDrugs = this.getAllDrugs.bind(this);
@@ -85,6 +86,9 @@ class ManageAlerts extends Component {
     }
 
     submit(values) {
+        this.setState({
+            loading: true
+        });
         let alert = {};
         alert.name = values.name;
         alert.header = values.header;
@@ -98,10 +102,9 @@ class ManageAlerts extends Component {
         if (alert.selectedDrug === 0) {
           rule.drugId = 0;
         } else {
-          rule.drugId = alert.selectedDrug
+          rule.drugId = alert.selectedDrug.id
         }
         rule.percentChange = values.percentChange;
-        console.log(rule);
         Axios.post(process.env.API_URL + "/create/alert/type", alert).then(
             response => {
                 rule.alertTypeId = response.data.id;
@@ -113,7 +116,9 @@ class ManageAlerts extends Component {
                     process.env.API_URL + "/create/drug/rule",
                     rule
                 ).then(response => {
-                    console.log(response);
+                    this.setState({
+                        loading: false
+                    })
                 });
             }
         );
@@ -228,6 +233,7 @@ class ManageAlerts extends Component {
                     open={this.state.newAlertDialog}
                     toggleDialog={this.toggleDialog}
                     handleSubmit={this.submit}
+                    loading={this.state.loading}
                 />
             </div>
         );

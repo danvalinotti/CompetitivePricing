@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import MaterialTable from 'material-table';
 import TabBar from "./TabBar";
 import {authenticateUser} from '../services/authService';
+import NewTableItemDialog from "./NewTableItemDialog";
 
 class ManageRequests extends Component {
     constructor(props) {
@@ -35,14 +36,46 @@ class ManageRequests extends Component {
             options:[],
             drugList:[],
             newProgram:0,
+            loading: false
         };
         this.getAllDrugs = this.getAllDrugs.bind(this);
-        
-        
+        this.submit = this.submit.bind(this);
+        this.toggleDialog = this.toggleDialog.bind(this);
         this.populateRequests = this.populateRequests.bind(this);
         this.getAllDrugs();
         this.populateRequests(); 
-        
+    }
+
+    submit(values) {
+        this.setState({
+            newRequestDialog: false,
+            loading: true
+        })
+        var drugRequest = {};
+        drugRequest.drugId = values.drug.id;
+        drugRequest.drugName = values.drug.name;
+        drugRequest.ndc = values.ndc;
+        drugRequest.quantity = values.quantity;
+        drugRequest.zipcode = values.zipcode;
+        drugRequest.brandIndicator = values.brandIndicator ? 'BRAND' : 'GENERIC';
+        drugRequest.gsn = values.gsn;
+        drugRequest.latitude = values.latitude;
+        drugRequest.longitude = values.longitude;
+        drugRequest.good_rx_id = values.goodRxId;
+        drugRequest.programId = values.program.id;
+        Axios.post(process.env.API_URL + '/request/create', drugRequest)
+            .then(response => {
+                this.populateRequests();
+                this.setState({
+                    loading: false
+                })
+            });
+    }
+
+    toggleDialog() {
+        this.setState({
+            newRequestDialog: this.state.newRequestDialog ? false : true
+        });
     }
     
     getAllDrugs() {
@@ -104,66 +137,6 @@ class ManageRequests extends Component {
     clickAlerts() {
         this.props.history.push("/admin/manage/alerts");
     }
-    handleClose() {
-        this.setState({
-            editRequestDialog: false
-        })
-    }
-    handleAddClose() {
-        this.setState({
-            newRequestDialog: false
-        })
-    }
-    handleNDCChange(event) {
-        this.setState({
-            newNDC: event.target.value,
-        });
-    }
-    handleQuantityChange(event) {
-        this.setState({
-            newQuantity: event.target.value,
-        });
-    }
-    handleZipCodeChange(event) {
-        this.setState({
-            newZipCode: event.target.value,
-        });
-    }
-    handleDrugNameChange(event) {
-        this.setState({
-            newDrugName: event.target.value,
-        });
-    }
-    handleBrandChange(event) {
-        this.setState({
-            newBrandIndicator: event.target.value,
-        });
-    }
-    handleGSNChange(event) {
-        this.setState({
-            newGSN: event.target.value,
-        });
-    }
-    handleLatitudeChange(event) {
-        this.setState({
-            newLatitude: event.target.value,
-        });
-    }
-    handleLongitudeChange(event) {
-        this.setState({
-            newLongitude: event.target.value,
-        });
-    }
-    handleGoodRxIdChange(event) {
-        this.setState({
-            newGoodRxId: event.target.value,
-        });
-    }
-    handleDrugChange(selectedOption) {
-
-        this.setState({ selectedOption: selectedOption });
-    };
-
     editRequest(event, request){
         // console.log(request);
         // console.log(request);
@@ -208,17 +181,6 @@ class ManageRequests extends Component {
         }
 
     }
-    addRequest() {
-
-        this.setState({
-            newRequestDialog: true
-        })
-    }
-    handleNewProviderChange(event){
-        this.setState({
-            newProgram: event.target.value
-        })
-    }
     submitEditRequest(){
         // console.log(this.state.selectedRequest);
         var drugRequest = {};
@@ -241,32 +203,8 @@ class ManageRequests extends Component {
                 })
             })
     }
-    submitAddRequest(){
-        
-        var drugRequest = {};
-        // console.log(this.state.selectedOption)
-        drugRequest.drugId = this.state.selectedOption.value.id;
-        drugRequest.drugName = this.state.newDrugName;
-        drugRequest.ndc = this.state.newNDC;
-        drugRequest.quantity = this.state.newQuantity;
-        drugRequest.zipcode = this.state.newZipCode;
-        drugRequest.brandIndicator = this.state.newBrandIndicator;
-        drugRequest.gsn = this.state.newGSN;
-        drugRequest.latitude = this.state.newLatitude;
-        drugRequest.longitude = this.state.newLongitude;
-        drugRequest.good_rx_id = this.state.newGoodRxId;
-        drugRequest.programId = this.state.newProgram;
-        // console.log(drugRequest);
-        Axios.post(process.env.API_URL + '/request/create', drugRequest)
-            .then(response => {
-                this.populateRequests();
-                this.setState({
-                    newRequestDialog: false,
-                })
-            })
-    }
-    render() {
 
+    render() {
         return (
             <div>
                 <TabBar page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={4} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
@@ -277,7 +215,7 @@ class ManageRequests extends Component {
                         <Container>
                             <MaterialTable
                                 title="Manage Requests"
-                                style={{ boxShadow: 0 }}
+                                style={{ boxShadow: 0, padding: 15 }}
                                 columns={[{ title: 'Drug Name', field: 'drugName' },
                                 { title: 'Program', field: 'programId',  render: (rowData) => this.getProgram(rowData.programId) },
                                 { title: 'Quantity', field: 'quantity'},
@@ -290,11 +228,6 @@ class ManageRequests extends Component {
                                     //     new Promise((resolve, reject) => {
                                             // console.log("add")
                                     //     }),
-                                    onRowAdd: newData =>
-                                    new Promise((resolve, reject) => {
-                                        // console.log("add")
-                                    }),
-                                    addFunction: () => this.addRequest.bind(this),
                                     onRowUpdate: (newData, oldData) =>
                                     new Promise((resolve, reject) => {
                                         // console.log("update")
@@ -306,8 +239,14 @@ class ManageRequests extends Component {
                                     draggable: false,
                                     search: true,
                                     // selection: true,
-
                                 }}
+                                actions={[
+                                    {
+                                        icon: "add",
+                                        isFreeAction: true,
+                                        onClick: () => this.toggleDialog()
+                                    }
+                                ]}
                               
                             />
 
@@ -315,6 +254,76 @@ class ManageRequests extends Component {
                         </Container><br /> <br />
                     </div>
                 </div>
+                <NewTableItemDialog
+                    title="New Drug Request"
+                    open={this.state.newRequestDialog}
+                    toggleDialog={this.toggleDialog}
+                    handleSubmit={this.submit}
+                    loading={this.state.loading}
+                    initValues={[
+                        {
+                            name: "Drug",
+                            id: "drug",
+                            type: "select",
+                            value: {},
+                            values: this.state.drugList
+                        }, {
+                            name: "Program",
+                            id: 'program',
+                            type: 'select',
+                            value: '',
+                            values: [
+                                {id: 0, name: 'InsideRx'},
+                                {id: 1, name: 'US Pharmacy Card'},
+                                {id: 2, name: 'WellRx'},
+                                {id: 3, name: 'MedImpact'},
+                                {id: 4, name: 'SingleCare'},
+                                {id: 5, name: 'Blink Health'},
+                                {id: 6, name: 'GoodRx'}
+                            ]
+                        }, {
+                            name: 'NDC',
+                            id: 'ndc',
+                            type: 'text',
+                            value: ''
+                        }, {
+                            name: 'GSN',
+                            id: 'gsn',
+                            type: 'text',
+                            value: ''
+                        }, {
+                            name: 'Quantity',
+                            id: 'quantity',
+                            type: 'number',
+                            value: 0,
+                        }, {
+                            name: 'Brand Name',
+                            id: 'brandIndicator',
+                            type: 'checkbox',
+                            value: false
+                        }, {
+                            name: 'Zipcode',
+                            id: 'zipcode',
+                            type: 'text',
+                            value: ''
+                        }, {
+                            name: 'Longitude',
+                            id: 'longitude',
+                            type: 'number',
+                            value: 0.0
+                        }, {
+                            name: 'Latitude',
+                            id: 'latitude',
+                            type: 'number',
+                            value: 0.0
+                        }, {
+                            name: 'GoodRX ID',
+                            id: 'goodRxId',
+                            type: 'text',
+                            value: ''
+                        }
+                    ]}
+                />
             </div>
         )
     }

@@ -2,16 +2,17 @@ import React, { Fragment } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Button, Select, Checkbox, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { Button, Select, Checkbox, MenuItem, InputLabel, FormControl, CircularProgress, FormControlLabel } from '@material-ui/core';
 
-export default function NewTableItemDialog({open, initValues, handleSubmit, title, toggleDialog}) {
+export default function NewTableItemDialog({open, initValues, handleSubmit, title, toggleDialog, loading}) {
     const v = {};
     initValues.forEach((value) => {
         v[value.id] = value.value
     });
     const [values, setValues] = React.useState(v);
+    // const [loading, setLoading] = React.useState(false);
     
     function handleClose() {
         open = false;
@@ -23,14 +24,18 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
         toggleDialog();
     }
     const handleChange = (event) => {
-        console.log(event.target)
         setValues({
             ...values,
             [event.target.name]: event.target.value
         });
     }
+    const toggleValue = (event) => {
+        setValues({
+            ...values,
+            [event.target.name]: event.target.checked
+        })
+    }
     const updateList = event => {
-        console.log(event.target);
         let newList = values[event.target.name.toLowerCase()];
         if (newList.indexOf(event.target.value.username)<0) {
             newList.push(event.target.value.username);
@@ -44,7 +49,6 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
         })
     }
     
-    console.log(values);
     return (
         <Fragment>
             <Dialog onClose={() => handleClose()} open={open} >
@@ -100,7 +104,7 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
                                         style={{textAlign: 'left'}}
                                     >
                                         {value.values.map((item, key) => (
-                                            <MenuItem id={value.id} key={key} value={item.id}
+                                            <MenuItem id={value.id} key={key} value={item}
                                                 style={values[value.id] ===  item.id ? {backgroundColor: 'lightgray'} : {}}>
                                                 {item.name}
                                             </MenuItem>
@@ -110,7 +114,7 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
                             ) 
                         } else if (value.type === 'checkbox') {
                             return (
-                                <Checkbox key={key} checked={values[value.id]} onChange={toggleValue(value.value)} />
+                                <FormControlLabel control={<Checkbox key={key} id={value.id} value={values[value.id]} name={value.id} checked={values[value.id]} onChange={toggleValue} />} label={value.name} />
                             )
                         } else {
                             return (
@@ -134,6 +138,14 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
                     <Button onClick={() => submit()} color="primary">Submit</Button>
                     <Button onClick={() => toggleOpen()} color="primary">Close</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog aria-labelledby="customized-dialog-title" open={loading}>
+                <DialogTitle id="customized-dialog-title">
+                    Processing...
+                </DialogTitle>
+                <DialogContent className="textCenter">
+                    <CircularProgress />
+                </DialogContent>
             </Dialog>
         </Fragment>
     )
