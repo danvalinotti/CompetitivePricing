@@ -4,7 +4,6 @@ import axios from 'axios';
 import DrugStrengthDropDown from "./drugStrengthDropdown";
 import DrugQuantityDropDown from "./DrugQuantityDropDown";
 import "../../assests/sass/searchPage.css"
-import HeaderComponent from "./HeaderComponent";
 import { Field, reduxForm } from 'redux-form';
 import AutoSuggestComponent from "./AutoSuggestComponent";
 import { withRouter } from "react-router-dom";
@@ -214,7 +213,6 @@ class DashBoard extends React.Component {
             <div>
                 <form id='Simple' className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}
                 >
-                    <HeaderComponent profile={this.state.loggedInProfile} value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
                     <div className="title ">
                         <div style={{ float: 'right', paddingTop:'10px'}}>
                             {/* <img className="gxImage" src={gxImage} /> */}

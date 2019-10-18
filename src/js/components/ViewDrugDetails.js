@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import '../../assests/sass/ViewDrugDetailsCSS.css'
-import HeaderComponent from "./HeaderComponent";
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Arrow from "../components/Arrow";
@@ -193,7 +192,6 @@ clickReports(){
       return (
 
         <div>
-          <HeaderComponent profile={this.state.loggedInProfile} value={0} clickHome={this.clickHome} clickDashboard={this.clickDashboard} history={this.props.history} clickReports={this.clickReports}/>
 
       
           <DrugInformation

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import HeaderComponent from './HeaderComponent'
 import * as Sorting from './Sorting'
 import '../../assests/sass/dashboardstyles.css'
 import Typography from '@material-ui/core/Typography'
@@ -442,14 +441,6 @@ class DashBoardViewComponent extends Component {
   render () {
     return (
       <div>
-        <HeaderComponent
-          profile={this.state.loggedInProfile}
-          value={1}
-          clickHome={this.clickHome}
-          clickDashboard={this.clickDashboard}
-          history={this.props.history}
-          clickReports={this.clickReports}
-        />
         <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
           <div
             className='row'

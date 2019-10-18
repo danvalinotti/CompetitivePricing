@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import HeaderComponent from "./HeaderComponent";
 import "../../assests/sass/dashboardstyles.css";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
@@ -355,7 +354,6 @@ class Reports extends Component {
         }
         return (
             <div>
-                <HeaderComponent profile={this.state.loggedInProfile} value={2} clickHome={this.clickHome}history={this.props.history} clickDashboard={this.clickDashboard} clickReports={this.clickReports} />
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <h4 className="row" style={{ paddingTop: '3%', marginRight: '0px', marginLeft: '0px' }}>
                         <div className="col-sm-6" style={{ fontWeight: 'bold', }} style={{ display: 'inline-flex', paddingLeft: '0px' }}>

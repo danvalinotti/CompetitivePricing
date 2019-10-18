@@ -4,22 +4,8 @@ import { withRouter } from "react-router-dom";
 import Axios from "axios";
 import Container from "@material-ui/core/Container";
 import MaterialTable from "material-table";
-import TabBar from "./TabBar";
 import { authenticateUser } from "../services/authService";
 import NewTableItemDialog from "./NewTableItemDialog";
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from "@material-ui/core/Select";
-import AutoSuggestComponent from "./AutoSuggestComponent";
-import DrugStrengthDropDown from "./drugStrengthDropdown";
-import DrugQuantityDropDown from "./DrugQuantityDropDown";
-import Button from '@material-ui/core/Button';
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 class ManageAlerts extends Component {
     constructor(props) {
@@ -55,21 +41,6 @@ class ManageAlerts extends Component {
                 alerts: response.data
             });
         });
-    }
-    clickHome() {
-        this.props.history.push("/admin/manage/users");
-    }
-    clickDashboard() {
-        this.props.history.push("/admin/manage/users");
-    }
-    clickReports() {
-        this.props.history.push("/admin/manage/drugs");
-    }
-    clickAlerts() {
-        this.props.history.push("/admin/manage/alerts");
-    }
-    clickRequests() {
-        this.props.history.push("/admin/manage/requests");
     }
     getAllUsers() {
         Axios.get(process.env.API_URL + "/admin/get/users").then(response => {
@@ -140,23 +111,6 @@ class ManageAlerts extends Component {
     render() {
         return (
             <div>
-                <TabBar
-                    page="admin"
-                    profile={this.state.loggedInProfile}
-                    color={"steelblue"}
-                    value={3}
-                    history={this.props.history}
-                    tab1={"Home"}
-                    clickHome={this.clickHome.bind(this)}
-                    tab2={"Manage Users"}
-                    clickDashboard={this.clickDashboard.bind(this)}
-                    tab3={"Manage Drugs"}
-                    clickReports={this.clickReports.bind(this)}
-                    tab4={"Manage Alerts"}
-                    clickTab4={this.clickAlerts.bind(this)}
-                    tab5={"Manage Requests"}
-                    clickTab5={this.clickRequests.bind(this)}
-                />
                 <div style={{ paddingLeft: "10%", paddingRight: "10%" }}>
                     <br />
                     <div style={{ paddingTop: "30px" }}>

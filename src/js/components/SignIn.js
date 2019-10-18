@@ -116,6 +116,7 @@ class SignIn extends Component {
         var profile = {};
         profile.username = this.state.email;
         profile.password = this.state.password;
+        console.log(profile);
 
 
         this.submitSignIn(profile);
@@ -127,6 +128,7 @@ class SignIn extends Component {
                 if(response.data.password != "false"){
                     Axios.post(process.env.API_URL + '/authenticate/token', response.data)
                     .then(r => {
+                        console.log(r.data);
 
                         if (r.data.password != "false") {
                             this.setState({
@@ -254,7 +256,7 @@ class SignIn extends Component {
                     <Card style={{ maxWidth: '500px',minWidth: '300px', backgroundColor: 'white' }} >
                         <CardContent>
                             <Grid container spacing={1} direction="column" alignItems="center" justify="center">
-                                <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center">
+                                <Grid container item xs={12} spacing={3} direction="column" alignItems="center" justify="center" style={{paddingTop: 30}}>
                                   <br/>
                                     <img src={galaxeLogo} width= "200px" height= "71px" /><br/>
                                     <Typography variant="h6">Log In</Typography>

@@ -22,3 +22,29 @@ export function authenticateUser(self) {
       }
     )
   }
+
+export const authUserHook = (history) => {
+    var userToken = {}
+    userToken.name = window.sessionStorage.getItem('token')
+    console.log(userToken)
+
+    return new Promise((resolve, reject) => {
+      Axios.post(process.env.API_URL + '/authenticate/token', userToken).then(
+        r => {
+            if (r.data.password != 'false') {
+
+                window.sessionStorage.setItem('token', r.data.password)
+                window.sessionStorage.setItem('loggedIn', 'true')
+                // console.log(r.data);
+                resolve(r.data);
+            } else {
+                window.sessionStorage.setItem('token', null);
+                window.sessionStorage.setItem('loggedIn', 'false')
+                history.push({ pathname: '/signIn' })
+                reject();
+            }
+        }
+      );
+    });
+    // return data;
+}

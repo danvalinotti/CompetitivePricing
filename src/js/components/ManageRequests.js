@@ -4,22 +4,8 @@ import { withRouter } from "react-router-dom";
 import Axios from "axios";
 import Container from '@material-ui/core/Container';
 import MaterialTable from 'material-table';
-import TabBar from "./TabBar";
 import {authenticateUser} from '../services/authService';
 import NewTableItemDialog from "./NewTableItemDialog";
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from "@material-ui/core/Select";
-import AutoSuggestComponent from "./AutoSuggestComponent";
-import DrugStrengthDropDown from "./drugStrengthDropdown";
-import DrugQuantityDropDown from "./DrugQuantityDropDown";
-import Button from '@material-ui/core/Button';
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 class ManageRequests extends Component {
     constructor(props) {
@@ -123,33 +109,6 @@ class ManageRequests extends Component {
                 })
             })
     }
-    handleChangePage(event, newPage) {
-        this.setState({
-            page: newPage,
-        });
-    }
-   
-    handleChangeRowsPerPage(event) {
-        var rows = parseInt(event.target.value);
-        this.setState({
-            rowsPerPage: rows
-        });
-    }
-    clickHome() {
-        this.props.history.push("/admin/manage/users");
-    }
-    clickDashboard() {
-        this.props.history.push("/admin/manage/users");
-    }
-    clickReports() {
-        this.props.history.push("/admin/manage/drugs");
-    }
-    clickRequests() {
-        this.props.history.push("/admin/manage/requests");
-    }
-    clickAlerts() {
-        this.props.history.push("/admin/manage/alerts");
-    }
     editRequest(event, request){
         // console.log(request);
         // console.log(request);
@@ -194,33 +153,10 @@ class ManageRequests extends Component {
         }
 
     }
-    submitEditRequest(){
-        // console.log(this.state.selectedRequest);
-        var drugRequest = {};
-        drugRequest.id = this.state.selectedRequest.id;
-        drugRequest.drugName = this.state.newDrugName;
-        drugRequest.ndc = this.state.newNDC;
-        drugRequest.quantity = this.state.newQuantity;
-        drugRequest.zipcode = this.state.newZipCode;
-        drugRequest.brandIndicator = this.state.newBrandIndicator;
-        drugRequest.gsn = this.state.newGSN;
-        drugRequest.latitude = this.state.newLatitude;
-        drugRequest.longitude = this.state.newLongitude;
-        
-        // console.log(drugRequest);
-        Axios.post(process.env.API_URL + '/request/edit', drugRequest)
-            .then(response => {
-                this.populateRequests();
-                this.setState({
-                    editRequestDialog: false,
-                })
-            })
-    }
 
     render() {
         return (
             <div>
-                <TabBar page="admin" profile={this.state.loggedInProfile} color={"steelblue"} value={4} history={this.props.history} tab1={"Home"} clickHome={this.clickHome.bind(this)} tab2={"Manage Users"} clickDashboard={this.clickDashboard.bind(this)} tab3={"Manage Drugs"} clickReports={this.clickReports.bind(this)} tab4={"Manage Alerts"} clickTab4={this.clickAlerts.bind(this)}tab5={"Manage Requests"} clickTab5={this.clickRequests.bind(this)}></TabBar>
                 <div style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                     <br />
                     <div style={{ paddingTop: '30px' }}>

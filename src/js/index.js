@@ -1,10 +1,8 @@
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-
 import store from "../js/store/index";
 import { HashRouter, Route } from "react-router-dom";
-
 import DashBoardContainer from "./container/DashBoardContainer";
 import DashBoardViewContainer from "./container/DashBoardViewContainer";
 import ViewDrugDetailsContainer from "./container/ViewDrugDetailsContainer";
@@ -15,10 +13,13 @@ import ManageUsersContainer from "./container/ManageUsersContainer";
 import ManageDrugsContainer from "./container/ManageDrugsContainer";
 import ManageAlertsContainer from "./container/ManageAlertsContainer";
 import ManageRequestsContainer from "./container/ManageRequestsContainer";
+import HeaderComponent from './components/HeaderComponent';
+
 render(
     <Provider store={store}>
         <HashRouter>
             <div style={{height:'inherit'}}>
+                <HeaderComponent /> 
                 <Route exact path="/" component={SignInContainer} />
                 <Route path="/search" component={DashBoardContainer} />
                 <Route path="/viewdrugs" component={ViewDrugDetailsContainer} />
