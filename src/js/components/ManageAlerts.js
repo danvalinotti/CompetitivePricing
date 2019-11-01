@@ -8,19 +8,6 @@ import TabBar from "./TabBar";
 import { authenticateUser } from "../services/authService";
 import NewTableItemDialog from "./NewTableItemDialog";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from "@material-ui/core/Select";
-import AutoSuggestComponent from "./AutoSuggestComponent";
-import DrugStrengthDropDown from "./drugStrengthDropdown";
-import DrugQuantityDropDown from "./DrugQuantityDropDown";
-import Button from '@material-ui/core/Button';
-import CircularProgress from "@material-ui/core/CircularProgress";
-
 class ManageAlerts extends Component {
     constructor(props) {
         super(props);
