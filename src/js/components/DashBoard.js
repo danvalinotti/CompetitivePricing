@@ -54,9 +54,9 @@ class DashBoard extends React.Component {
 
             try {
                 if (data.myZipCode.length === 5) {
-                    var drugName = this.state.drugName;
-                    var dosageStrength = this.state.dosageStrength;
-                    var quantity = this.state.quantity;
+                    let drugName = this.state.drugName;
+                    let dosageStrength = this.state.dosageStrength;
+                    let quantity = this.state.quantity;
                     if(this.state.drugName === ""){
                             drugName = this.state.firstChoice.name;
                             dosageStrength =this.state.firstChoice.dose[0];
@@ -85,8 +85,7 @@ class DashBoard extends React.Component {
                             this.toggleDialog();
                             this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
     
-                        }).catch(error => {
-                            // handle error
+                        }).catch(() => {
                             this.toggleDialog();
                             this.openDialog();
                         });
@@ -129,15 +128,18 @@ class DashBoard extends React.Component {
 
     updateDrug(drug) {
         // console.log(drug)
-        this.setState({
-            drugName: drug.name,
-            selectedDrug: drug,
-            drugStrengthArray: drug.dose,
-            dosageStrength: drug.dose[0],
-            drugStrengthIndex: 0,
-            drugQuantityArray: drug.dose[0].quantity,
-            quantity: drug.dose[0].quantity[0].value,
-        });
+        if (drug) {
+            this.setState({
+                drugName: drug.name,
+                selectedDrug: drug,
+                drugStrengthArray: drug.dose,
+                dosageStrength: drug.dose[0],
+                drugStrengthIndex: 0,
+                drugQuantityArray: drug.dose[0].quantity,
+                quantity: drug.dose[0].quantity[0].value,
+            });
+
+        }
     };
     updateStrength(strength, index) {
 

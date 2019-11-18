@@ -20,29 +20,29 @@ class FilterDialogs extends React.Component {
         });
     }
     handleSubmit(){
-        var date = document.getElementById("mui-pickers-date").value;
-      
+        const date = document.getElementById("mui-pickers-date").value;
+
         this.props.filterFunc(date);
 
         this.props.updateDialog("off");
 
     }
     handleBetweenSubmit(){
-        var start = document.getElementById("datePicker1").value;
-        var end = document.getElementById("datePicker2").value;
+        const start = document.getElementById("datePicker1").value;
+        const end = document.getElementById("datePicker2").value;
         this.props.filterFunc(start, end);
 
        this.props.updateDialog("off");
     }
     handleBetweenDrugsSubmit(){
-        var start = document.getElementById("startDrug").value;
-        var end = document.getElementById("endDrug").value;
+        const start = document.getElementById("startDrug").value;
+        const end = document.getElementById("endDrug").value;
         this.props.filterFunc(start, end);
 
        this.props.updateDialog("off");
     }
     handleDrugCountSubmit(){
-        var drugCount = document.getElementById("drugCount").value;
+        const drugCount = document.getElementById("drugCount").value;
         this.props.filterFunc(drugCount);
 
        this.props.updateDialog("off");
@@ -56,7 +56,7 @@ class FilterDialogs extends React.Component {
                    <Dialog
                    onClose={() => this.handleClose()}
                    aria-labelledby="customized-dialog-title"
-                   open={this.props.dialog!="off"}
+                   open={this.props.dialog!=="off"}
                >
                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
                        Filter By Specific Date
@@ -74,7 +74,7 @@ class FilterDialogs extends React.Component {
                    <Dialog
                    onClose={() => this.handleClose()}
                    aria-labelledby="customized-dialog-title"
-                   open={this.props.dialog!="off"}
+                   open={this.props.dialog!=="off"}
                >
                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
                        Filter By Range Of Dates
@@ -94,7 +94,7 @@ class FilterDialogs extends React.Component {
                    <Dialog
                    onClose={() => this.handleClose()}
                    aria-labelledby="customized-dialog-title"
-                   open={this.props.dialog!="off"}
+                   open={this.props.dialog!=="off"}
                >
                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
                        Filter By Range Of Dates
@@ -114,7 +114,7 @@ class FilterDialogs extends React.Component {
                    <Dialog
                    onClose={() => this.handleClose()}
                    aria-labelledby="customized-dialog-title"
-                   open={this.props.dialog!="off"}
+                   open={this.props.dialog!=="off"}
                >
                    <DialogTitle id="customized-dialog-title" onClose={this.handleClose.bind(this)}>
                        Filter By Range Of Dates

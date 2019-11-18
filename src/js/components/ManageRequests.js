@@ -8,19 +8,6 @@ import TabBar from "./TabBar";
 import {authenticateUser} from '../services/authService';
 import NewTableItemDialog from "./NewTableItemDialog";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from "@material-ui/core/Select";
-import AutoSuggestComponent from "./AutoSuggestComponent";
-import DrugStrengthDropDown from "./drugStrengthDropdown";
-import DrugQuantityDropDown from "./DrugQuantityDropDown";
-import Button from '@material-ui/core/Button';
-import CircularProgress from "@material-ui/core/CircularProgress";
-
 class ManageRequests extends Component {
     constructor(props) {
         super(props);
@@ -63,8 +50,8 @@ class ManageRequests extends Component {
         this.setState({
             newRequestDialog: false,
             loading: true
-        })
-        var drugRequest = {};
+        });
+        const drugRequest = {};
         drugRequest.drugId = values.drug.id;
         drugRequest.drugName = values.drug.name;
         drugRequest.ndc = values.ndc;
@@ -77,7 +64,7 @@ class ManageRequests extends Component {
         drugRequest.good_rx_id = values.goodRxId;
         drugRequest.programId = values.program.id;
         Axios.post(process.env.API_URL + '/request/create', drugRequest)
-            .then(response => {
+            .then(() => {
                 this.populateRequests();
                 this.setState({
                     loading: false
@@ -87,7 +74,7 @@ class ManageRequests extends Component {
 
     toggleDialog() {
         this.setState({
-            newRequestDialog: this.state.newRequestDialog ? false : true
+            newRequestDialog: !this.state.newRequestDialog
         });
     }
     
@@ -105,7 +92,7 @@ class ManageRequests extends Component {
     }
 
     mapOptions(drugList) {
-        var newOptions = [];
+        const newOptions = [];
         drugList.map((drug) => {
             newOptions.push({ value: drug, label: drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")" })
         });
@@ -122,18 +109,6 @@ class ManageRequests extends Component {
                     requests: response.data,
                 })
             })
-    }
-    handleChangePage(event, newPage) {
-        this.setState({
-            page: newPage,
-        });
-    }
-   
-    handleChangeRowsPerPage(event) {
-        var rows = parseInt(event.target.value);
-        this.setState({
-            rowsPerPage: rows
-        });
     }
     clickHome() {
         this.props.history.push("/admin/manage/users");
@@ -154,7 +129,7 @@ class ManageRequests extends Component {
         // console.log(request);
         // console.log(request);
         Axios.get(process.env.API_URL + '/drugmaster/get/id/'+request.drugId)
-        .then(r => {
+        .then(() => {
         this.setState({
             selectedRequest:request,
             newDrugName:request.drugName,
@@ -171,50 +146,28 @@ class ManageRequests extends Component {
         );
     }
     getProgram(programId){
-        if(programId == 0){
+        if(programId === 0){
             return "Inside Rx"
         }
-        if(programId == 1){
+        if(programId === 1){
             return "U.S Pharmacy Card"
         }
-        else if(programId == 2){
+        else if(programId === 2){
             return "Well Rx"
         }
-        else if(programId == 3){
+        else if(programId === 3){
             return "MedImpact"
         }
-        else if(programId == 4){
+        else if(programId === 4){
             return "Singlecare"
         }
-        else if(programId == 5){
+        else if(programId === 5){
             return "Blink Health"
         }
-        else if(programId == 6){
+        else if(programId === 6){
             return "GoodRx"
         }
 
-    }
-    submitEditRequest(){
-        // console.log(this.state.selectedRequest);
-        var drugRequest = {};
-        drugRequest.id = this.state.selectedRequest.id;
-        drugRequest.drugName = this.state.newDrugName;
-        drugRequest.ndc = this.state.newNDC;
-        drugRequest.quantity = this.state.newQuantity;
-        drugRequest.zipcode = this.state.newZipCode;
-        drugRequest.brandIndicator = this.state.newBrandIndicator;
-        drugRequest.gsn = this.state.newGSN;
-        drugRequest.latitude = this.state.newLatitude;
-        drugRequest.longitude = this.state.newLongitude;
-        
-        // console.log(drugRequest);
-        Axios.post(process.env.API_URL + '/request/edit', drugRequest)
-            .then(response => {
-                this.populateRequests();
-                this.setState({
-                    editRequestDialog: false,
-                })
-            })
     }
 
     render() {
@@ -241,8 +194,8 @@ class ManageRequests extends Component {
                                     //     new Promise((resolve, reject) => {
                                             // console.log("add")
                                     //     }),
-                                    onRowUpdate: (newData, oldData) =>
-                                    new Promise((resolve, reject) => {
+                                    onRowUpdate: () =>
+                                    new Promise(() => {
                                         // console.log("update")
                                     }),
                                     editFunction: () => this.editRequest.bind(this)

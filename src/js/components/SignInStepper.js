@@ -42,7 +42,7 @@ export default function HorizontalLinearStepper(props) {
   const [skipped, setSkipped] = React.useState(new Set());
   const steps = props.steps;
 
-  function isStepOptional(step) {
+  function isStepOptional() {
     return false;
   }
 

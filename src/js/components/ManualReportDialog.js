@@ -41,23 +41,9 @@ class ManualReportDialog extends React.Component {
             selectedOption: null,
         };
         this.getLatestReport();
-        this.loadPreviousReports();
-
-    }
-    loadPreviousReports() {
-        var sender = {};
-        sender.value = window.sessionStorage.getItem("token");
-        sender.key = window.sessionStorage.getItem("token");
-        Axios.post(process.env.API_URL + '/reports/saved/get', sender)
-            .then(response => {
-
-                this.setState({
-                    previousReports: response.data
-                })
-            });
     }
     handlePrevious(event) {
-        if (event.target.value == "none") {
+        if (event.target.value === "none") {
             this.setState({
                 selectedPrevious: 'None',
                 selectedProviders: [],
@@ -65,8 +51,8 @@ class ManualReportDialog extends React.Component {
                 selectedOption: [],
             })
         } else {
-            var arr = [];
-            event.target.value.drug_ids.map((drug, index) => {
+            const arr = [];
+            event.target.value.drug_ids.map((drug) => {
                 arr.push({ 'label': drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")", 'value': drug })
             });
             this.setState({
@@ -85,11 +71,11 @@ class ManualReportDialog extends React.Component {
     }
     
     handleSubmit() {
-        var selectedDrugs = [];
+        const selectedDrugs = [];
         this.state.selectedOption.map((option) => {
             selectedDrugs.push(option.value);
         });
-        var reportRequest = {
+        const reportRequest = {
             'drugs': selectedDrugs, 'drugDetails': this.state.selectedDrugDetails,
             'providers': this.state.selectedProviders, 'isSaved': this.state.isSaved, 'name': this.state.reportName
         };
@@ -131,7 +117,7 @@ class ManualReportDialog extends React.Component {
             });
     }
     mapOptions(drugList) {
-        var newOptions = [];
+        const newOptions = [];
         drugList.map((drug) => {
             newOptions.push({ value: drug, label: drug.name + " " + drug.dosageStrength + " " + "(" + drug.quantity + ")" })
         });

@@ -62,17 +62,6 @@ class ManageDrugs extends Component {
     clickAlerts() {
         this.props.history.push("/admin/manage/alerts");
     }
-    handleClose() {
-        this.setState({
-            newDrugDialog: false
-        })
-    }
-    addDrug() {
-
-        this.setState({
-            newDrugDialog: true
-        })
-    }
     editDrug(event, drug) {
         // drugStrengthArray={this.state.drugStrengthArray}
         // updateStrength={this.updateStrength.bind(this)}
@@ -81,8 +70,8 @@ class ManageDrugs extends Component {
         Axios.get(process.env.API_URL + '/getDrugInfo/' + drug.name)
             .then(response => {
                 // console.log(response.data[0]);
-                var drugDetails = response.data[0];
-                var dosageIndex = this.getDosageIndex(drug.dosageStrength, drugDetails.dose);
+                const drugDetails = response.data[0];
+                const dosageIndex = this.getDosageIndex(drug.dosageStrength, drugDetails.dose);
                 // console.log("dosageIndex");
                 // console.log(dosageIndex);
                 // console.log(drug.quantity);
@@ -105,28 +94,28 @@ class ManageDrugs extends Component {
     getDosageIndex(dosageStrength, strengthArr) {
         // console.log(dosageStrength);
         // console.log(strengthArr);
-        var firstIndex = -1;
+        let firstIndex = -1;
         strengthArr.forEach((strength, index) => {
             if (strength.label.includes(dosageStrength)) {
                 // console.log("HERE");
-                if(firstIndex == -1){
+                if(firstIndex === -1){
                     // console.log("HERE");
                     firstIndex = index;
                 }
                 
             }
         });
-        if (firstIndex == -1) {
+        if (firstIndex === -1) {
             strengthArr.forEach((strength, index) => {
                 if (strength.label.includes(dosageStrength.charAt(0))) {
                  
-                    if(firstIndex == -1){
+                    if(firstIndex === -1){
                         firstIndex = index;
                     }
                 }
             });
         }
-        if(firstIndex == -1){
+        if(firstIndex === -1){
             // console.log("NOT FOUND");
             firstIndex = 0
         }
@@ -134,37 +123,13 @@ class ManageDrugs extends Component {
 
 
     }
-    createDrug() {
-        this.setState({
-            addingDialog: true,
-        });
-        var drug = {};
-        // console.log(this.state.selectedDrug);
-        // console.log("HELLO");
-        // console.log(this.state.dosageStrength);
-        drug.zipCode = "08873";
-        drug.name = this.state.drugName;
-        drug.dosageStrength = this.state.dosageStrength.label;
-        drug.quantity = this.state.quantity;
-        drug.ndc = this.state.dosageStrength.value;
-        drug.reportFlag = this.state.reportFlag;
-        
-        Axios.post(process.env.API_URL + '/add/drug', drug)
-            .then(response => {
-               this.populateDrugs();
-                this.setState({
-                    addingDialog: false,
-                })
-                // console.log("ADDED DRUG");
-            })
-    }
 
     renderDrugType(drugType) {
 
-        if (drugType == "B") {
+        if (drugType === "B") {
             drugType = "Brand";
         }
-        if (drugType == "G") {
+        if (drugType === "G") {
             drugType = "Generic";
         }
 
@@ -193,13 +158,7 @@ class ManageDrugs extends Component {
             quantity: quantity,
         })
     }
-    updateEditQuantity(quantity) {
-        
-        this.setState({
-            editDrugQuantity: quantity,
-        })
-    }
-    
+
     updateStrength(strength, index) {
 
         this.setState({
@@ -209,36 +168,14 @@ class ManageDrugs extends Component {
             quantity: strength.quantity[0].value,
         })
     }
-    updateEditStrength(strength, index) {
 
-        this.setState({
-            // dosageStrength: strength,
-            editDrugStrength: index,
-            drugQuantityArray: strength.quantity,
-            editDrugQuantity: strength.quantity[0].value,
-        })
-    }
-    closeAddingDialog(){
-        this.setState({
-            addingDialog:false
-        });
-    }
-    handleReportFlagChange(event) {
-        this.setState({
-            reportFlag: event.target.value
-        })
-        // console.log(event);
-    }
     renderReportFlag(reportFlag) {
-        if (reportFlag == true) {
+        if (reportFlag === true) {
             return <label>Yes</label>
         } else {
             return <label>No</label>
         }
 
-    }
-    drugChange(drugs) {
-        // console.log(drugs);
     }
     clickRequests() {
         this.props.history.push("/admin/manage/requests");
@@ -251,43 +188,11 @@ class ManageDrugs extends Component {
         }
 
     }
-    handleEditDrugClose() {
-        this.setState({
-            editDrugDialog: false
-        })
-    }
-    getDrugDetails(drugName) {
-        Axios.get(process.env.API_URL + '/getDrugInfo/' + drugName)
-            .then(response => {
-                // console.log(response.data[0]);
-                return response.data[0];
-            });
-    }
-    submitEditDrug(){
-      
-            var drug = {};
-            drug.id = this.state.editDrug.id;
-            drug.zipCode = "08873";
-            drug.name = this.state.editDrugName;
-            drug.dosageStrength = this.state.drugStrengthArray[this.state.editDrugStrength].label;
-            drug.quantity = this.state.editDrugQuantity;
-            drug.ndc = this.state.drugStrengthArray[this.state.editDrugStrength].value;
-            drug.reportFlag = this.state.reportFlag;
-            
-            Axios.post(process.env.API_URL + '/edit/drug', drug)
-                .then(response => {
-                    this.populateDrugs();
-                    this.setState({
-                        editDrugDialog: false,
-                    })
-                    // console.log("FINISHED ADDING");
-                })
-            
-    
-    }
+
+
     toggleDialog() {
         this.setState({
-            newDrugDialog: this.state.newDrugDialog ? false : true
+            newDrugDialog: !this.state.newDrugDialog
         });
     }
     submit(values) {
@@ -295,7 +200,7 @@ class ManageDrugs extends Component {
             newDrugDialog: false,
             loading: true
         });
-        var drug = {};
+        const drug = {};
         drug.id = values.id;
         drug.zipcode = values.zipCode;
         drug.drugName = values.name;
@@ -305,7 +210,7 @@ class ManageDrugs extends Component {
         drug.reportFlag = state.reportFlag;
         
         Axios.post(process.env.API_URL + '/add/drug', drug)
-            .then(response => {
+            .then(() => {
                 this.populateDrugs();
                 this.setState({
                     loading: false
@@ -335,8 +240,8 @@ class ManageDrugs extends Component {
                                 { title: 'Include', field: 'reportFlag', render: rowData => { return (this.renderReportFlag(rowData.reportFlag)) }, type: 'html' }]}
                                 data={this.state.drugs}
                                 editable={{
-                                    onRowUpdate: (newData, oldData) =>
-                                        new Promise((resolve, reject) => {
+                                    onRowUpdate: () =>
+                                        new Promise(() => {
                                             // console.log("update")
                                         }),
                                     editFunction: () => this.editDrug.bind(this)

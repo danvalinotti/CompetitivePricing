@@ -130,14 +130,6 @@ export default function DrugExpandableRow({ program, image, programId }) {
         return Number(num).toFixed(2);
     }
 
-    function comparePrices(price, uncPrice) {
-        if (parseFloat(uncPrice) > parseFloat(price)) {
-            return uncPrice;
-        } else {
-            return price;
-        }
-    }
-
     return (
         <ExpansionPanel
             square={true}

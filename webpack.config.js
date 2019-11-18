@@ -1,7 +1,6 @@
 const path = require("path");
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-const dotenv = require('dotenv-flow');
 const DotenvFlow = require('dotenv-flow-webpack');
 
 module.exports = {
@@ -10,10 +9,6 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "js/[name].js"
   },
-  devServer: {
-    contentBase: "./dist"
-  },
-  devtool: 'source-map',
   module: {
     rules: [{
         test: /\.js$/,

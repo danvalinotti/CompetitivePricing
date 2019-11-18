@@ -28,13 +28,13 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
             ...values,
             [event.target.name]: event.target.value
         });
-    }
+    };
     const toggleValue = (event) => {
         setValues({
             ...values,
             [event.target.name]: event.target.checked
         })
-    }
+    };
     const updateList = event => {
         let newList = values[event.target.name.toLowerCase()];
         if (newList.indexOf(event.target.value.username)<0) {
@@ -47,8 +47,7 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
             ...values,
             [event.target.name.toLowerCase()]: newList
         })
-    }
-    
+    };
     return (
         <Fragment>
             <Dialog onClose={() => handleClose()} open={open} >
@@ -120,7 +119,7 @@ export default function NewTableItemDialog({open, initValues, handleSubmit, titl
                             return (
                                 <TextField
                                     key={key}
-                                    autoFocus={key === 0 ? true : false}
+                                    autoFocus={key === 0}
                                     margin="dense"
                                     id={value.id}
                                     label={value.name}

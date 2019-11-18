@@ -223,7 +223,7 @@ Menu.propTypes = {
 };
 const MenuList = props => {
 
-  var listItems;
+  let listItems;
   try {
     listItems = props.children.slice(0, 50)
   } catch (error) {

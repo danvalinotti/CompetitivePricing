@@ -23,15 +23,12 @@ class SplitButton extends Component {
     }
   }
 
-   handleClick() {
-  }
-
-  handleMenuItemClick(event, option) {
-   if(option.key != this.state.selectedIndex){
+    handleMenuItemClick(event, option) {
+   if(option.key !== this.state.selectedIndex){
     this.props.masterFunction(event, option);
     this.setSelectedIndex(option.key);
    }else{
-     if(this.props.reset != undefined){
+       if(this.props.reset !== undefined){
       this.props.reset();
 
      }else{
@@ -62,7 +59,7 @@ class SplitButton extends Component {
     });
   }
 
-   handleClose(event) {
+   handleClose() {
    
     this.setOpen(false);
   }
@@ -99,7 +96,7 @@ class SplitButton extends Component {
                 <Paper id="menu-list-grow"style={{zIndex:30}}>
                   <ClickAwayListener onClickAway={this.handleClose.bind(this)}>
                     <MenuList >
-                      {this.state.options.map((option, index) => (
+                      {this.state.options.map((option) => (
                         <MenuItem
                           key={option.key}
                           style={{zIndex:2}}

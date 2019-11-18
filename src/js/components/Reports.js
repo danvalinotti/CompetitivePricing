@@ -161,7 +161,7 @@ class Reports extends Component {
         Axios.get(process.env.API_URL + '/asd/' + data.id,options)
         .then(response => {
             this.toggleDialog();
-            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
                 const link = document.createElement('a');
 
                 link.href = url;

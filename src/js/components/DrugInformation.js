@@ -41,43 +41,6 @@ class DrugInformation extends React.Component {
         this.setState({
             drugDescription: this.props.selectedDrug.description,
         });
-
-        // axios.get('https://api.uspharmacycard.com/drug/price/147/none/07001/'+this.props.selectedDrug.defaultDose+'/'+this.props.selectedDrug.slug+'/'+this.props.response.drugType+'/'+this.props.selectedDrug.dose[0].defaultQuantity+'/8')
-        // .then(response => {
-        // //    console.log(response.data);
-        //     this.setState({
-        //         drugDescription: response.data.drugInfo,
-        //     });
-        // });
-        // axios.get('https://www.blinkhealth.com/api/directory/'+this.props.selectedDrug.name+'?c_app=rx&c_platform=web&c_timestamp=1566565631578')
-        // .then(response => {
-        // //    console.log(response.data);
-        //     this.setState({
-        //         drugDescription: response.data.results[0].monograph.uses,
-        //     });
-        // });
-        
-    }
- 
-    // 
-    getIndexWithValue(value,list){
-        var index = 0;
-        list.map((v,i)=>{
-            if(v.value === value){
-                index = i;
-            }
-        });
-        return index;
-    }
-
-    getIndexWithLabel(value,list){
-        var index = 0;
-        list.map((v,i)=>{
-            if(v.label === value){
-                index = i;
-            }
-        });
-        return index;
     }
 
     getDrugDetails(drugRequest) {
@@ -118,7 +81,7 @@ class DrugInformation extends React.Component {
 
         this.props.toggleDialog();
         axios.post(process.env.API_URL + '/dashboard/drugs/add', this.props.drugRequest)
-            .then(response => {
+            .then(() => {
                 
                 this.props.toggleDialog();
 
@@ -126,9 +89,9 @@ class DrugInformation extends React.Component {
 
     }
     getNDC(strength, response){
-       
 
-        var drugNDC = "";
+
+        let drugNDC = "";
         response.dose.forEach(dose => {
 
             if(dose.label.trim() === strength.trim()){
@@ -143,9 +106,9 @@ class DrugInformation extends React.Component {
    
     
     format(str){
-        var text = str;
+        let text = str;
         text = text.toLowerCase();
-        var first = text.charAt(0).toUpperCase();
+        const first = text.charAt(0).toUpperCase();
         text = first + text.substring(1);
         return text;
     }
