@@ -131,12 +131,14 @@ export default function DrugExpandableRow({ program, image, programId }) {
         let n = num;
         if (num instanceof String) {
             n = parseFloat(num);
+        } else if (num === -1.0 || num === "null" || num == null) {
+            return "N/A";
         }
         return Number(n).toFixed(2);
     }
 
     return (
-        
+
         <ExpansionPanel
             square={true}
             expanded={expanded === "panel1"}

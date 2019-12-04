@@ -114,6 +114,8 @@ class ViewDrugDetails extends React.Component {
     let n = num;
     if (num instanceof String) {
       n = parseFloat(num);
+    } else if (num == null || num === "null") {
+        return "N/A"
     }
     return Number(n).toFixed(2);
   }
@@ -173,12 +175,12 @@ clickReports(){
       const { classes } = this.props;
       let averagePriceColor, lowestPriceColor, currentPriceColor;
       if (this.state.drugDetails) {
-        if (this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.averagePrice <= 0) {
+        if (this.state.drugDetails.programs[0].prices.length > 0 && this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.averagePrice <= 0) {
           averagePriceColor = { color: '#08CA00' };
         } else {
           averagePriceColor = { color: 'red' };
         }
-        if (this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.recommendedPrice <= 0) {
+        if (this.state.drugDetails.programs[0].prices.length > 0 && this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.recommendedPrice <= 0) {
           lowestPriceColor = { color: '#08CA00' };
         } else {
           lowestPriceColor = { color: 'red' };
@@ -243,7 +245,7 @@ clickReports(){
                     <div className=" overallPrice col-sm" style={currentPriceColor}>
                       <div className="headerhelp">
                         <span ></span>
-                        {this.state.drugDetails ? "$" + this.round(this.state.drugDetails.programs[0].prices[0].price) : "N/A"}</div>
+                        {this.state.drugDetails ? "$" + this.round(this.state.drugDetails.currentPrice) : "N/A"}</div>
                       {/*<div className="diff">*/}
                       {/*  <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails.programs[0].length > 0 ? this.state.drugDetails.programs[0].diff : 0}></Arrow>*/}
                       {/*  {this.state.drugDetails ? this.round(this.state.drugDetails.programs[0].diff) : "N/A"}</span>*/}
