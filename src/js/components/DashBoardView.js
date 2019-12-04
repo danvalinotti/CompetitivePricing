@@ -8,6 +8,13 @@ import {withRouter} from 'react-router-dom'
 import Axios from 'axios'
 import {authenticateUser} from '../services/authService';
 import Icons from './Icons'
+import {Dialog, Snackbar} from "@material-ui/core";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 class DashBoardViewComponent extends Component {
     constructor(props) {
@@ -25,12 +32,27 @@ class DashBoardViewComponent extends Component {
             blinkHealthSort: 'off',
             goodRxSort: 'off',
             lowestPriceSort: 'off',
-            loggedInProfile: {}
+            loggedInProfile: {},
+            dashboardLoading: true,
+            loadingDialog: false,
+            snackbarOpen: false,
+            snackbarMessage: "",
+            deleteOk: false
         };
+
         this.getDashboardDrugs();
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
-        this.clickReports = this.clickReports.bind(this)
+        this.clickReports = this.clickReports.bind(this);
+        this.toggleDialog = this.toggleDialog.bind(this);
+        this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
+    }
+
+    toggleDialog() {
+        let s = !this.state.loadingDialog;
+        this.setState({
+            loadingDialog: s
+        });
     }
 
     exportDrugs() {
@@ -85,13 +107,44 @@ class DashBoardViewComponent extends Component {
     }
 
     deleteDrug(drug, index) {
-        Axios.post(process.env.API_URL + '/dashboard/drug/delete', drug).then(
-            () => {
-                this.setState({
-                    dashBoardDrugsData: this.state.dashBoardDrugsData.splice(index, 1)
-                })
+        console.log(drug);
+        this.toggleDialog();
+        let list = this.state.filteredList;
+        let i = list.indexOf(drug);
+        let newList = list.splice(i, 1);
+        Axios.delete(process.env.API_URL + '/dashboard/remove', { data: drug }).then(
+            (response) => {
+                this.toggleDialog();
+                if (response.status === 200) {
+                    console.log(i);
+                    this.setState({
+                        snackbarOpen: true,
+                        deleteOk: true,
+                        snackbarMessage: "Drug successfully deleted from dashboard.",
+                        filteredList: list
+                    });
+                } else if (response.status === 208) {
+                    this.setState({
+                        snackbarOpen: true,
+                        deleteOk: true,
+                        snackbarMessage: "This drug has already been deleted from the dashboard."
+                    });
+                } else {
+                    this.setState({
+                        snackbarOpen: true,
+                        deleteOk: false,
+                        snackbarMessage: "An unknown error has occurred."
+                    });
+                }
             }
-        )
+        ).catch((error) => {
+            console.log(error);
+            this.setState({
+                snackbarOpen: true,
+                deleteOk: false,
+                snackbarMessage: "Failed to delete drug from dashboard."
+            });
+        })
     }
 
     getDashboardDrugs() {
@@ -99,11 +152,16 @@ class DashBoardViewComponent extends Component {
         const token = {};
         token.value = strtoken;
         token.key = strtoken;
-        Axios.post(process.env.API_URL + '/dashboard/get', token).then(response => {
+        this.setState({
+            dashboardLoading: true
+        });
+        Axios.get(process.env.API_URL + '/dashboard/getAll', token).then(response => {
             console.log(response.data);
+            let data = response.data;
             this.setState({
                 dashBoardDrugsData: response.data,
-                filteredList: response.data
+                filteredList: response.data,
+                dashboardLoading: false
             })
         })
     }
@@ -126,9 +184,16 @@ class DashBoardViewComponent extends Component {
     }
 
     getDiv(program) {
-        if (program.price !== 'N/A' && program.diff >= 0) {
+        if (program && program.price !== 'N/A' && program.diff >= 0) {
             return (
                 <div style={{color: '#08ca00'}}>
+                    <span>{this.round(program.price)}</span>
+                    <div style={{fontWeight: 'normal'}}>{this.round(program.diff)}</div>
+                </div>
+            )
+        } else if (program) {
+            return (
+                <div style={{color: 'red'}}>
                     <span>{this.round(program.price)}</span>
                     <div style={{fontWeight: 'normal'}}>{this.round(program.diff)}</div>
                 </div>
@@ -136,8 +201,8 @@ class DashBoardViewComponent extends Component {
         } else {
             return (
                 <div style={{color: 'red'}}>
-                    <span>{this.round(program.price)}</span>
-                    <div style={{fontWeight: 'normal'}}>{this.round(program.diff)}</div>
+                    <span>N/A</span>
+                    <div style={{fontWeight: 'normal'}}>N/A</div>
                 </div>
             )
         }
@@ -445,6 +510,12 @@ class DashBoardViewComponent extends Component {
         })
     }
 
+    handleCloseSnackbar() {
+        this.setState({
+            snackbarOpen: false
+        });
+    }
+
     render() {
         return (
             <div>
@@ -727,7 +798,7 @@ class DashBoardViewComponent extends Component {
                           <br/>
                           Type: {drug.drugType}
                             <br/>
-                          Dosage: {drug.dosageStrength} {drug.dosageUOM} <br/>
+                          Dosage: {drug.dosageStrength} <br/>
                           Quantity: {drug.quantity}
                             <br/>
                           Zip Code: {drug.zipcode}
@@ -812,13 +883,23 @@ class DashBoardViewComponent extends Component {
                             })}
                             </tbody>
                         </table>
-                        {this.state.filteredList.length === 0 ? (
+                        {this.state.filteredList.length === 0 && !this.state.dashboardLoading ? (
                             <div style={{textAlign: 'center'}} className='highlightedCell'>
                                 No Drugs Added To Dashboard
                             </div>
-                        ) : (
-                            <div/>
-                        )}
+                        ) : [( this.state.dashboardLoading
+                                ? (
+                                    <div
+                                        style={{textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 30}}
+                                        className='highlightedCell'
+                                    >
+                                        <CircularProgress />
+                                        <p style={{paddingTop: 15}}>Loading...</p>
+                                    </div>
+                                ) : (
+                                    <div/>
+                                )
+                        )]}
                     </div>
                     <div style={{paddingRight: '0px', paddingTop: '15px'}}>
                         <div className='float-sm-right'>
@@ -836,6 +917,34 @@ class DashBoardViewComponent extends Component {
                         </div>
                     </div>
                 </div>
+                <Dialog
+                    open={this.state.loadingDialog}
+                    onClose={this.toggleDialog}
+                    aria-labelledby="customized-dialog-title"
+                >
+                    <DialogTitle id="customized-dialog-title" onClose={this.toggleDialog}>
+                        Loading
+                    </DialogTitle>
+                    <DialogContent className="textCenter">
+                        <CircularProgress/>
+                    </DialogContent>
+                </Dialog>
+                <Snackbar
+                    open={this.state.snackbarOpen}
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                    autoHideDuration={5000}
+                    onClose={this.handleCloseSnackbar}
+                >
+                    <SnackbarContent
+                        onClose={this.handleCloseSnackbar}
+                        style={this.state.deleteOk ? {backgroundColor: 'limegreen'} : {backgroundColor: 'crimson'}}
+                        message={this.state.snackbarMessage}
+                        action={[
+                            <IconButton key="close" aria-label="close" color="inherit" onClick={this.handleCloseSnackbar}>
+                                <CloseIcon style={{fontSize: 20}} />
+                            </IconButton>,
+                        ]}/>
+                </Snackbar>
             </div>
         )
     }

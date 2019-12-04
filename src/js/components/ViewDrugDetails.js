@@ -24,24 +24,24 @@ class ViewDrugDetails extends React.Component {
       const request = this.props.state.location.state.request;
       request.token = window.sessionStorage.getItem("token");
       // console.log(response);
-    if(response.average === "0" || response.average === "N/A"|| response.average === "0.0"){
-      response.average = this.responseAverage(response);
+    if(response.averagePrice === "0" || response.averagePrice === "N/A"|| response.averagePrice === "0.0"){
+      response.averagePrice = this.responseAverage(response);
     }
     if(response.recommendedPrice === "0" || response.recommendedPrice === "N/A"){
       response.recommendedPrice = this.responseLowest(response);
     }
 
       const info = this.props.state.location.state.info;
-      this.props.state.location.state.info.dose.map((dose) => {
+      this.props.state.location.state.info["dose"].map((dose) => {
         if (dose.label === this.props.state.location.state.request.dosageStrength) {
           quantityList = dose.quantity;
         }
       });
       info.description= response.description;
       this.state = {
-        strengthList: info.dose,
+        strengthList: info["dose"],
         quantityList: quantityList,
-        drugStrength: this.getIndexByLabel(request.dosageStrength, info.dose),
+        drugStrength: this.getIndexByLabel(request.dosageStrength, info["dose"]),
         drugQuantity: this.getIndexByValue(request.quantity, quantityList),
         selectedDrug: info,
         drugRequest: request,
@@ -110,7 +110,12 @@ class ViewDrugDetails extends React.Component {
   }
 
   round(num) {
-    return Number(num).toFixed(2);
+    console.log(num);
+    let n = num;
+    if (num instanceof String) {
+      n = parseFloat(num);
+    }
+    return Number(n).toFixed(2);
   }
   updateProperties(request, info, response, drugStrengthList, drugQuantityList, drugStrength, drugQuantity) {
  
@@ -162,25 +167,25 @@ clickReports(){
   }
 
   render() {
+
+    console.log(this.state.drugDetails);
     if (this.state.selectedDrug != null) {
       const { classes } = this.props;
       let averagePriceColor, lowestPriceColor, currentPriceColor;
       if (this.state.drugDetails) {
-        if (this.state.drugDetails.averageDiff >= 0 || this.state.drugDetails.averageDiff === "N/A") {
-
+        if (this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.averagePrice <= 0) {
           averagePriceColor = { color: '#08CA00' };
         } else {
-
           averagePriceColor = { color: 'red' };
         }
-        if (this.state.drugDetails.recommendedDiff >= 0 || this.state.drugDetails.recommendedDiff === "N/A") {
+        if (this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.recommendedPrice <= 0) {
           lowestPriceColor = { color: '#08CA00' };
         } else {
           lowestPriceColor = { color: 'red' };
         }
 
-        if (this.state.drugDetails.programs.prices) {
-          if (this.state.drugDetails.programs[0].prices[0].diff >= 0 || this.state.drugDetails.programs[0].prices[0].diff === "N/A") {
+        if (this.state.drugDetails.programs) {
+          if (this.state.drugDetails.recommendedDiff >= 0 || this.state.drugDetails.recommendedDiff === "N/A") {
             currentPriceColor = { color: '#08CA00' };
           } else {
             currentPriceColor = { color: 'red' };
@@ -223,9 +228,9 @@ clickReports(){
                     <div className="overallPrice col-sm" style={averagePriceColor}>
                       <div className="headerhelp">
                         <span></span>
-                        <span>{this.state.drugDetails ? "$" + this.round(this.state.drugDetails.average) : "N/A"}</span></div>
+                        <span>{this.state.drugDetails ? "$" + this.round(this.state.drugDetails.averagePrice) : "N/A"}</span></div>
                       <div className="diff">
-                        <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails ? this.state.drugDetails.averageDiff : 0}></Arrow> {this.state.drugDetails ? this.round(this.state.drugDetails.averageDiff) : "N/A"}</span>
+                        <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails ? (this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.averagePrice) : 0}></Arrow> {this.state.drugDetails ? this.round((this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.averagePrice)) : "N/A"}</span>
                       </div>
                     </div>
                   </div>
@@ -238,11 +243,11 @@ clickReports(){
                     <div className=" overallPrice col-sm" style={currentPriceColor}>
                       <div className="headerhelp">
                         <span ></span>
-                        {this.state.drugDetails.programs[0].prices.length > 0 && this.state.drugDetails !== "N/A" ? "$" + this.round(this.state.drugDetails.programs[0].prices[0].price) : "N/A"}</div>
-                      <div className="diff">
-                        <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails.programs[0].prices.length > 0 ? this.state.drugDetails.programs[0].prices[0].diff : 0}></Arrow> 
-                        {this.state.drugDetails.programs[0].prices.length > 0 && this.state.drugDetails !== "N/A" ? this.round(this.state.drugDetails.programs[0].prices[0].diff) : "N/A"}</span>
-                      </div>
+                        {this.state.drugDetails ? "$" + this.round(this.state.drugDetails.programs[0].prices[0].price) : "N/A"}</div>
+                      {/*<div className="diff">*/}
+                      {/*  <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails.programs[0].length > 0 ? this.state.drugDetails.programs[0].diff : 0}></Arrow>*/}
+                      {/*  {this.state.drugDetails ? this.round(this.state.drugDetails.programs[0].diff) : "N/A"}</span>*/}
+                      {/*</div>*/}
                     </div>
                   </div>
 
@@ -257,7 +262,7 @@ clickReports(){
                         <span ></span>
                         {(this.state.drugDetails && this.state.drugDetails.recommendedPrice !== "N/A") ? "$" + this.round(this.state.drugDetails.recommendedPrice) : "N/A"}</div>
                       <div className="diff">
-                        <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails ? this.state.drugDetails.recommendedDiff : 0}></Arrow>{(this.state.drugDetails && this.state.drugDetails !== "N/A") ? this.round(this.state.drugDetails.recommendedDiff) : "N/A"}</span>
+                        <span style={{ display: 'inline-flex' }}><Arrow diff={this.state.drugDetails ? ((this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.recommendedPrice)) : 0}></Arrow>{(this.state.drugDetails && this.state.drugDetails.recommendedPrice) ? this.round((this.state.drugDetails.programs[0].prices[0].price - this.state.drugDetails.recommendedPrice)) : "N/A"}</span>
                       </div> </div>
                   </div>
                 </div>
