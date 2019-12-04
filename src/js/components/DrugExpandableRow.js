@@ -136,6 +136,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
     }
 
     return (
+        
         <ExpansionPanel
             square={true}
             expanded={expanded === "panel1"}
