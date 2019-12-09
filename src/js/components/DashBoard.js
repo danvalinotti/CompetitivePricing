@@ -26,11 +26,13 @@ class DashBoard extends React.Component {
             drugName: '',
             dosageStrength: '',
             drugType: 'BRAND_WITH_GENERIC',
+            drugForm: '',
             quantity: '',
             drugStrengthArray: [],
             drugQuantityArray: [],
             selectedDrug: null,
             showDialog: false,
+            errorMessage: '',
             firstChoice:null,
             loggedInProfile:{},
             invalid: false
@@ -64,7 +66,7 @@ class DashBoard extends React.Component {
                             this.state.selectedDrug = this.state.firstChoice;
                     }
                     this.setState({
-                    
+                        drugForm: data.drugForm,
                         drugType: data.drugType,
                     });
                     this.toggleDialog();
@@ -74,6 +76,7 @@ class DashBoard extends React.Component {
                         "drugName": drugName,
                         "dosageStrength": dosageStrength.label,
                         "drugType": this.state.drugType,
+                        "drugForm": this.state.drugForm,
                         "quantity": quantity,
                         "zipcode": data.myZipCode,
                         "longitude": "longitude",
@@ -84,10 +87,20 @@ class DashBoard extends React.Component {
                         .then(response => {
                             this.toggleDialog();
                             this.props.history.push({ pathname: '/viewdrugs', state: { request: requestObject, info: this.state.selectedDrug, response: response.data } });
-    
-                        }).catch(() => {
-                            this.toggleDialog();
-                            this.openDialog();
+                        }).catch((e) => {
+                            if (e.status === 400) {
+                                this.setState({
+                                    errorMessage: 'Drug search terms invalid.'
+                                });
+                                this.toggleDialog();
+                                this.openDialog();
+                            } else {
+                                this.setState({
+                                    errorMessage: 'An internal server error has occurred.'
+                                });
+                                this.toggleDialog();
+                                this.openDialog();
+                            }
                         });
                 } else {
                     this.openDialog();
@@ -317,7 +330,7 @@ class DashBoard extends React.Component {
                     onClose={this.handleClose}
                 >
                     <SnackbarContent 
-                        message={"Drug search terms invalid."}
+                        message={this.state.errorMessage}
                         style={{backgroundColor: "#e00000", fontWeight: 600}}
                         action={[
                             <IconButton key="close" aria-label="close" color="inherit" onClick={this.handleClose}>

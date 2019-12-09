@@ -15,14 +15,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Table from "@material-ui/core/Table";
-import TableRow from "@material-ui/core/TableRow";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import DashBoard from "./DashBoard";
 import DashboardTable from "./DashboardTable";
 
-class DashBoardViewComponent extends Component {
+class DashBoardContainer extends Component {
     constructor(props) {
         super(props);
         authenticateUser(this);
@@ -534,7 +529,7 @@ class DashBoardViewComponent extends Component {
                     clickReports={this.clickReports}
                 />
 
-                <div style={{paddingLeft: '10%', paddingRight: '10%'}}>
+                <div style={{paddingLeft: '5%', paddingRight: '5%'}}>
                     <div
                         className='row'
                         style={{paddingTop: '3%', marginRight: '0px', marginLeft: '0px'}}
@@ -546,7 +541,8 @@ class DashBoardViewComponent extends Component {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 width: '100%',
-                                paddingLeft: '0px'
+                                paddingLeft: '5%',
+                                paddingRight: '5%'
                             }}
                         >
                             <Typography
@@ -572,326 +568,6 @@ class DashBoardViewComponent extends Component {
                         </div>
                     </div>
                     <div style={{paddingTop: '30px'}}>
-                        <DashboardTable filteredList={this.state.filteredList}/>
-                        <table className='dashboardPrices'>
-                            <thead className='dashboardRows'>
-                            <tr>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortByName()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            Drug
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.drugSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortByInsideRx()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            Current Price
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.insideRxSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortByPharmCard()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            USPharmacy
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.pharmCardSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortByWellRx()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            WellRx
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.wellRxSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortByMedImpact()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            MedImpact
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.medImpactSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortByBlink()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            BlinkHealth
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.blinkHealthSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortBySingleCare()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            SingleCare
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.singleCareSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    className='tableHeader dashboardCellHeader'
-                                    onClick={() => {
-                                        this.sortByGoodRx()
-                                    }}
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            GoodRx
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.goodRxSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th
-                                    onClick={() => {
-                                        this.sortByLowestPrice()
-                                    }}
-                                    className='tableHeader dashboardCellHeader'
-                                >
-                                    <div style={{display: 'inline-flex'}}>
-                                        <label
-                                            className='dashboardTableHeader'
-                                            style={{float: 'left'}}
-                                        >
-                                            Lowest Market Price
-                                        </label>
-                                        <div style={{float: 'left'}}>
-                                            {' '}
-                                            <Icons
-                                                icon={this.state.lowestPriceSort}
-                                                height='24'
-                                                width='24'
-                                            />
-                                        </div>
-                                    </div>
-                                </th>
-                                <th className='tableHeader dashboardCellHeader'/>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {this.state.filteredList.map((drug, index) => {
-                                return (
-                                    <tr
-                                        className='dashboardRows'
-                                        key={index}
-                                        style={
-                                            index % 2 === 0 ? {backgroundColor: '#d3d3d338'} : {}
-                                        }
-                                    >
-                                        <td>
-                        <span className='nameColor'>
-                          <strong
-                              style={{fontSize: '0.9rem', color: '#000000bf'}}
-                          >
-                            {drug.name}
-                          </strong>
-                          <br/>
-                          Type: {drug.drugType}
-                            <br/>
-                          Dosage: {drug.dosageStrength} <br/>
-                          Quantity: {drug.quantity}
-                            <br/>
-                          Zip Code: {drug.zipcode}
-                            <br/>
-                        </span>
-                                        </td>
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv(drug.programs[0].prices[0])}{' '}
-                        </span>
-                                            <br/>
-                                        </td>
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv(drug.programs[1].prices[0])}{' '}
-                        </span>
-                                            <br/>
-                                        </td>
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv(drug.programs[2].prices[0])}
-                        </span>
-                                            <br/>
-                                        </td>
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv(drug.programs[3].prices[0])}
-                        </span>
-                                            <br/>
-                                        </td>
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv(drug.programs[4].prices[0])}
-                        </span>
-                                            <br/>
-                                        </td>
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv(drug.programs[5].prices[0])}
-                        </span>
-                                            <br/>
-                                        </td>
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv(drug.programs[6].prices[0])}
-                        </span>
-                                            <br/>
-                                        </td>
-
-                                        <td>
-                        <span className='programPrice colorBlue'>
-                          {this.getDiv2(
-                              drug.recommendedPrice,
-                              drug.recommendedDiff
-                          )}
-                        </span>
-                                            <br/>
-                                        </td>
-                                        <td>
-                                            {' '}
-                                            <div
-                                                style={{color: 'red'}}
-                                                onClick={() => this.deleteDrug(drug, index)}
-                                            >
-                                                <div>
-                                                    <svg
-                                                        xmlns='http://www.w3.org/2000/svg'
-                                                        width='24'
-                                                        height='24'
-                                                        fill='red'
-                                                        viewBox='0 0 24 24'
-                                                    >
-                                                        <path
-                                                            d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/>
-                                                        <path d='M0 0h24v24H0z' fill='none'/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
-                        </table>
                         {this.state.filteredList.length === 0 && !this.state.dashboardLoading ? (
                             <div style={{textAlign: 'center'}} className='highlightedCell'>
                                 No Drugs Added To Dashboard
@@ -906,13 +582,15 @@ class DashBoardViewComponent extends Component {
                                             alignItems: 'center',
                                             paddingTop: 30
                                         }}
-                                        className='highlightedCell'
                                     >
-                                        <CircularProgress/>
-                                        <p style={{paddingTop: 15}}>Loading...</p>
+                                        <CircularProgress size={60}/>
+                                        <p style={{paddingTop: 15, fontSize: "1.25rem", fontWeight: 500, fontStyle: "italic", color: "#363647"}}>
+                                            Loading Dashboard prices...<br/>
+                                            This may take a minute.
+                                        </p>
                                     </div>
                                 ) : (
-                                    <div/>
+                                    <DashboardTable filteredList={this.state.filteredList}/>
                                 )
                         )]}
                     </div>
@@ -932,38 +610,10 @@ class DashBoardViewComponent extends Component {
                         </div>
                     </div>
                 </div>
-                <Dialog
-                    open={this.state.loadingDialog}
-                    onClose={this.toggleDialog}
-                    aria-labelledby="customized-dialog-title"
-                >
-                    <DialogTitle id="customized-dialog-title" onClose={this.toggleDialog}>
-                        Loading
-                    </DialogTitle>
-                    <DialogContent className="textCenter">
-                        <CircularProgress/>
-                    </DialogContent>
-                </Dialog>
-                <Snackbar
-                    open={this.state.snackbarOpen}
-                    anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
-                    autoHideDuration={5000}
-                    onClose={this.handleCloseSnackbar}
-                >
-                    <SnackbarContent
-                        onClose={this.handleCloseSnackbar}
-                        style={this.state.deleteOk ? {backgroundColor: 'limegreen'} : {backgroundColor: 'crimson'}}
-                        message={this.state.snackbarMessage}
-                        action={[
-                            <IconButton key="close" aria-label="close" color="inherit"
-                                        onClick={this.handleCloseSnackbar}>
-                                <CloseIcon style={{fontSize: 20}}/>
-                            </IconButton>,
-                        ]}/>
-                </Snackbar>
+
             </div>
         )
     }
 }
 
-export default withRouter(DashBoardViewComponent)
+export default withRouter(DashBoardContainer)
