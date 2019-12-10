@@ -53,10 +53,13 @@ export default function DashboardTable(props) {
         let num2 = Number(num).toFixed(2);
         if (num2 === 'NaN') {
             num2 = 'N/A'
-        } else {
+        } else if (num2 >= 0) {
             num2 = '' + num2;
             num2 = addCommas(num2);
             num2 = '$' + num2
+        } else {
+            num2 = addCommas('' + (num2 * -1));
+            num2 = '-$' + num2;
         }
 
         return num2
@@ -189,7 +192,7 @@ export default function DashboardTable(props) {
                         ).map((drug, key) => (
                             <TableRow key={key} hover>
                                 <TableCell align={"left"} style={{borderRight: "1px solid lightgray", width: 240}}>
-                                    <span style={{fontSize: "1rem", fontWeight: 600}}>{drug.name}</span><br/>
+                                    <span style={{fontSize: "1rem", fontWeight: 600}}>{drug.name.toUpperCase()}</span><br/>
                                     <span style={{fontSize: "0.9rem", color: "#9b9b9b"}}>
                                         Form: {drug.drugType ? drug.drugType.replace(/-/g, " ") : ""}<br/>
                                         Dosage: {drug.dosageStrength ? drug.dosageStrength.replace(/-/g, " ") : ""}<br/>
@@ -198,30 +201,66 @@ export default function DashboardTable(props) {
                                     </span>
                                 </TableCell>
                                 {drug["programs"].map((program, key) => (
-                                    <TableCell key={key} align={"center"} style={{borderRight: "1px solid lightgray", width: 150}}>
-                                        <span style={
-                                            program["prices"].length > 0 && drug["programs"][0]["prices"].length > 0
-                                                ? getPriceColor(round(program["prices"][0]["price"]))
-                                                : {color: "crimson"}}
-                                        >
-                                            {program["prices"].length > 0
-                                                ? round(program["prices"][0]["price"])
-                                                : "N/A"
-                                            }
-                                            {/* TODO: add pharmacy to dashboard price*/}
-                                            {/*<br/>*/}
-                                            {/*<span style={{fontSize: '0.8em'}}>*/}
-                                            {/*    {program["prices"].length > 0*/}
-                                            {/*            ? program["prices"][0]["pharmacy"]*/}
-                                            {/*            : "N/A"*/}
-                                            {/*    }*/}
-                                            {/*</span>*/}
-                                        </span>
+                                    <TableCell key={key} align={"center"} style={{borderRight: "1px solid lightgray", width: 150, position: 'relative'}}>
+                                        <div className={"table-row-doublecell"}>
+                                            <div className={"table-row-doublecell-child"}>
+                                                <span style={
+                                                    program["prices"].length > 0 && drug["programs"][0]["prices"].length > 0
+                                                        ? getPriceColor(round(program["prices"][0]["price"]))
+                                                        : {color: "crimson"}}
+                                                >
+                                                    {program["prices"].length > 0
+                                                        ? round(program["prices"][0]["price"])
+                                                        : "N/A"
+                                                    }
+                                                </span>
+                                            </div>
+                                            {(program["prices"].length > 0 && program["prices"][0]["pharmacy"]) && (
+                                                <div className={"table-row-doublecell-child"}>
+                                                    <span>
+                                                         {/*TODO: add pharmacy to dashboard price*/}
+                                                        {program["prices"].length > 0
+                                                            ? (<span style={{fontSize: '0.8em', color: 'rgb(81, 81, 81)', fontStyle: 'italic'}}>
+                                                                        {program["prices"][0]["pharmacy"]}
+                                                                </span>
+                                                            ) : (<span style={{fontSize: '0.8em', color: 'crimson'}}>
+                                                                    N/A
+                                                                </span>
+                                                            )}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </TableCell>
                                 ))}
 
-                                <TableCell align={"center"} style={{borderRight: "1px solid lightgray", color: "#08ca00", fontWeight: 600}}>
-                                    {round(drug["recommendedPrice"])}
+                                <TableCell align={"center"} style={{width: 120, borderRight: "1px solid lightgray", color: "#08ca00", fontWeight: 600, position: 'relative'}}>
+                                    <div className={"table-row-doublecell"}>
+                                        <div className={"table-row-doublecell-child"}>
+                                                <span style={
+                                                    drug["recommendedDiff"] >= 0
+                                                        ? {color: "#08ca00"}
+                                                        : {color: "crimson"}}
+                                                >
+                                                    {round(drug["recommendedPrice"])}
+                                                </span>
+                                        </div>
+                                        {(drug["programs"][0]["prices"].length > 0 && drug["recommendedDiff"]) && (
+                                            <div className={"table-row-doublecell-child"}>
+                                                    <span>
+                                                         {/*TODO: add pharmacy to dashboard price*/}
+                                                        {drug["recommendedDiff"] >= 0
+                                                            ? (<span style={{fontWeight: 400, fontSize: '0.9em', color: 'rgb(81, 81, 81)', fontStyle: 'italic'}}>
+                                                                    {round(drug["recommendedDiff"])}
+                                                                </span>
+                                                            ) : (<span style={{fontWeight: 400, fontSize: '0.9em', color: 'crimson', fontStyle: 'italic'}}>
+                                                                    {round(drug["recommendedDiff"])}
+                                                                </span>
+                                                            )}
+                                                    </span>
+                                            </div>
+                                        )}
+                                    </div>
                                 </TableCell>
                                 <TableCell align={"center"}>
                                     <IconButton

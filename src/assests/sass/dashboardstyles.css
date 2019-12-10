@@ -49,3 +49,33 @@ table.dashboardPrices td {
 .colorGreen{
     color: rgb(46, 140, 248);
 }
+
+.table-row-doublecell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding: 18px;
+}
+
+.table-row-doublecell-child {
+    width: 100%;
+}
+
+.table-row-doublecell-child:nth-child(1) {
+    flex-basis: 2%;
+    height: 50px;
+}
+
+.table-row-doublecell-child:nth-child(2) {
+    border-top: 1px solid lightgray;
+    margin-top: 10px;
+    padding-top: 10px;
+    flex-basis: 80%;
+    height: auto;
+}
