@@ -26,7 +26,7 @@ class SignUp extends Component {
         }
     }
     handleEmailChange(event) {
-        if(event.target.value.length ==0){
+        if(event.target.value.length ===0){
             this.setState({
                 email: event.target.value,
                 emailErrorText:'Email must not be empty'
@@ -56,7 +56,7 @@ class SignUp extends Component {
     }
 
     handlePasswordChange(event) {
-        if(event.target.value.length ==0){
+        if(event.target.value.length ===0){
             this.setState({
                 password: event.target.value,
                 passwordErrorText:'Password must not be empty'
@@ -83,7 +83,7 @@ class SignUp extends Component {
                 <TextField
                     variant="outlined"
                     required
-                    error={this.state.emailErrorText.length === 0 ? false : true}
+                    error={this.state.emailErrorText.length !== 0}
                     helperText={this.state.emailErrorText}
                     id="standard-name"
                     label="Email"
@@ -95,7 +95,7 @@ class SignUp extends Component {
                     required
                     variant="outlined"
                     autoComplete="off"
-                    error={this.state.passwordErrorText.length === 0 ? false : true}
+                    error={this.state.passwordErrorText.length !== 0}
                     helperText={this.state.passwordErrorText}
                     id="standard-name"
                     label="Password"
@@ -127,7 +127,7 @@ class SignUp extends Component {
         </div>);
     }
     handleSubmit() {
-        var profile = {};
+        const profile = {};
         profile.username = this.state.email;
         profile.password = this.state.password;
         profile.name = this.state.name;
@@ -140,7 +140,7 @@ class SignUp extends Component {
             .then(response => {
                 // console.log(response.data.username)
                 if(response.data.username === "Exists"){
-                    this.setActiveStep((data)=>{return 0});
+                    this.setActiveStep(()=>{return 0});
                 }else{
                     this.props.history.push({ pathname: '/signin' });
                 }
@@ -153,17 +153,17 @@ class SignUp extends Component {
         this.props.history.push("/signin");
     }
     setActiveStep(newStep) {
-        if(this.state.emailErrorText == '' && this.state.passwordErrorText == ''){
-            if(newStep()==0 && newStep == 0){
+        if(this.state.emailErrorText === '' && this.state.passwordErrorText === ''){
+            if(newStep()===0 && newStep === 0){
                 this.setState({
                     activeStep:0,
                     email : '',
                     password: '',
                     warning :<div style={{color:"red"}}>Email taken, try again.</div>,
                 })
-            } else if (newStep == 0) {
-            
-                var step = newStep(this.state.activeStep);
+            } else if (newStep === 0) {
+
+                const step = newStep(this.state.activeStep);
                 this.setState({
                     activeStep:step
                 })

@@ -18,9 +18,6 @@ class DrugStrengthDropDown extends Component {
         }
 
     }
-    getDose(index) {
-        return this.state.drugStrengthArray[index];
-    }
 
     render() {
 

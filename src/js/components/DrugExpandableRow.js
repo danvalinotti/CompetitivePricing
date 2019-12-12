@@ -12,6 +12,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
 import { Button } from "@material-ui/core";
 
+// TODO: FIND OUT IF UNC PRICE IS DISPLAYED IF IT IS LOWER, OR IF IT EXISTS
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -127,18 +128,17 @@ export default function DrugExpandableRow({ program, image, programId }) {
     };
 
     function round(num) {
-        return Number(num).toFixed(2);
-    }
-
-    function comparePrices(price, uncPrice) {
-        if (parseFloat(uncPrice) > parseFloat(price)) {
-            return uncPrice;
-        } else {
-            return price;
+        let n = num;
+        if (num instanceof String) {
+            n = parseFloat(num);
+        } else if (num === -1.0 || num === "null" || num == null) {
+            return "N/A";
         }
+        return Number(n).toFixed(2);
     }
 
     return (
+
         <ExpansionPanel
             square={true}
             expanded={expanded === "panel1"}
@@ -153,7 +153,7 @@ export default function DrugExpandableRow({ program, image, programId }) {
                 <div id={programId} className={classes.summaryContent} >
                     <img src={image} alt="InsideRx" style={{ height: '60px', width: '150px' }} />
                     <Typography className={classes.secondaryHeading} align="left">
-                        {program.prices.length > 0 ? program.prices[0].pharmacy : "N/A"}
+                        {program.prices.length > 0 ? program.prices[0]["pharmacy"] : "N/A"}
                     </Typography>
                     <div className={classes.thirdHeading} style={program.prices.length > 0 && program.prices[0].uncPriceFlag ? {paddingTop: 30} : {paddingTop: 0}}>
                         {(program.prices.length > 0 && program.prices[0].uncPriceFlag) ? (
@@ -166,7 +166,13 @@ export default function DrugExpandableRow({ program, image, programId }) {
 
                         {program.prices.length > 0 ? (
                             <Typography align="right" className={classes.priceText}>
-                                {(program.prices[0].price === "N/A") ? "N/A" : "$" + round(program.prices[0].uncPriceFlag ? program.prices[0].uncPrice : program.prices[0].price)}
+                                {program.prices[0]["price"] ? "$" +
+                                    round(
+                                        program.prices[0]["uncPriceFlag"]
+                                        ? program.prices[0]["uncPrice"]
+                                        : program.prices[0]["price"])
+                                    : "N/A"
+                                }
                             </Typography>
                         ) : (
                                 <Typography align="right" className={classes.priceText}>
@@ -176,7 +182,8 @@ export default function DrugExpandableRow({ program, image, programId }) {
                         <br />
                         {program.prices.length > 0 ? (
                             <Typography align="right" className={classes.diffText}>
-                                <Arrow diff={program.prices[0].diff} />${round(program.prices[0].diff)}
+                                {/*<Arrow diff={program.prices[0].diff} />${round(program.prices[0].diff)}*/}
+                                <Arrow diff={0.00} />$0.00
                             </Typography>
                         ) : <div></div>}
                         <Button variant={"text"} color={"default"} className={classes.button} onClick={handleChange("panel1")}>
@@ -191,11 +198,11 @@ export default function DrugExpandableRow({ program, image, programId }) {
                 {program.prices.length > 0 ? (
                     <div className={`top4-${programId}`}>
                         {program.prices.slice(1, 5).map((price, key) => {
-                            if (price.price !== "null") {
+                            if (price.price) {
                                 return (
                                     <div className={classes.topFourRow} key={key}>
                                         <div className={`${classes.topFourContents} col-xs-12 col-sm  price rest `} style={{ display: 'flex', justifyContent: 'flex-start' }}><span className={classes.topFourNumber}>#{key + 2}</span> </div>
-                                        <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{ display: 'flex' }}><span>{price.pharmacy}</span></div>
+                                        <div className={`${classes.topFourContents} col-xs-12 col-sm  ph armacy rest `} style={{ display: 'flex' }}><span>{price["pharmacy"]}</span></div>
                                         <div className={`${classes.topFourPrices} col-xs-12 col-sm  price rest `}>
                                         {(price.uncPriceFlag) ? (
                                             <div className="uncPriceBox--sub">

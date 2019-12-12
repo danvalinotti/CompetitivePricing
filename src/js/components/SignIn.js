@@ -36,7 +36,7 @@ class SignIn extends Component {
         this.submitSignIn = this.submitSignIn.bind(this);
     }
     handleEmailChange(event) {
-        if (event.target.value.length == 0) {
+        if (event.target.value.length === 0) {
             this.setState({
                 email: event.target.value,
                 emailErrorText: 'Email must not be empty'
@@ -61,7 +61,7 @@ class SignIn extends Component {
     }
 
     handlePasswordChange(event) {
-        if (event.target.value.length == 0) {
+        if (event.target.value.length === 0) {
             this.setState({
                 password: event.target.value,
                 passwordErrorText: 'Password must not be empty'
@@ -74,46 +74,9 @@ class SignIn extends Component {
             });
         }
     }
-    renderEmailStep() {
-        return (<div> {this.state.warning}
-            <Grid container direction="column" alignItems="center" justify="center">
-                <TextField
-                    required
-                    error={this.state.emailErrorText.length === 0 ? false : true}
-                    helperText={this.state.emailErrorText}
-                    id="standard-name"
-                    label="Email"
-                    value={this.state.email}
-                    onChange={this.handleEmailChange.bind(this)}
-                    margin="normal"
-                />
-            </Grid>
-        </div>);
-    }
-    renderPasswordStep() {
-        return (<div>
-            <Grid container direction="column" alignItems="center" justify="center">
-                <TextField
-                    required
-                    error={this.state.passwordErrorText.length === 0 ? false : true}
-                    helperText={this.state.passwordErrorText}
-                    id="standard-name"
-                    label="Password"
-                    type="password"
-                    value={this.state.password}
-                    onChange={this.handlePasswordChange.bind(this)}
-                    margin="normal"
-                />
-            </Grid>
-        </div>);
-    }
-    renderFinalStep() {
-        return (<div>
-            Log in
-        </div>);
-    }
+
     handleSubmit() {
-        var profile = {};
+        const profile = {};
         profile.username = this.state.email;
         profile.password = this.state.password;
 
@@ -124,11 +87,11 @@ class SignIn extends Component {
         Axios.post(process.env.API_URL + '/create/token', profile)
             .then(response => {
 
-                if(response.data.password != "false"){
+                if(response.data.password !== "false"){
                     Axios.post(process.env.API_URL + '/authenticate/token', response.data)
                     .then(r => {
 
-                        if (r.data.password != "false") {
+                        if (r.data.password !== "false") {
                             this.setState({
                                 openSignIn: false,
                                 loggedIn: true,
@@ -150,11 +113,11 @@ class SignIn extends Component {
 
                         } else {
 
-                            this.setActiveStep((data) => { return 0 })
+                            this.setActiveStep(() => { return 0 })
                         }
                     })
                 }else{
-                    this.setActiveStep((data) => { return 0 })
+                    this.setActiveStep(() => { return 0 })
                 }
             });
 
@@ -164,16 +127,16 @@ class SignIn extends Component {
         this.props.history.push("/signup");
     }
     setActiveStep(newStep) {
-        if (this.state.emailErrorText == '' && this.state.passwordErrorText == '') {
-            if (newStep() == 0 && newStep == 0) {
+        if (this.state.emailErrorText === '' && this.state.passwordErrorText === '') {
+            if (newStep() === 0 && newStep === 0) {
                 this.setState({
                     activeStep: 0,
                     email: '',
                     password: '',
                     warning: <div style={{ color: "red" }}>Wrong credentials, try again.</div>,
                 })
-            } else if (newStep == 0) {
-                var step = newStep(this.state.activeStep);
+            } else if (newStep === 0) {
+                const step = newStep(this.state.activeStep);
                 this.setState({
                     activeStep: step
                 })
@@ -185,11 +148,7 @@ class SignIn extends Component {
             updateDialog: false
         })
     }
-    handleForgotClose() {
-        this.setState({
-            updateDialog: false
-        })
-    }
+
     handleOldPassword(event) {
         this.setState({
             oldPassword: event.target.value
@@ -211,13 +170,13 @@ class SignIn extends Component {
         })
     }
     updatePassword() {
-        var profile = {};
+        const profile = {};
 
         profile.password = this.state.oldPassword;
         profile.username = this.state.email;
         profile.role = this.state.newPassword;
-        if(this.state.newPassword == this.state.confirmNewPassword){
-        if(this.state.newPassword != this.state.oldPassword){
+        if(this.state.newPassword === this.state.confirmNewPassword){
+        if(this.state.newPassword !== this.state.oldPassword){
         Axios.post(process.env.API_URL + '/update/password', profile)
             .then(response => {
                 if (response.data == null) {
@@ -269,7 +228,7 @@ class SignIn extends Component {
                                                 width="auto"
                                                 required
                                                 variant="outlined"
-                                                error={this.state.emailErrorText.length === 0 ? false : true}
+                                                error={this.state.emailErrorText.length !== 0}
                                                 helperText={this.state.emailErrorText}
                                                 id="standard-name"
                                                 label="Email"
@@ -284,7 +243,7 @@ class SignIn extends Component {
                                         <Grid container item xs={12} direction="column" alignItems="center" justify="center">
                                             <TextField
                                                 required
-                                                error={this.state.passwordErrorText.length === 0 ? false : true}
+                                                error={this.state.passwordErrorText.length !== 0}
                                                 helperText={this.state.passwordErrorText}
                                                 id="standard-name"
                                                 label="Password"

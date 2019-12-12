@@ -18,13 +18,9 @@ class TabBar extends React.Component {
 
   constructor(props) {
     super(props);
-    var loggedIn = window.sessionStorage.getItem("loggedIn");
-    
-    if(loggedIn !== "true"){
-      loggedIn = false;
-    }else{
-      loggedIn = true;
-    }
+    let loggedIn = window.sessionStorage.getItem("loggedIn");
+
+    loggedIn = loggedIn === "true";
    
     this.state = {
       value: this.props.value,
@@ -58,16 +54,16 @@ class TabBar extends React.Component {
     })
   }
   logout(){
-    var userToken = {};
+    const userToken = {};
     userToken.name = window.sessionStorage.getItem("token");
     Axios.post(process.env.API_URL + '/profile/logout' , userToken)
-    .then(r => {
+    .then(() => {
       
       this.setState({
         loggedIn: false,
       });
 
-      window.sessionStorage.setItem("loggedIn",false);
+      window.sessionStorage.setItem("loggedIn","false");
       window.sessionStorage.setItem("token","");
       this.props.history.push({ pathname: '/signin' });
     });
@@ -84,7 +80,7 @@ class TabBar extends React.Component {
   }
 
   loadMenuItems(){
-      if(this.props.profile.role == "admin"){
+      if(this.props.profile.role === "admin"){
         if(this.props.page){
           return(<div >
             <MenuItem >My Account</MenuItem>
@@ -116,8 +112,7 @@ class TabBar extends React.Component {
   }
   submitSignUp(profile){
     Axios.post(process.env.API_URL + '/signUp' , profile)
-    .then(response => {
-      // console.log("response");
+    .then(() => {
     });
 
     this.setState({
@@ -129,7 +124,7 @@ class TabBar extends React.Component {
     .then(response => {
         Axios.post(process.env.API_URL + '/authenticate/token' , response.data)
         .then(r => {
-            if(r.data.password != "false"){
+            if(r.data.password !== "false"){
               this.setState({
                 openSignIn : false,
                 loggedIn : true,

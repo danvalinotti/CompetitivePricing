@@ -76,7 +76,7 @@ class ManageAlerts extends Component {
         );
     }
     getDate(time) {
-        var d = new Date(time);
+        const d = new Date(time);
         return d.toLocaleString();
     }
     toggleDialog() {
@@ -98,7 +98,7 @@ class ManageAlerts extends Component {
         alert.active = true;
         alert.recipients = values.recipients.toString();
 
-        var rule = {};
+        const rule = {};
         if (alert.selectedDrug === 0) {
           rule.drugId = 0;
         } else {
@@ -115,7 +115,7 @@ class ManageAlerts extends Component {
                 Axios.post(
                     process.env.API_URL + "/create/drug/rule",
                     rule
-                ).then(response => {
+                ).then(() => {
                     this.setState({
                         loading: false
                     })

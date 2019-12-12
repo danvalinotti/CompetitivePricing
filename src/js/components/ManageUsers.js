@@ -53,7 +53,7 @@ class ManageUsers extends Component {
         });
     }
     handleChangeRowsPerPage(event) {
-        var rows = parseInt(event.target.value);
+        const rows = parseInt(event.target.value);
         this.setState({
             rowsPerPage: rows
         });
@@ -75,25 +75,25 @@ class ManageUsers extends Component {
     }
     toggleDialog() {
         this.setState({
-            newProfileDialog: this.state.newProfileDialog ? false : true
+            newProfileDialog: !this.state.newProfileDialog
         });
     }
     submit(values) {
         this.setState({
             loading: true
         });
-        var profile = {};
+        const profile = {};
 
         profile.name = values.name;
         profile.username = values.email;
-        if (this.state.isAdmin == true) {
+        if (this.state.isAdmin === true) {
             profile.role = "admin";
         } else {
             profile.role = "user";
         }
 
         Axios.post(process.env.API_URL + "/admin/create/user", profile).then(
-            response => {
+            () => {
                 this.populateProfiles();
                 this.setState({
                     newProfileDialog: false,

@@ -39,21 +39,29 @@ class AutoSuggestComponent extends React.Component {
 
     }
 
-    getSuggestions(value) {
+    getSuggestions() {
 
         return this.state.providerPrices;
     }
     onClickDrug(drug) {
+        if (drug) {
+            this.setState({
+                inputValue: drug.name,
+                strengthList: drug.dose,
+                drugStrength: drug.dose[0],
+                quantityList: drug.dose[0].quantity,
+                drugQuantity: drug.dose[0].quantity[0],
+            });
+        } else {
+            this.setState({
+                inputValue: "",
+                strengthList: "",
+                drugStrength: "",
+                quantityList: "",
+                drugQuantity: ""
+            });
+        }
 
-        this.dosageList = drug.dose;
-        this.setState({
-            inputValue: drug.name,
-            strengthList: drug.dose,
-            drugStrength: drug.dose[0],
-            quantityList: drug.dose[0].quantity,
-            drugQuantity: drug.dose[0].quantity[0],
-        });
- 
         this.props.updateDrug(drug);
 
     };
@@ -81,7 +89,7 @@ class AutoSuggestComponent extends React.Component {
             });
 
     };
-    renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
+    renderSuggestion({ suggestion, index, itemProps, highlightedIndex}) {
         const isHighlighted = highlightedIndex === index;
 
         return (
@@ -107,52 +115,7 @@ class AutoSuggestComponent extends React.Component {
     render() {
         const { classes } = this.props;
         
-        const theme = {
-            input: {
-                height: '60px ',
-                width: '100% ',
-                border: '1px solid #B3B3B3 ',
-                backgroundColor: ' #FFFFFF ',
-                borderRadius: '8px ',
-                boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08) '
-            },
-            suggestionsContainerOpen: {
-                flex: 'row',
-                border: '1px solid #B3B3B3 ',
-                backgroundColor: ' #FFFFFF ',
-                borderRadius: '8px ',
-                boxShadow: '0 8px 25px -10px rgba(0, 0, 0, 0.08) '
-            },
-            root: {
-                flexGrow: '1',
-         
-            },
 
-            container: {
-                flexGrow: '1',
-                position: 'relative',
-            },
-            paper: {
-                position: 'absolute',
-                zIndex: 5,
-                marginTop: 'theme.spacing.unit',
-                left: '0',
-                right: '0',
-            },
-            chip: {
-                margin: '`${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`',
-            },
-            inputRoot: {
-                flexWrap: 'wrap',
-            },
-            inputInput: {
-                width: 'auto',
-                flexGrow: '1',
-            },
-            divider: {
-                height: 'theme.spacing.unit * 2',
-            }
-        };
         
         const searchBarCopy = {
 
@@ -171,11 +134,9 @@ class AutoSuggestComponent extends React.Component {
                 <Downshift onSelect={(drug) => this.onClickDrug(drug)} itemToString={i => { return i ? i.name : '' }} id="downshift-simple" 
                 >
                     {({
-                        theme,
                         getInputProps,
                         getItemProps,
                         getMenuProps,
-                        handleInputChange,
                         highlightedIndex,
                         inputValue,
                         isOpen,

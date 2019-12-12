@@ -59,8 +59,8 @@ class SignInDialog extends React.Component {
         </div>);
     }
     handleSubmit(){
-     
-        var profile = {};
+
+        const profile = {};
         profile.username = this.state.email;
         profile.password = this.state.password;
 

@@ -56,7 +56,6 @@ const executeFetch = (url,
 
 function drugSearchService(name) {
     const url = `http://localhost:8081/getDrugInfo/${name}`;
-    // executeFetch(url,'GET')
     return fetch(
         url, {
             method: 'GET',

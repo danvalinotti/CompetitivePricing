@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {actions} from "../actions/dashBoardActions";
 import DashBoardViewComponent from "../components/DashBoardView";
 import gxWave from "../../assests/images/GxWave-Logo.png";
+import DashBoardContainer from "../components/DashboardContainer";
 
 class DashBoardViewContainer extends Component {
     constructor(props) {
@@ -15,7 +16,7 @@ class DashBoardViewContainer extends Component {
     render() {
         return (
             <div>
-                <DashBoardViewComponent
+                <DashBoardContainer
                     actions = {this.props.actions}
                     dashBoardDrugsData = {this.props.dashBoardDrugsData}
 
