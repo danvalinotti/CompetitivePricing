@@ -3,7 +3,7 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
-import {Dialog, makeStyles, Paper, Snackbar, TableBody, TableCell} from "@material-ui/core";
+import {Dialog, makeStyles, Paper, Select, Snackbar, TableBody, TableCell, Typography} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
@@ -17,28 +17,18 @@ import SnackbarContent from "@material-ui/core/SnackbarContent";
 import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from '@material-ui/icons/Delete';
-
-const rows = [
-    {
-        name: "Test",
-        usp: 0.00,
-        wellRx: 0.00,
-        medImpact: 0.00,
-        blink: 0.00,
-        single: 0.00,
-        goodRx: 0.00,
-        lmp: 0.00
-    }
-];
+import MenuItem from "@material-ui/core/MenuItem";
 
 export default function DashboardTable(props) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [list, setList] = useState(props.filteredList);
     const [filteredList, setFilteredList] = useState(props.filteredList);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteOk, setDeleteOk] = useState(true);
+    const [filter, setFilter] = useState('none');
 
     const handlePageChange = (event, newPage) => {
         setPage(newPage);
@@ -117,15 +107,45 @@ export default function DashboardTable(props) {
         });
     };
 
+    const updateFilter = (event) => {
+        setFilter(event.target.value);
+        setPage(0);
+        if (event.target.value === "leading") {
+            let newList = list.filter((drug) => {
+                return parseFloat(drug["recommendedDiff"]) === 0;
+            });
+            setFilteredList(newList);
+        } else if (event.target.value === "trailing") {
+            let newList = list.filter((drug) => {
+                return parseFloat(drug["recommendedDiff"]) < 0;
+            });
+            setFilteredList(newList);
+        } else {
+            setFilteredList(list);
+        }
+    };
+
     return (
         <Paper>
             <div>
                 <Table stickyHeader>
                     <TableHead>
-                        <TableRow style={{backgroundColor: "#0f0034", color: "whitesmoke"}}>
+                        <TableRow>
+                            <th className={"table-filter-container"} style={{backgroundColor: "#2e2051", color: "whitesmoke", paddingLeft: 15}}>
+                                <Typography style={{color: "whitesmoke"}}>Filter: </Typography>
+                                <Select
+                                    value={filter}
+                                    onChange={updateFilter}
+                                    style={{color: "black", backgroundColor: "whitesmoke", marginLeft: 15, padding: "0 10px", fontWeight: 400, width: 180}}
+                                >
+                                    <MenuItem value={"none"}>None</MenuItem>
+                                    <MenuItem value={"leading"}>Market Leading</MenuItem>
+                                    <MenuItem value={"trailing"}>Market Trailing</MenuItem>
+                                </Select>
+                            </th>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 50]}
-                                count={props.filteredList.length}
+                                count={filteredList.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 onChangePage={handlePageChange}
@@ -188,7 +208,7 @@ export default function DashboardTable(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {props.filteredList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage
+                        {filteredList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage
                         ).map((drug, key) => (
                             <TableRow key={key} hover>
                                 <TableCell align={"left"} style={{borderRight: "1px solid lightgray", width: 240}}>
@@ -330,7 +350,7 @@ function TablePaginationActions(props) {
     };
 
     return (
-        <div style={{width: "30%"}}>
+        <div style={{width: 350, marginLeft: 15}}>
             <IconButton
                 style={{color: "whitesmoke"}}
                 onClick={handleFirstPageButtonClick}

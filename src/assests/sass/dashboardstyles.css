@@ -79,3 +79,9 @@ table.dashboardPrices td {
     flex-basis: 80%;
     height: auto;
 }
+
+.table-filter-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
