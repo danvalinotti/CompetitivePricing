@@ -10,6 +10,7 @@ import {Snackbar} from "@material-ui/core";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import DashboardAddDialog from "./DashboardAddDialog";
 
 
 class DrugInformation extends React.Component {
@@ -26,13 +27,22 @@ class DrugInformation extends React.Component {
             dashboardOk: -1,
             snackbarOpen: false,
             dashboardMessage: "",
-            alertColor: 'limegreen'
+            alertColor: 'limegreen',
+            dialogOpen: false,
         };
         this.getDosageForm = this.getDosageForm.bind(this);
         this.getDrugDescription = this.getDrugDescription.bind(this);
         this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
+        this.toggleDialog = this.toggleDialog.bind(this);
+        this.addDrug = this.addDrug.bind(this);
         this.getDosageForm();
         // this.getDrugDescription();
+    }
+
+    toggleDialog() {
+        this.setState({
+            dialogOpen: !this.state.dialogOpen
+        });
     }
 
     getDosageForm() {
@@ -59,7 +69,7 @@ class DrugInformation extends React.Component {
         axios.post(process.env.API_URL + '/rts', drugRequest)
             .then(response => {
                 // console.log(response.data);
-                this.props.toggleDialog();
+                this.props.toggleLoadingDialog();
                 this.setState({
                     drugDetails: response.data,
                 });
@@ -72,7 +82,7 @@ class DrugInformation extends React.Component {
 
 
     onClickFilterSearch() {
-        this.props.toggleDialog();
+        this.props.toggleLoadingDialog();
 
         const zipCode = this.props.drugRequest.zipcode;
         const drugType = "BRAND_WITH_GENERIC";
@@ -90,11 +100,16 @@ class DrugInformation extends React.Component {
         this.getDrugDetails(drugRequest);
     }
 
-
-    addDrug() {
-
-        this.props.toggleDialog();
-        axios.post(process.env.API_URL + '/dashboard/add', this.props.drugRequest)
+    addDrug(days) {
+        console.log(days);
+        const token = window.sessionStorage.getItem("token");
+        const payload = {
+            ...this.props.drugRequest,
+            token: token,
+            schedule: `{${days}}`
+        };
+        this.props.toggleLoadingDialog();
+        axios.post(process.env.API_URL + '/dashboard/add', payload)
             .then((response) => {
                 if (response.status === 200) {
                     this.setState({
@@ -111,6 +126,7 @@ class DrugInformation extends React.Component {
                         alertColor: 'limegreen'
                     });
                 }
+                this.props.toggleLoadingDialog();
                 this.props.toggleDialog();
             }).catch((error) => {
                 // Drug does not exist in drug_master
@@ -138,6 +154,7 @@ class DrugInformation extends React.Component {
                         alertColor: 'crimson'
                     });
                 }
+                this.props.toggleLoadingDialog();
                 this.props.toggleDialog();
             });
 
@@ -172,6 +189,10 @@ class DrugInformation extends React.Component {
         });
     }
 
+    onSubmit() {
+        console.log("Submit");
+    }
+
     render() {
         if (this.state.pastDrugName !== this.props.drugRequest.drugName) {
             this.setState({
@@ -190,9 +211,7 @@ class DrugInformation extends React.Component {
                         </div>
                         <div className="col-sm-6 ">
                             <button type="button" style={{backgroundColor: 'white', padding: '.375rem 2.5rem'}}
-                                    onClick={() => {
-                                        this.addDrug()
-                                    }} className="btn btn-outline-primary float-sm-right trackListing pointer">Track
+                                    onClick={this.toggleDialog} className="btn btn-outline-primary float-sm-right trackListing pointer">Track
                                 Pricing
                             </button>
                         </div>
@@ -260,11 +279,11 @@ class DrugInformation extends React.Component {
                         </div>
                     </div>
                     <Dialog
-                        onClose={this.props.toggleDialog}
+                        onClose={this.props.toggleLoadingDialog}
                         aria-labelledby="customized-dialog-title"
-                        open={this.props.showDialog}
+                        open={this.props.loadingDialog}
                     >
-                        <DialogTitle id="customized-dialog-title" onClose={this.props.toggleDialog}>
+                        <DialogTitle id="customized-dialog-title" onClose={this.props.toggleLoadingDialog}>
                             Loading
                         </DialogTitle>
                         <DialogContent className="textCenter">
@@ -272,6 +291,7 @@ class DrugInformation extends React.Component {
                         </DialogContent>
 
                     </Dialog>
+                    <DashboardAddDialog open={this.state.dialogOpen} onChange={this.toggleDialog} onSubmit={this.addDrug} />
                 </div>
                 <Snackbar
                     open={this.state.snackbarOpen}

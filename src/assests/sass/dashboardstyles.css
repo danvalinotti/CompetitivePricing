@@ -85,3 +85,20 @@ table.dashboardPrices td {
     justify-content: flex-start;
     align-items: center;
 }
+
+.dashboard-dialog-content {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.dashboard-dialog-check {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+}
+
+.dashboard-dialog-check > h6 {
+    font-size: 1rem !important;
+}

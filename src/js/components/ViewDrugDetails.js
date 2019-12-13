@@ -46,16 +46,23 @@ class ViewDrugDetails extends React.Component {
                 selectedDrug: info,
                 drugRequest: request,
                 drugDetails: response,
-
+                loadingDialog: false,
                 toggleDialog: false,
                 loggedInProfile: {},
             };
 
         }
+        this.toggleLoadingDialog = this.toggleLoadingDialog.bind(this);
         this.clickHome = this.clickHome.bind(this);
         this.clickDashboard = this.clickDashboard.bind(this);
         this.clickReports = this.clickReports.bind(this);
 
+    }
+
+    toggleLoadingDialog() {
+        this.setState({
+            loadingDialog: !this.state.loadingDialog
+        });
     }
 
     responseAverage(response) {
@@ -236,7 +243,9 @@ class ViewDrugDetails extends React.Component {
                         drugStrength={this.state.drugStrength}
                         drugQuantity={this.state.drugQuantity}
                         updateProperties={this.updateProperties.bind(this)}
+                        toggleLoadingDialog={this.toggleLoadingDialog}
                         toggleDialog={this.toggleDialog.bind(this)}
+                        loadingDialog={this.state.loadingDialog}
                         showDialog={this.state.toggleDialog}
                         history={this.props.history}
                         response={this.state.drugDetails}

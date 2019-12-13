@@ -76,12 +76,17 @@ export default function DashboardTable(props) {
     };
 
     const deleteDrug = (drug) => {
+        const payload = {
+            ...drug,
+            token: window.sessionStorage.getItem("token")
+        };
         console.log(drug);
         setDialogOpen(true);
+        const token = sessionStorage.getItem("token");
         let list = filteredList;
         let i = list.indexOf(drug);
         let newList = list.splice(i, 1);
-        Axios.delete(process.env.API_URL + '/dashboard/remove', {data: drug}).then(
+        Axios.delete(process.env.API_URL + '/dashboard/remove', {data: payload}).then(
             (response) => {
                 if (response.status === 200) {
                     setDialogOpen(false);
