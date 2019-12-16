@@ -168,9 +168,9 @@ class DashBoardContainer extends Component {
                         style={{paddingTop: '3%', marginRight: '0px', marginLeft: '0px'}}
                     >
                         <div
-                            style={{fontWeight: 'bold'}}
                             style={{
                                 display: 'flex',
+                                fontWeight: 'bold',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 width: '100%',

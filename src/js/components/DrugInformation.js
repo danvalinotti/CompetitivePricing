@@ -10,8 +10,6 @@ import {Snackbar} from "@material-ui/core";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import DashboardAddDialog from "./DashboardAddDialog";
-
 
 class DrugInformation extends React.Component {
 
@@ -100,13 +98,11 @@ class DrugInformation extends React.Component {
         this.getDrugDetails(drugRequest);
     }
 
-    addDrug(days) {
-        console.log(days);
+    addDrug() {
         const token = window.sessionStorage.getItem("token");
         const payload = {
             ...this.props.drugRequest,
-            token: token,
-            schedule: days
+            token: token
         };
         this.props.toggleLoadingDialog();
         axios.post(process.env.API_URL + '/dashboard/add', payload)
@@ -126,7 +122,7 @@ class DrugInformation extends React.Component {
                         alertColor: 'limegreen'
                     });
                 }
-                this.toggleDialog();
+                // this.toggleDialog();
                 this.props.toggleLoadingDialog();
             }).catch((error) => {
                 // Drug does not exist in drug_master
@@ -155,7 +151,7 @@ class DrugInformation extends React.Component {
                     });
                 }
                 this.props.toggleLoadingDialog();
-                this.props.toggleDialog();
+                // this.props.toggleDialog();
             });
 
     }
@@ -189,10 +185,6 @@ class DrugInformation extends React.Component {
         });
     }
 
-    onSubmit() {
-        console.log("Submit");
-    }
-
     render() {
         if (this.state.pastDrugName !== this.props.drugRequest.drugName) {
             this.setState({
@@ -211,7 +203,7 @@ class DrugInformation extends React.Component {
                         </div>
                         <div className="col-sm-6 ">
                             <button type="button" style={{backgroundColor: 'white', padding: '.375rem 2.5rem'}}
-                                    onClick={this.toggleDialog} className="btn btn-outline-primary float-sm-right trackListing pointer">
+                                    onClick={this.addDrug} className="btn btn-outline-primary float-sm-right trackListing pointer">
                                 Track Pricing
                             </button>
                         </div>
@@ -291,7 +283,6 @@ class DrugInformation extends React.Component {
                         </DialogContent>
 
                     </Dialog>
-                    <DashboardAddDialog open={this.state.dialogOpen} onChange={this.toggleDialog} onSubmit={this.addDrug} />
                 </div>
                 <Snackbar
                     open={this.state.snackbarOpen}

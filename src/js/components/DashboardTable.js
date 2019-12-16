@@ -18,45 +18,7 @@ import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuItem from "@material-ui/core/MenuItem";
 
-const days = ["All", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 export default function DashboardTable(props) {
-    const filterList = (list, day, filter) => {
-        return list.filter((drug) => {
-            // Day is specified
-            if (day !== "All") {
-                if (filter === "leading") {
-                    if (drug !== undefined && drug["schedule"] !== null) {
-                        return (parseFloat(drug["recommendedDiff"]) === 0 && drug["schedule"].includes(day.toLowerCase()));
-                    } else {
-                        return false;
-                    }
-                } else if (filter === "trailing") {
-                    if (drug !== undefined && drug["schedule"] !== null) {
-                        return (parseFloat(drug["recommendedDiff"]) < 0 && drug["schedule"].includes(day.toLowerCase()));
-                    } else {
-                        return false;
-                    }
-                } else {
-                    if (drug !== undefined && drug["schedule"] !== null) {
-                        return drug["schedule"].includes(day.toLowerCase());
-                    } else {
-                        return false;
-                    }
-                }
-            // Day is set to "All"
-            } else {
-                if (filter === "leading") {
-                    return parseFloat(drug["recommendedDiff"]) === 0;
-                } else if (filter === "trailing") {
-                    return parseFloat(drug["recommendedDiff"]) < 0;
-                } else {
-                    return true;
-                }
-            }
-        });
-    };
-
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -64,8 +26,7 @@ export default function DashboardTable(props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteOk, setDeleteOk] = useState(true);
     const [filter, setFilter] = useState('none');
-    const [day, setDay] = useState(days[new Date().getDay() + 1]);
-    const [filteredList, setFilteredList] = useState(filterList(props.filteredList, day, filter));
+    const [filteredList, setFilteredList] = useState(props.filteredList);
 
     const handlePageChange = (event, newPage) => {
         setPage(newPage);
@@ -117,7 +78,6 @@ export default function DashboardTable(props) {
             ...drug,
             token: window.sessionStorage.getItem("token")
         };
-        console.log(drug);
         setDialogOpen(true);
         let list = filteredList;
         let i = list.indexOf(drug);
@@ -131,10 +91,12 @@ export default function DashboardTable(props) {
                     setDeleteOk(true);
                     setFilteredList(list);
                 } else if (response.status === 208) {
+                    setDialogOpen(false);
                     setSnackbarMessage("Drug already deleted from dashboard.");
                     setSnackbarOpen(true);
                     setDeleteOk(true);
                 } else {
+                    setDialogOpen(false);
                     setSnackbarMessage("An unknown error has occurred.");
                     setSnackbarOpen(true);
                     setDeleteOk(false);
@@ -142,22 +104,37 @@ export default function DashboardTable(props) {
             }
         ).catch((error) => {
             console.log(error);
+            setDialogOpen(false);
             setSnackbarMessage("Failed to delete drug from dashboard.");
             setSnackbarOpen(true);
             setDeleteOk(false);
         });
     };
 
-    const updateMarket = (event) => {
-        setFilter(event.target.value);
-        setPage(0);
-        setFilteredList(filterList(props.filteredList, day, event.target.value));
+    const filterList = (list, filter) => {
+        return list.filter((drug) => {
+            if (filter === "leading") {
+                if (drug !== undefined) {
+                    return parseFloat(drug["recommendedDiff"]) === 0;
+                } else {
+                    return false;
+                }
+            } else if (filter === "trailing") {
+                if (drug !== undefined) {
+                    return parseFloat(drug["recommendedDiff"]) < 0;
+                } else {
+                    return false;
+                }
+            } else {
+                return drug !== undefined;
+            }
+        });
     };
 
-    const updateDay = (event) => {
-        setDay(event.target.value);
+    const updateMarketFilter = (event) => {
+        setFilter(event.target.value);
         setPage(0);
-        setFilteredList(filterList(props.filteredList, event.target.value, filter));
+        setFilteredList(filterList(props.filteredList, event.target.value));
     };
 
     return (
@@ -171,22 +148,12 @@ export default function DashboardTable(props) {
                                     <Typography style={{color: "whitesmoke"}}>Filter: </Typography>
                                     <Select
                                         value={filter}
-                                        onChange={updateMarket}
+                                        onChange={updateMarketFilter}
                                         style={{color: "black", backgroundColor: "whitesmoke", marginLeft: 15, padding: "0 10px", fontWeight: 400, width: 180}}
                                     >
                                         <MenuItem value={"none"}>None</MenuItem>
                                         <MenuItem value={"leading"}>Market Leading</MenuItem>
                                         <MenuItem value={"trailing"}>Market Trailing</MenuItem>
-                                    </Select>
-                                    <Typography style={{color: 'whitesmoke', paddingLeft: 15}}>Day: </Typography>
-                                    <Select
-                                        value={day}
-                                        onChange={updateDay}
-                                        style={{color: "black", backgroundColor: "whitesmoke", marginLeft: 15, padding: "0 10px", fontWeight: 400, width: 180}}
-                                    >
-                                        {days.map((day, index) => (
-                                            <MenuItem value={day} key={index}>{day}</MenuItem>
-                                        ))}
                                     </Select>
                                 </div>
                             </TableCell>
