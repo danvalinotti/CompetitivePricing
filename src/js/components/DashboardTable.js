@@ -3,7 +3,7 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
-import {Dialog, makeStyles, Paper, Select, Snackbar, TableBody, TableCell, Typography} from "@material-ui/core";
+import {Dialog, Paper, Select, Snackbar, TableBody, TableCell, Typography} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
@@ -15,20 +15,57 @@ import DialogContent from "@material-ui/core/DialogContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import CloseIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import Button from "@material-ui/core/Button";
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuItem from "@material-ui/core/MenuItem";
 
+const days = ["All", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 export default function DashboardTable(props) {
+    const filterList = (list, day, filter) => {
+        return list.filter((drug) => {
+            // Day is specified
+            if (day !== "All") {
+                if (filter === "leading") {
+                    if (drug !== undefined && drug["schedule"] !== null) {
+                        return (parseFloat(drug["recommendedDiff"]) === 0 && drug["schedule"].includes(day.toLowerCase()));
+                    } else {
+                        return false;
+                    }
+                } else if (filter === "trailing") {
+                    if (drug !== undefined && drug["schedule"] !== null) {
+                        return (parseFloat(drug["recommendedDiff"]) < 0 && drug["schedule"].includes(day.toLowerCase()));
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (drug !== undefined && drug["schedule"] !== null) {
+                        return drug["schedule"].includes(day.toLowerCase());
+                    } else {
+                        return false;
+                    }
+                }
+            // Day is set to "All"
+            } else {
+                if (filter === "leading") {
+                    return parseFloat(drug["recommendedDiff"]) === 0;
+                } else if (filter === "trailing") {
+                    return parseFloat(drug["recommendedDiff"]) < 0;
+                } else {
+                    return true;
+                }
+            }
+        });
+    };
+
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [list, setList] = useState(props.filteredList);
-    const [filteredList, setFilteredList] = useState(props.filteredList);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteOk, setDeleteOk] = useState(true);
     const [filter, setFilter] = useState('none');
+    const [day, setDay] = useState(days[new Date().getDay() + 1]);
+    const [filteredList, setFilteredList] = useState(filterList(props.filteredList, day, filter));
 
     const handlePageChange = (event, newPage) => {
         setPage(newPage);
@@ -82,7 +119,6 @@ export default function DashboardTable(props) {
         };
         console.log(drug);
         setDialogOpen(true);
-        const token = sessionStorage.getItem("token");
         let list = filteredList;
         let i = list.indexOf(drug);
         let newList = list.splice(i, 1);
@@ -112,22 +148,16 @@ export default function DashboardTable(props) {
         });
     };
 
-    const updateFilter = (event) => {
+    const updateMarket = (event) => {
         setFilter(event.target.value);
         setPage(0);
-        if (event.target.value === "leading") {
-            let newList = list.filter((drug) => {
-                return parseFloat(drug["recommendedDiff"]) === 0;
-            });
-            setFilteredList(newList);
-        } else if (event.target.value === "trailing") {
-            let newList = list.filter((drug) => {
-                return parseFloat(drug["recommendedDiff"]) < 0;
-            });
-            setFilteredList(newList);
-        } else {
-            setFilteredList(list);
-        }
+        setFilteredList(filterList(props.filteredList, day, event.target.value));
+    };
+
+    const updateDay = (event) => {
+        setDay(event.target.value);
+        setPage(0);
+        setFilteredList(filterList(props.filteredList, event.target.value, filter));
     };
 
     return (
@@ -136,28 +166,42 @@ export default function DashboardTable(props) {
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <th className={"table-filter-container"} style={{backgroundColor: "#2e2051", color: "whitesmoke", paddingLeft: 15}}>
-                                <Typography style={{color: "whitesmoke"}}>Filter: </Typography>
-                                <Select
-                                    value={filter}
-                                    onChange={updateFilter}
-                                    style={{color: "black", backgroundColor: "whitesmoke", marginLeft: 15, padding: "0 10px", fontWeight: 400, width: 180}}
-                                >
-                                    <MenuItem value={"none"}>None</MenuItem>
-                                    <MenuItem value={"leading"}>Market Leading</MenuItem>
-                                    <MenuItem value={"trailing"}>Market Trailing</MenuItem>
-                                </Select>
-                            </th>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 50]}
-                                count={filteredList.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onChangePage={handlePageChange}
-                                onChangeRowsPerPage={handleRowsPerPageChange}
-                                ActionsComponent={TablePaginationActions}
-                                style={{backgroundColor: "#2e2051", color: "whitesmoke"}}
-                            />
+                            <TableCell colSpan={4} style={{backgroundColor: "#2e2051", color: "whitesmoke", paddingLeft: 15}}>
+                                <div className={"table-filter-container"}>
+                                    <Typography style={{color: "whitesmoke"}}>Filter: </Typography>
+                                    <Select
+                                        value={filter}
+                                        onChange={updateMarket}
+                                        style={{color: "black", backgroundColor: "whitesmoke", marginLeft: 15, padding: "0 10px", fontWeight: 400, width: 180}}
+                                    >
+                                        <MenuItem value={"none"}>None</MenuItem>
+                                        <MenuItem value={"leading"}>Market Leading</MenuItem>
+                                        <MenuItem value={"trailing"}>Market Trailing</MenuItem>
+                                    </Select>
+                                    <Typography style={{color: 'whitesmoke', paddingLeft: 15}}>Day: </Typography>
+                                    <Select
+                                        value={day}
+                                        onChange={updateDay}
+                                        style={{color: "black", backgroundColor: "whitesmoke", marginLeft: 15, padding: "0 10px", fontWeight: 400, width: 180}}
+                                    >
+                                        {days.map((day, index) => (
+                                            <MenuItem value={day} key={index}>{day}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </div>
+                            </TableCell>
+                            <TableCell colSpan={6} style={{padding: 0}}>
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 50]}
+                                    count={filteredList.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={handlePageChange}
+                                    onChangeRowsPerPage={handleRowsPerPageChange}
+                                    ActionsComponent={TablePaginationActions}
+                                    style={{backgroundColor: "#2e2051", color: "whitesmoke", padding: 16, display: 'flex', justifyContent: 'flex-end'}}
+                                />
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell
@@ -355,7 +399,7 @@ function TablePaginationActions(props) {
     };
 
     return (
-        <div style={{width: 350, marginLeft: 15}}>
+        <div style={{width: 'min-content', display: 'flex', marginLeft: 15}}>
             <IconButton
                 style={{color: "whitesmoke"}}
                 onClick={handleFirstPageButtonClick}

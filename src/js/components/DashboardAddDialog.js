@@ -23,12 +23,19 @@ const DashboardAddDrugDialog = ({open, onChange, onSubmit}) => {
 
     const handleSubmit = () => {
         let finalList = dayList;
+        let schedule = "";
         for (let i = 0; i < 7; i++) {
             if (finalList[i] === undefined) {
                 finalList[i] = false;
             }
+            if (finalList[i] === true) {
+                schedule +=
+                    i === 0
+                        ? days[i].toLowerCase()
+                        : ',' + days[i].toLowerCase();
+            }
         }
-        onSubmit(finalList);
+        onSubmit(schedule);
     };
 
     return (

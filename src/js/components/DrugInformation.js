@@ -106,7 +106,7 @@ class DrugInformation extends React.Component {
         const payload = {
             ...this.props.drugRequest,
             token: token,
-            schedule: `{${days}}`
+            schedule: days
         };
         this.props.toggleLoadingDialog();
         axios.post(process.env.API_URL + '/dashboard/add', payload)
@@ -126,8 +126,8 @@ class DrugInformation extends React.Component {
                         alertColor: 'limegreen'
                     });
                 }
+                this.toggleDialog();
                 this.props.toggleLoadingDialog();
-                this.props.toggleDialog();
             }).catch((error) => {
                 // Drug does not exist in drug_master
                 if (error.response && error.response.status === 400) {
@@ -211,8 +211,8 @@ class DrugInformation extends React.Component {
                         </div>
                         <div className="col-sm-6 ">
                             <button type="button" style={{backgroundColor: 'white', padding: '.375rem 2.5rem'}}
-                                    onClick={this.toggleDialog} className="btn btn-outline-primary float-sm-right trackListing pointer">Track
-                                Pricing
+                                    onClick={this.toggleDialog} className="btn btn-outline-primary float-sm-right trackListing pointer">
+                                Track Pricing
                             </button>
                         </div>
                     </h2>
