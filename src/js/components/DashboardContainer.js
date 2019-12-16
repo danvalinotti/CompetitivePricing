@@ -100,14 +100,14 @@ class DashBoardContainer extends Component {
     }
 
     getDashboardDrugs() {
-        const strtoken = window.sessionStorage.getItem('token');
-        const token = {};
-        token.value = strtoken;
-        token.key = strtoken;
+        const token = window.sessionStorage.getItem('token');
+        const payload = {
+            token: token
+        };
         this.setState({
             dashboardLoading: true
         });
-        Axios.get(process.env.API_URL + '/dashboard/getAll', token).then(response => {
+        Axios.post(process.env.API_URL + '/dashboard/user/get', payload).then(response => {
             console.log(response.data);
             let data = response.data;
             this.setState({
